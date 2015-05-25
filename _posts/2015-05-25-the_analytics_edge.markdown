@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Course Review The Analytics Edge
+title: Course Review - The Analytics Edge
 date: 2015-05-25 22:27:12
 categories:
 ---
