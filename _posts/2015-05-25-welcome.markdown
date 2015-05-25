@@ -1,0 +1,13 @@
+---
+layout: post
+title: Welcome
+date: 2015-05-25 16:08:39
+categories:
+---
+
+I have been putting off putting up a descent personal web site for a while and I
+then I ran into Jekyll when I was reading a
+GitHub related document. So here we go!
+
+I have been playing around with WordPress but realised it was an overkill for my
+purposes as compared to <a href="http://jekyll.com/">Jekyll</a>

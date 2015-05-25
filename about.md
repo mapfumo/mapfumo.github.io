@@ -1,11 +1,22 @@
 ---
 layout: page
 title: About
-permalink: /about/
+sitemap:
+    priority: 1.0
+    changefreq: weekly
+    lastmod: 2014-09-07T16:31:30+05:30
 ---
+#About
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+## Welcome to my data science journal.
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+For the past few years I have shown an increasing interest in Data Science. 
+I have been teaching myself data science core concepts from such sources as <a
+href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
+science specialisation</a> MOOC and <a
+href="https://www.edx.org/course/analytics-edge-mitx-15-071x-0">EDX</a> in
+addition to countless hours of YouTube tutorials.
+Having a postgraduate qualification in Computer Science has made grasping
+associated programming, statistics and
+algorithms a bit easier.
+I am keen on exploring the world Machine Learning and applications.
