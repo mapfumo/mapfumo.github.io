@@ -12,10 +12,11 @@ So far I have completed several online courses and this is by far the best I
 have come across. It has inspired me to want to learn more about analytics. The
 course uses real world examples of how analytics have been used to gain a
 competitive edge. 
-<p>Examples range from election forecasting to discovering
+
+Examples range from election forecasting to discovering
 patterns for disease detection.
 Examples and assignments are implemented in R. The course is problem oriented
-and hands on.</p> 
+and hands on.
 
 I enjoyed the accompanying <a
 href="https://www.kaggle.com/c/15-071x-the-analytics-edge-competition-spring-2015">Kaggle</a> competition where I had to use
