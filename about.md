@@ -11,7 +11,7 @@ sitemap:
 ## Welcome to my data science journal.
 
 For the past few years I have shown an increasing interest in Data Science. 
-I have been teaching myself data science core concepts and from from such great sources as <a
+I have been teaching myself data science core concepts and from such great sources as <a
 href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
 science specialisation</a> MOOC and <a
 href="https://www.edx.org/course/analytics-edge-mitx-15-071x-0">EDX</a> in
