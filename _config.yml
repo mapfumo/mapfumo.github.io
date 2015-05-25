@@ -1,0 +1,13 @@
+# Site settings
+title: Antony Mapfumo - Data Science Journal
+email:
+description: > # this means to ignore newlines until "baseurl:"
+  Personal Data Science journal. R, Scala and Python programming for data
+  science. Apache Spark and Machine learning.
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://yourdomain.com" # the base hostname & protocol for your site
+twitter_username: mapfumo
+github_username:  mapfumo
+
+# Build settings
+markdown: kramdown
