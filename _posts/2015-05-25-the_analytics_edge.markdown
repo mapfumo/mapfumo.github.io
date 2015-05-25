@@ -18,6 +18,6 @@ and hands on. I enjoyed the accompanying <a
 href="https://www.kaggle.com/c/15-071x-the-analytics-edge-competition-spring-2015">Kaggle</a> competition where I had to use
 my newly acquired analytics skills to predict which New York Times blog articles
 will be the most popular.
-Topics covered include logistic regression, trees, clustering, visualisation,
+Over 11 weeks topics covered include logistic regression, trees, clustering, visualisation,
 linear and integer optimisation.
 I give this course five stars.
