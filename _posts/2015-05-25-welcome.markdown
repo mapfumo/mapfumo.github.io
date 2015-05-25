@@ -5,7 +5,7 @@ date: 2015-05-25 16:08:39
 categories:
 ---
 
-I have been putting off putting up a descent personal web site for a while and I
+I have been putting off putting up a decent personal web site for a while and I
 then I ran into Jekyll when I was reading a
 GitHub related document. So here we go!
 
