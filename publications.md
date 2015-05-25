@@ -8,3 +8,21 @@ sitemap:
 ---
 # Publications
 
+## A Unified Logging System
+Australia Post operates optical character recognition based mail sorting machines. Occasionally they have faults which vary in severity. These faults are logged and sent to a central server for analysis. This project focussed on
+developing
+tools to allow technicians and managers to view and analyse these faults in an
+intuitive manner with the aim of using this information to improve mail delivery
+service
+and reduce costs along the way. A unified logging system allows for the
+definition of a
+common log file format with which the various kinds of mail sorting machines
+need to
+adhere to with the aim of analysing faults from a central point. 
+<p><a href='img/logging_system.pdf'>Download</a></p>
+
+## Cisco NetFlow Collector and Analyser
+UltraFlow is an application for collecting and analysing Cisco Netflow data. It
+is written in Python, wxPython, Matplotlib, SQLite and the Python based Twisted network
+programming framework.
+<p><a href='img/netflow.pdf'>Download</a></p>
