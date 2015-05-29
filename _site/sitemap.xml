@@ -2,7 +2,7 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
-      <loc>http://example.com/2015/05/26/the_analytics_edge.html</loc>
+      <loc>http://www.mapfumo.net/2015/05/26/the_analytics_edge.html</loc>
       
         <lastmod>2015-05-26T08:27:12+10:00</lastmod>
       
@@ -11,7 +11,7 @@
     </url>
   
     <url>
-      <loc>http://example.com/2015/05/26/welcome.html</loc>
+      <loc>http://www.mapfumo.net/2015/05/26/welcome.html</loc>
       
         <lastmod>2015-05-26T02:08:39+10:00</lastmod>
       
@@ -24,7 +24,7 @@
   
     
       <url>
-        <loc>http://example.com/about.html</loc>
+        <loc>http://www.mapfumo.net/about.html</loc>
         <lastmod>2014-09-07T21:01:30+10:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -35,7 +35,7 @@
   
     
       <url>
-        <loc>http://example.com/publications.html</loc>
+        <loc>http://www.mapfumo.net/publications.html</loc>
         <lastmod>2014-09-07T21:01:30+10:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
