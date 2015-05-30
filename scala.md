@@ -48,7 +48,7 @@ Notice how there is no return statement, again less typing. We can be implicit a
 ```scala> def addNums(x: Int, y: Int): Int = { return x+y }```
 <hr>
 ## Resources
-For an indepth look at scala I recommend the following resources:-
+For an in-depth look at scala I recommend the following resources:-
 
 * <a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming - Cousera</a>
 * <a href="https://www.coursera.org/course/progfun">Functional Programming Principles in Scala - Cousera</a>
