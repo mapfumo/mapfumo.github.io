@@ -53,3 +53,7 @@ For an in-depth look at Scala I recommend the following resources:-
 * <a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming - Cousera</a>
 * <a href="https://www.coursera.org/course/progfun">Functional Programming Principles in Scala - Cousera</a>
 
+I found this video about Scala to be as educational as it is funny. Enjoy!
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/LH75sJAR0hc" frameborder="0" allowfullscreen></iframe>
+
