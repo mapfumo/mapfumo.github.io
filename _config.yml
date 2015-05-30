@@ -23,8 +23,8 @@ keywords: R, Analytics, Data Science, Scala, Spark, Python, Machine Learning
 #disqus: forumname
 
 ##set this to enable google analytics
-#ga_id: analyticsID
-#ga_domain: analyticsDomain
+ga_id: UA-63567996-1
+ga_domain: mapfumo.net
 
 ##Some commonly used links
 links:
