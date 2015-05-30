@@ -18,7 +18,7 @@ Scala  is a functional and object-oriented programming language based on Java 
 
 A variable can be declared with ```var```(can change later on) or ```val```(immutable)
 
-```scala> var speed = 10 // speed can change letter```<br>
+```scala> var speed = 10 // we can change speed later```<br>
 ```scala> val gravity = 10 //suitable for constants```<br>
 ```scala> gravity = 20 // will generate an error```
 <hr>
