@@ -27,7 +27,7 @@ A variable can be declared with ```var```(can change later on) or ```val```(immu
 ```scala> var x = 5 // x will be Int type```<br>
 ```scala> x = "Antony Mapfumo" // This is illegal, error: type mismatch```<br>
 ```scala> x = 20 // Fine, x is still an Int```<br>
-```scala> var x = "I am a string" // allowed, new declarationring```
+```scala> var x = "I am a string" // allowed, new declaration```
 
 In the above example we could have explicitily declared "x" as an Int, ```scala> var x: Int = 5```. It is one of the things I like about Scala as compared to Java, less typing.
 <hr>
