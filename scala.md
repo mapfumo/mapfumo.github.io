@@ -20,13 +20,14 @@ A variable can be declared with ```var```(can change later on) or ```val```(immu
 
 ```scala> var speed = 10 // we can change speed later```<br>
 ```scala> val gravity = 10 //suitable for constants```<br>
-```scala> gravity = 20 // will generate an error```
+```scala> gravity = 20 // will generate an error, gravity is immutable```
 <hr>
 <b>Variable type Inference</b>
 
 ```scala> var x = 5 // x will be Int type```<br>
 ```scala> x = "Antony Mapfumo" // This is illegal, error: type mismatch```<br>
-```scala> var x = "I am a String" // allowed: x is now a string ```
+```scala> x = 20 // Fine, x is still an Int
+```scala> var x = "I am a String" // allowed, new declaration: x is now a string ```
 
 In the above example we could have explicitily declared "x" as an Int, ```scala> var x: Int = 5```. It is one of the things I like about Scala as compared to Java, less typing.
 <hr>
