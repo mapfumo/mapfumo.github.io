@@ -6,6 +6,15 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
+#  <a href="https://www.class-central.com/mooc/1623/edx-15-071x-the-analytics-edge">Massachusetts Institute of Technology</a>
+
+## 15.071x: The Analytics Edge
+* An applied understanding of many different analytics methods, including linear regression, logistic regression, CART, clustering, and data visualization. 
+* How to implement all of these methods in R
+* An applied understanding of mathematical optimization and how to solve optimization models in spreadsheet software
+<a href="img/analytics_certificate.pdf">[Certificate]</a>
+<hr>
+
 # <a href="https://www.coursera.org/specialization/jhudatascience/1">Data Science - Johns Hopkins University</a>
 The Johns Hopkins Bloomberg School of Public Health offers its open education in structured and comprehensive Data Science Specialization through <a href="https://www.coursera.org">Coursera</a>, a leading provider of Massive Open Online Courses (MOOCs). I have completed all the 9 courses and I am now waiting to do the final seven week long capstone project.
 <hr>
