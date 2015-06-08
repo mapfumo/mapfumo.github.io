@@ -6,7 +6,7 @@ markdown: kramdown
 highlighter: pygments
 
 ##define base_url for valid usage in sitemap.xml and robots.txt
-base_url: http://mapfumo.net
+base_url: http://www.mapfumo.net
 sass:
   sass_dir: _sass
   style: :compressed
