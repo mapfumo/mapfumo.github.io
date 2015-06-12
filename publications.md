@@ -8,6 +8,12 @@ sitemap:
 ---
 # Publications & Projects
 <hr>
+## Shiny Application
+### <a href='https://mapfumo.shinyapps.io/Indigenous_population'>Indigenous population, by State / Territory, 1971 to 2006</a>
+
+<a href='http://shiny.rstudio.com/'>Shiny</a> is a web application framework for R. The application provides information about the Australian indigenous population, by State / Territory, 1971 to 2006.The population can be displayed by state/territory or for the whole of Australia. Use the drop down list on the left-hand side to switch the plot between Australia and its states and territories. You can also select the color of the line plots. The raw data was obtained from The Australian Bureau of Statistics web site.
+
+<hr>
 ## Regresssion Analysis - Automatic vs Manual Transmission Fuel Efficiency Analysis
 Motor Trend is an automotive trend magazine. It is interested in understanding the relationship between a set of
 variables and miles per gallon (MPG). I will be using the dataset from the 1974 Motor Trend US magazine to
