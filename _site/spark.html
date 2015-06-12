@@ -3,15 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Scala Programming | Antony Mapfumo</title>
+        <title>Apache Spark | Antony Mapfumo</title>
         
           <meta name="author" content="mapfumo">
         
-        <meta name="title" content="Scala Programming" >
+        <meta name="title" content="Apache Spark" >
         <link rel="icon" type="image/png" href="/favicon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="og:title" content="Scala Programming" />
-<meta name="twitter:title" content="Scala Programming" />
+        <meta property="og:title" content="Apache Spark" />
+<meta name="twitter:title" content="Apache Spark" />
 
 <meta name="keywords" content="R, Analytics, Data Science, Scala, Spark, Python, Machine Learning" />
 
@@ -65,69 +65,81 @@
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-<h1 id="scala">Scala</h1>
-<p>Scala is one of the languages I recommend one should have in their Data Science toolbox. To learn Scala a Java background would be ideal, other c/c++ family of languages would also be fine.
-Scala  is a functional and object-oriented programming language based on Java and compiles to the JVM. It is one of the best languages for crunching big data. Apache Spark is written in Scala.</p>
+<h1 id="apache-spark">Apache Spark</h1>
+
+<p><a href="https://spark.apache.org/">Apache Spark</a> is an open source big data processing framework built around speed and ease of use. Spark is written in Scala and runs on Java Virtual Machine (JVM). I am more interested in Spark for Machine Learning.</p>
+
+<p>I have enrolled in <a href="https://www.edx.org/course/introduction-big-data-apache-spark-uc-berkeleyx-cs100-1x">Introduction to Big Data with Apache Spark</a>. The course objectives include:-</p>
 
 <ul>
-  <li>Scala is statically typed although type information is not always necessary and it can be inferred.</li>
-  <li>Scala is functional – In Scala functions are objects making them first class values</li>
-  <li>Scala uses existing Java libraries and tools</li>
+  <li>Learning how to use Apache Spark to perform data analysis</li>
+  <li>How to use parallel programming to explore data sets</li>
+  <li>Applying Log Mining, Textual Entity Recognition and Collaborative Filtering to real world data questions</li>
+  <li>Preparing for the Spark Certified Developer exam</li>
 </ul>
 
-<p><b>Declarations</b></p>
+<p>Having already completed the first laboratory assessment I can say that the course is very hands on and the exercises are very challenging. Although the exercises have to be completed in Python (PySpark) I am also completing them in Scala.</p>
 
-<p>A variable can be declared with <code>var</code>(can change later on) or <code>val</code>(immutable)</p>
+<h2 id="pyspark">PySpark</h2>
 <pre><code>
-scala&gt; var speed = 10 // we can change speed later
-scala&gt; val gravity = 10 //suitable for constants
-scala&gt; gravity = 20 // will generate an error, gravity is immutable
+%quickref -&gt; Quick reference.
+help      -&gt; Python's own help system.
+object?   -&gt; Details about 'object', use 'object??' for extra details.
+Spark assembly has been built with Hive, including Datanucleus jars on classpath
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0
+15/06/12 15:20:32 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 1.1.0
+      /_/
+
+Using Python version 2.7.10 (default, May 28 2015 17:02:03)
+SparkContext available as sc.
+
+In [1]: wordsList = ['cat', 'elephant', 'rat', 'rat', 'cat']
+
+In [2]: wordsRDD = sc.parallelize(wordsList, 4)
+
+In [3]: wordsRDD.collect()
+Out[3]: ['cat', 'elephant', 'rat', 'rat', 'cat']
+
+In [4]: 
 </code></pre>
 <hr />
 
-<p><b>Variable type Inference</b></p>
+<h2 id="spark-scala">Spark (Scala)</h2>
 
 <pre><code>
-scala&gt; var x = 5 // x will be Int type
-scala&gt; x = "Antony Mapfumo" // This is illegal, error: type mismatch
-scala&gt; x = 20 // Fine, x is still an Int
-scala&gt; var x = "I am a string" // allowed, new declaration
-</code></pre>
-<p>In the above example we could have explicitily declared “x” as an Int:-</p>
-<pre><code>scala&gt; var x: Int = 5</code></pre>
-<p>It is one of the things I like about Scala as compared to Java, less typing.</p>
-<hr />
+Spark assembly has been built with Hive, including Datanucleus jars on classpath
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 1.1.0
+      /_/
 
-<p><b>Multiple assignment with type inference</b></p>
+Using Scala version 2.10.4 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_45)
+Type in expressions to have them evaluated.
+Type :help for more information.
+15/06/12 15:22:02 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+15/06/12 15:22:02 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+Spark context available as sc.
 
-<pre><code>scala&gt; val (a, b) = (5, "I am a string")</code></pre>
+scala&gt; val wordsList = Array("cat", "elephant", "rat", "rat", "cat")
+wordsList: Array[String] = Array(cat, elephant, rat, rat, cat)
 
-<p><b>“a”</b> will be assigned to Int: 5 whilst <b>“b”</b> will be String: “I am a string”</p>
+scala&gt; val wordsRDD = sc.parallelize(wordsList)
+wordsRDD: org.apache.spark.rdd.RDD[String] = ParallelCollectionRDD[0] at parallelize at <console>:14
 
-<hr />
+scala&gt; wordsRDD.collect()
+res0: Array[String] = Array(cat, elephant, rat, rat, cat)
 
-<p><b>Function definition and the implied return</b></p>
+scala&gt;
 
-<p>Here is a simple function to return the sum of two numbers:-</p>
-<pre><code>scala&gt; def addNums(x: Int, y: Int): Int = x + y</code></pre>
-
-<p>Notice how there is no return statement, again less typing. We can be implicit and include the return statement,</p>
-
-<pre><code>scala&gt;def addNums(x: Int, y: Int): Int = { return x+y }</code></pre>
-<hr />
-
-<h2 id="resources">Resources</h2>
-<p>For an in-depth look at Scala I recommend the following resources:-</p>
-
-<ul>
-  <li><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming - Cousera</a></li>
-  <li><a href="https://www.coursera.org/course/progfun">Functional Programming Principles in Scala - Cousera</a></li>
-</ul>
-
-<p>I found this video about Scala to be as educational as it is funny. Enjoy!</p>
-
-<iframe width="420" height="315" src="https://www.youtube.com/embed/LH75sJAR0hc" frameborder="0" allowfullscreen=""></iframe>
-
+</console></code></pre>
 
 	</div>
 </div>
