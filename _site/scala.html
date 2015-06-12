@@ -58,7 +58,13 @@
       <section class="content">
         <div id="home" class="grid post">
 	<div class="unit whole">
-		<h1 id="scala">Scala</h1>
+		<link rel="stylesheet" href="css/default.css" />
+
+<script src="js/highlight.pack.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<h1 id="scala">Scala</h1>
 <p>Scala is one of the languages I recommend one should have in their Data Science toolbox. To learn Scala a Java background would be ideal, other c/c++ family of languages would also be fine.
 Scala  is a functional and object-oriented programming language based on Java and compiles to the JVM. It is one of the best languages for crunching big data. Apache Spark is written in Scala.</p>
 
@@ -71,25 +77,29 @@ Scala  is a functional and object-oriented programming language based on Java 
 <p><b>Declarations</b></p>
 
 <p>A variable can be declared with <code>var</code>(can change later on) or <code>val</code>(immutable)</p>
-
-<p><code>scala&gt; var speed = 10 // we can change speed later</code><br />
-<code>scala&gt; val gravity = 10 //suitable for constants</code><br />
-<code>scala&gt; gravity = 20 // will generate an error, gravity is immutable</code></p>
+<pre><code>
+scala&gt; var speed = 10 // we can change speed later
+scala&gt; val gravity = 10 //suitable for constants
+scala&gt; gravity = 20 // will generate an error, gravity is immutable
+</code></pre>
 <hr />
 
 <p><b>Variable type Inference</b></p>
 
-<p><code>scala&gt; var x = 5 // x will be Int type</code><br />
-<code>scala&gt; x = "Antony Mapfumo" // This is illegal, error: type mismatch</code><br />
-<code>scala&gt; x = 20 // Fine, x is still an Int</code><br />
-<code>scala&gt; var x = "I am a string" // allowed, new declaration</code></p>
-
-<p>In the above example we could have explicitily declared “x” as an Int, <code>scala&gt; var x: Int = 5</code>. It is one of the things I like about Scala as compared to Java, less typing.</p>
+<pre><code>
+scala&gt; var x = 5 // x will be Int type
+scala&gt; x = "Antony Mapfumo" // This is illegal, error: type mismatch
+scala&gt; x = 20 // Fine, x is still an Int
+scala&gt; var x = "I am a string" // allowed, new declaration
+</code></pre>
+<p>In the above example we could have explicitily declared “x” as an Int:-</p>
+<pre><code>scala&gt; var x: Int = 5</code></pre>
+<p>It is one of the things I like about Scala as compared to Java, less typing.</p>
 <hr />
 
 <p><b>Multiple assignment with type inference</b></p>
 
-<p><code>scala&gt; val (a, b) = (5, "I am a string")</code></p>
+<pre><code>scala&gt; val (a, b) = (5, "I am a string")</code></pre>
 
 <p><b>“a”</b> will be assigned to Int: 5 whilst <b>“b”</b> will be String: “I am a string”</p>
 
@@ -98,12 +108,11 @@ Scala  is a functional and object-oriented programming language based on Java 
 <p><b>Function definition and the implied return</b></p>
 
 <p>Here is a simple function to return the sum of two numbers:-</p>
-
-<p><code>scala&gt; def addNums(x: Int, y: Int): Int = x + y</code></p>
+<pre><code>scala&gt; def addNums(x: Int, y: Int): Int = x + y</code></pre>
 
 <p>Notice how there is no return statement, again less typing. We can be implicit and include the return statement,</p>
 
-<p><code>scala&gt; def addNums(x: Int, y: Int): Int = { return x+y }</code></p>
+<pre><code>scala&gt;def addNums(x: Int, y: Int): Int = { return x+y }</code></pre>
 <hr />
 
 <h2 id="resources">Resources</h2>
