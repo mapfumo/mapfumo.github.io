@@ -52,7 +52,7 @@ sitemap:
 </code></pre>
 From the data we can see:-
 
-* identical means (9.0) for "x" variables, identical (7.5) means for "variables"
+* identical mean (9.0) for "x" variables, identical mean (7.5) for "y" variables
 * identical variances, 11 for "x" and 4.1 for "y"
 
 Now lets plot the data:-
