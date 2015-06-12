@@ -6,7 +6,7 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
-<link rel="stylesheet" href="css/default.css">
+<link rel="stylesheet" href="css/monokai_sublime.css">
 <script src="js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
@@ -24,7 +24,7 @@ I have enrolled in <a href='https://www.edx.org/course/introduction-big-data-apa
 Having already completed the first laboratory assessment I can say that the course is very hands on and the exercises are very challenging. Although the exercises have to be completed in Python (PySpark) I am also completing them in Scala.
 
 ## PySpark
-<pre><code>
+<pre><code class="html">
 %quickref -> Quick reference.
 help      -> Python's own help system.
 object?   -> Details about 'object', use 'object??' for extra details.

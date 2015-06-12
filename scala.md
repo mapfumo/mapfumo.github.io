@@ -6,7 +6,7 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
-<link rel="stylesheet" href="css/default.css">
+<link rel="stylesheet" href="css/monokai_sublime.css">
 <script src="js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
