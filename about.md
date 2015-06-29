@@ -15,7 +15,7 @@ I have been learning data science core concepts from such great sources as <a
 href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
 science specialisation</a> MOOC and <a
 href="https://www.edx.org/course/analytics-edge-mitx-15-071x-0">EDX</a> in
-addition to countless hours of YouTube tutorials.
+addition to countless hours of YouTube tutorials. I have also enrolled in the IBM sponsored <a href="http://bigdatauniversity.com/">Big Data University</a> and joined resourceful online forums for data  practitioners like <a href="http://www.datasciencecentral.com/">Data Science Central.</a>
 Having postgraduate and undergraduate qualifications in Computer Science has made grasping
 associated programming, statistics and
 algorithms a bit easier.
