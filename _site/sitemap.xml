@@ -2,6 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
+      <loc>http://www.mapfumo.net/2015/06/29/course_review_-_introduction_to_big_data_with_apache_spark.html</loc>
+      
+        <lastmod>2015-06-29T22:50:59+10:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+    </url>
+  
+    <url>
       <loc>http://www.mapfumo.net/2015/05/26/the_analytics_edge.html</loc>
       
         <lastmod>2015-05-26T08:27:12+10:00</lastmod>
