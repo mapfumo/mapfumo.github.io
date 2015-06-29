@@ -10,13 +10,13 @@ sitemap:
 
 ## Welcome to my data science journal.
 
-For the past few years I have been showing increasing interest in Data Science. 
+Hi all! I am Antony Mapfumo, data communications and data science professional, an <a href="http://www.arsenal.com/home">Arsenal</a> fan and open source advocate. For the past few years I have been showing increasing interest in Data Science. 
 I have been learning data science core concepts from such great sources as <a
 href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
 science specialisation</a> MOOC and <a
 href="https://www.edx.org/course/analytics-edge-mitx-15-071x-0">EDX</a> in
 addition to countless hours of YouTube tutorials.
-Having a postgraduate qualification in Computer Science has made grasping
+Having postgraduate and undergraduate qualifications in Computer Science has made grasping
 associated programming, statistics and
 algorithms a bit easier.
-I am keen on exploring the world Machine Learning and applications.
+I am keen on exploring the world Machine Learning and applications on a large scale.
