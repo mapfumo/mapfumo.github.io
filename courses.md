@@ -6,9 +6,19 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
-#  <a href="https://www.class-central.com/mooc/1623/edx-15-071x-the-analytics-edge">Massachusetts Institute of Technology</a>
+# The University of California, Berkeley through edX
 
-## 15.071x: The Analytics Edge
+## <a href="https://courses.edx.org/courses/BerkeleyX/CS100.1x/1T2015/info">CS100.1x: Introduction to Big Data with Apache Spark</a>
+* Learn how to use Apache Spark to perform data analysis
+* How to use parallel programming to explore data sets
+* Apply Log Mining, Textual Entity Recognition and Collaborative Filtering to real world data questions
+* Prepare for the Spark Certified Developer exam
+<a href="img/sparkbigdata_certificate.pdf">[Certificate]</a>
+<hr>
+
+#  Massachusetts Institute of Technology
+
+## <a href="https://www.class-central.com/mooc/1623/edx-15-071x-the-analytics-edge">15.071x: The Analytics Edge</a>
 * An applied understanding of many different analytics methods, including linear regression, logistic regression, CART, clustering, and data visualization. 
 * How to implement all of these methods in R
 * An applied understanding of mathematical optimization and how to solve optimization models in spreadsheet software
