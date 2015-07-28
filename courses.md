@@ -8,7 +8,7 @@ sitemap:
 ---
 # The University of California, Berkeley through edX
 
-## <a href="https://courses.edx.org/courses/BerkeleyX/CS100.1x/1T2015/info">CS100.1x: Introduction to Big Data with Apache Spark</a>
+## <a href="https://www.edx.org/course/introduction-big-data-apache-spark-uc-berkeleyx-cs100-1x">CS100.1x: Introduction to Big Data with Apache Spark</a>
 * Learn how to use Apache Spark to perform data analysis
 * How to use parallel programming to explore data sets
 * Apply Log Mining, Textual Entity Recognition and Collaborative Filtering to real world data questions
