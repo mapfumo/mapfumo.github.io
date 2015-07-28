@@ -25,7 +25,35 @@ sitemap:
 <a href="img/analytics_certificate.pdf">[Certificate]</a>
 <hr>
 
-# <a href="https://www.coursera.org/specialization/jhudatascience/1">Data Science - Johns Hopkins University</a>
+#  Big Data University
+
+## <a href="https://bigdatauniversity.com/bdu-wp/bdu-course/spark-fundamentals/">Spark Fundamentals I</a>
+After completing this course, you should be able to:
+
+* Describe what Spark is all about know why you would want to use Spark
+* Use Resilient Distributed Datasets operations
+* Use Scala, Java, or Python to create and run a Spark application
+* Creating applications using Spark SQL, MLlib, Spark Streaming, and GraphX
+* Configure, monitor and tune Spark
+<a href="img/ibm-spark-1-certificate.pdf">[Certificate]</a>
+
+## <a href="http://bigdatauniversity.com/bdu-wp/bdu-course/spark-fundamentals-ii/">Spark Fundamentals II</a>
+This course covers Spark’s architecture and goes in-depth on how data is distributed and tasks are parallelized. Students will have a better understanding for how to optimize their data for joins, using Spark’s memory caching, and use the more advanced operations available in the API. After completing this course, you should be able to:
+
+* Apache Spark architecture overview
+* Understanding input, partitioning, and parallelization
+* Optimizations for efficiently operating on and joining multiple datasets
+* Understanding how Spark instructions are translated into jobs and what causes multiple stages within a job
+* Developing, testing, and debugging Spark applications using SBT, Eclipse, and IntelliJ
+<a href="img/ibm-spark-2-certificate.pdf">[Certificate]</a>
+
+
+## <a href="http://bigdatauniversity.com/bdu-wp/bdu-course/big-data-fundamentals/">Big Data Fundamentals</a>
+The course emphasizes that we study Big Data to gain insight that will be used to get  people throughout the enterprise to run the business better and to provide better service to customers. Rather than a implementation of a single open-source systems such as Hadoop, the course recommends that Big Data should be processed in a platform that can handle the variety, velocity, and volume of data by using a family of components that require integration and data governance.
+<a href="img/ibm-big-data-certificate.pdf">[Certificate]</a>
+<hr>
+
+# Data Science - Johns Hopkins University
 The Johns Hopkins Bloomberg School of Public Health offers its open education in structured and comprehensive Data Science Specialization through <a href="https://www.coursera.org">Coursera</a>, a leading provider of Massive Open Online Courses (MOOCs). I have completed all the 9 courses and I am now waiting to do the final seven week long capstone project.
 <hr>
 ## 1. The Data Scientist’s Toolbox
