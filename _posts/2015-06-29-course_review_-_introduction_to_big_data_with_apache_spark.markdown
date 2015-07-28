@@ -21,7 +21,7 @@ The emphasis here is to learn and apply the Spark data model, transformations an
 
 <strong>Lab 2 – Web Server Log Analysis with Apache Spark</strong>
 
-Building upon the foundations laid in lab 1 the goal here is analyse a massive collective of server log files, NASA Apache web server logs. The assessment shows how to use Apache Spark on real-world text-based production logs and fully harness the power of that data. Tasks include:-
+Building upon the foundations laid in lab 1 the goal here we analyse a massive collective of server log files, NASA Apache web server logs. The assessment shows how to use Apache Spark on real-world text-based production logs and fully harness the power of that data. Tasks include:-
 
 * Configuration and Initial RDD Creation
 * Data cleaning
@@ -42,6 +42,7 @@ Entity resolution is a common, yet difficult problem in data cleaning and integr
 
 
 <strong>Lab 4 - Introduction to Machine Learning with Apache Spark</strong>
+
 One of the most common uses of big data is to predict what users want. This allows Google to show you relevant ads, Amazon to recommend relevant products, and Netflix to recommend movies that you might like. This lab will demonstrate how we can use Apache Spark to recommend movies to a user. We will start with some basic techniques, and then use the Spark MLlib library's Alternating Least Squares method to make more sophisticated predictions.
 
 * Predicting Movie Ratings from a subset dataset of 500,000 ratings
