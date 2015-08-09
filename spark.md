@@ -14,7 +14,7 @@ sitemap:
 
 <a href='https://spark.apache.org/'>Apache Spark</a> is an open source big data processing framework built around speed and ease of use. Because of its speed and scalability Spark is well suited for processing a large collection of log files, from a web server, for example.
 
-For this example I am going to use a dataset freely available from <a href="http://ita.ee.lbl.gov/index.html">The Internet Traffic Archive</a>. I will be using the <a href="ftp://ita.ee.lbl.gov/traces/usask_access_log.gz">Saskatchewan-HTTP trace</a>. This trace contains seven month's worth of all HTTP requests to the University of Saskatchewan's WWW server. The University of Saskatchewan is located in Saskatoon, Saskatchewan, Canada.
+For this example I am going to use a dataset freely available from <a href="http://ita.ee.lbl.gov/index.html">The Internet Traffic Archive</a>. I will be using the <a href="ftp://ita.ee.lbl.gov/traces/usask_access_log.gz">Saskatchewan-HTTP trace</a>. This trace contains seven month worth of all HTTP requests to the University of Saskatchewan's WWW server. The University of Saskatchewan is located in Saskatoon, Saskatchewan, Canada.
 
 <hr>
 ## RDD - Resilient Distributed Datasets
@@ -34,7 +34,9 @@ The logs are an ASCII file with one line per request, with the following columns
 * timestamp
 * request
 * HTTP reply code
-* bytes in the reply The first log was collected from 00:00:00 June 1, 1995 through 23:59:59 December 31, 1995, a total of 214 days
+* bytes in the reply 
+
+The first log was collected from 00:00:00 June 1, 1995 through 23:59:59 December 31, 1995, a total of 214 days
 
 <pre><code class="python"># Use regular expression to extract fields from the log entries
 import re
