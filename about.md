@@ -10,7 +10,7 @@ sitemap:
 
 ## Welcome to my data science journal.
 
-Hi all! I am Antony Mapfumo, data communications and data science professional, an <a href="http://www.arsenal.com/home">Arsenal</a> fan and open source advocate. For the past few years I have been showing increasing interest in Data Science particularly machine learning in network systems. 
+Hi all! I am Antony Mapfumo, a data communications and data science professional, an <a href="http://www.arsenal.com/home">Arsenal</a> fan and open source advocate. For the past few years I have been showing increasing interest in Data Science particularly machine learning in network systems. 
 I have been learning data science core concepts from such great sources as <a
 href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
 science specialisation</a> MOOC and <a

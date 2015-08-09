@@ -6,22 +6,31 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
-# The University of California, Berkeley through edX
+# The University of California, Berkeley
+<hr>
+## <a href="https://www.edx.org/course/introduction-big-data-apache-spark-uc-berkeleyx-cs100-1x">CS190.1x: Scalable Machine Learning</a>
+* Underlying statistical and algorithmic principles required to develop scalable real-world machine learning pipelines
+* Exploratory data analysis, feature extraction, supervised learning, and model evaluation
+* Application of these principles using Apache Spark
+* How to implement scalable algorithms for fundamental statistical models
 
+<a href="img/scalable_machine_learning_certificate.pdf">[Certificate]</a>
+<hr>
 ## <a href="https://www.edx.org/course/introduction-big-data-apache-spark-uc-berkeleyx-cs100-1x">CS100.1x: Introduction to Big Data with Apache Spark</a>
 * Learn how to use Apache Spark to perform data analysis
 * How to use parallel programming to explore data sets
 * Apply Log Mining, Textual Entity Recognition and Collaborative Filtering to real world data questions
 * Prepare for the Spark Certified Developer exam
+
 <a href="img/sparkbigdata_certificate.pdf">[Certificate]</a>
 <hr>
-
 #  Massachusetts Institute of Technology
 
 ## <a href="https://www.class-central.com/mooc/1623/edx-15-071x-the-analytics-edge">15.071x: The Analytics Edge</a>
 * An applied understanding of many different analytics methods, including linear regression, logistic regression, CART, clustering, and data visualization. 
 * How to implement all of these methods in R
 * An applied understanding of mathematical optimization and how to solve optimization models in spreadsheet software
+
 <a href="img/analytics_certificate.pdf">[Certificate]</a>
 <hr>
 
@@ -35,6 +44,7 @@ After completing this course, you should be able to:
 * Use Scala, Java, or Python to create and run a Spark application
 * Creating applications using Spark SQL, MLlib, Spark Streaming, and GraphX
 * Configure, monitor and tune Spark
+
 <a href="img/ibm-spark-1-certificate.pdf">[Certificate]</a>
 
 ## <a href="http://bigdatauniversity.com/bdu-wp/bdu-course/spark-fundamentals-ii/">Spark Fundamentals II</a>
@@ -45,6 +55,7 @@ This course covers Spark’s architecture and goes in-depth on how data is distr
 * Optimizations for efficiently operating on and joining multiple datasets
 * Understanding how Spark instructions are translated into jobs and what causes multiple stages within a job
 * Developing, testing, and debugging Spark applications using SBT, Eclipse, and IntelliJ
+
 <a href="img/ibm-spark-2-certificate.pdf">[Certificate]</a>
 
 
