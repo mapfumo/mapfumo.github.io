@@ -199,4 +199,70 @@ The lower points represent weekend traffic.
  (u'/~scottp/fn1.gif', 21067)]
 </pre>
 
-We can see the enormous Spark potential just from the few examples above.
+We can see the enormous Spark potential just from the few examples above. I am going to perform the same analysis using Scala.
+<hr>
+# Scala Implementation
+<pre><code class="scala">import java.util.Date
+import java.util.regex._
+def parseDate(str: String) = {
+    // Apparently Java months are numbered 0...11 With January being 0 and December being 11
+    val mappings = Map("Jan"->0, "Feb"->1, "Mar"->2,
+    "Apr"->3, "May"->4, "Jun"->5, "Jul"->6,
+    "Aug"->7, "Sep"->8, "Oct"->9, "Nov"->10, "Dec"->11)
+    val date = new Date()
+    date.setYear(str.split("/")(2).toInt)
+    date.setMonth(mappings(str.split("/")(1)).toInt)
+    date.setDate(str.split("/")(0).toInt)
+    date //impilied return keyword
+}
+</code></pre>
+<pre><code class="scala">case class Log(host: String, date: Date, 
+    requestMethod: String,endPoint: String, serverCode: String, bytes: Int)
+</code></pre>
+<hr>
+<pre><code class="scala">def parseLogLine(line: String) = {
+    val pattern = """(\S.+)\s-\s-\s\[(\d\d/\w\w\w/\d\d\d\d)\S.+\]\s(\S.+)\s(\S.+)\s(\d\d\d)\s(\S+)""".r
+ 	  val matchList = pattern.findAllIn(line).matchData.toList
+ 	  println(line)
+ 	  if (matchList.length==1) { // valid log entry, we've got a match
+ 		val _host = matchList(0).group(1).trim
+ 		val _date = parseDate(matchList(0).group(2).trim)
+ 		val _requestMethod = matchList(0).group(3).trim
+ 		val _endPoint = matchList(0).group(4).trim
+ 		val _serverCode = matchList(0).group(5).trim
+ 		val _bytes = if (matchList(0).group(6).forall(_.isDigit)==false) 0 else (matchList(0).group(6).toInt)
+		Log(_host, _date, _requestMethod, _endPoint, _serverCode, _bytes)
+ 	}
+ 	else{
+ 			Log("0", new Date(), "0", "0", "0", 0)
+ 	}
+}
+val rawRDD = sc.textFile("/temp/usask_access_log.gz")
+rawRDD.first()
+</code></pre>
+<pre>
+rawRDD: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[6] at textFile at <console>:47
+res27: String = 202.32.92.47 - - [01/Jun/1995:00:00:59 -0600] "GET /~scottp/publish.html" 200 271
+</pre>
+<pre><code class="scala">val logsRDD = rawRDD.map(parseLogLine(_))
+logsRDD.count()
+logsRDD.first()
+</code></pre>
+<pre>Log = Log(202.32.92.47,Sat Jun 01 22:25:48 AEST 3895,"GET,/~scottp/publish.html",200,271)</pre>
+<pre><code class="scala">logsRDD.map(log => (log.host, log.bytes)).
+      reduceByKey(_+_).sortBy(log => -log._2).take(10).foreach(println)
+</code></pre>
+<pre>
+(freenet.buffalo.edu,305054357)
+(duke.usask.ca,274812725)
+(broadway.sfn.saskatoon.sk.ca,135494706)
+(ccn.cs.dal.ca,115300828)
+(srv1.freenet.calgary.ab.ca,111177588)
+(sask.usask.ca,101352832)
+(sailor.lib.md.us,82896472)
+(www.gnofn.org,80557148)
+(sendit.sendit.nodak.edu,74408851)
+(huey.usask.ca,63100477)
+</pre>
+
+
