@@ -199,7 +199,7 @@ The lower points represent weekend traffic.
  (u'/~scottp/fn1.gif', 21067)]
 </pre>
 
-We can see the enormous Spark potential just from the few examples above. I am going to perform the same analysis using Scala.
+We can see the enormous Spark potential just from the few examples above.
 <hr>
 # Scala Implementation
 <pre><code class="scala">import java.util.Date
@@ -223,7 +223,6 @@ def parseDate(str: String) = {
 <pre><code class="scala">def parseLogLine(line: String) = {
     val pattern = """(\S.+)\s-\s-\s\[(\d\d/\w\w\w/\d\d\d\d)\S.+\]\s(\S.+)\s(\S.+)\s(\d\d\d)\s(\S+)""".r
  	  val matchList = pattern.findAllIn(line).matchData.toList
- 	  println(line)
  	  if (matchList.length==1) { // valid log entry, we've got a match
  		val _host = matchList(0).group(1).trim
  		val _date = parseDate(matchList(0).group(2).trim)
