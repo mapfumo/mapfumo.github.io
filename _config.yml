@@ -20,7 +20,7 @@ description: >
 keywords: R, Analytics, Data Science, Scala, Spark, Python, Machine Learning
 
 ##define this for disqus comment support
-#disqus: forumname
+disqus: mapfumo
 
 ##set this to enable google analytics
 ga_id: UA-63567996-1
