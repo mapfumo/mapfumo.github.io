@@ -23,7 +23,7 @@ algorithms a bit easier.
 I am keen on exploring the world Machine Learning and applications on a large scale.
 
 I code in <a href="http://www.scala-lang.org/">Scala</a> and <a
-href="https://www.python.org/"> Python</a>, Statistical Computical in<a
+href="https://www.python.org/"> Python</a>, do Statistical Computical in <a
 href="https://www.r-project.org/">R</a>, and I document in <a
 href="http://yihui.name/knitr/">knitr</a> and Markdown.
 
