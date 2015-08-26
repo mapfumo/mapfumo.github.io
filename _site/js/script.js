@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     cmtBtn.addEventListener("click", function(e){
         e.preventDefault();
         if(disqus_shortname === ''){
-            disqus_shortname = 'mapfumo';
+            disqus_shortname = 'datascience-mapfumo';
             dt.innerHTML = 'Loading comments...';
             (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
