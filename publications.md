@@ -6,8 +6,18 @@ sitemap:
     changefreq: weekly
     lastmod: 2015-05-30T16:31:30+05:30
 ---
-# Publications & Projects
+# Projects
 <hr>
+
+## Predicting New York Times blog popularity
+Newspapers and online news aggregators like Google News need to understand which news articles will be the most popular, so that they can prioritize the order in which stories appear. In this competition, you will predict the popularity of a set of New York Times blog articles from the time period September 2014-December 2014.
+
+This is from a past Kaggle <a href='https://www.kaggle.com/c/15-071x-the-analytics-edge-competition-spring-2015'>competition</a> from the course, <a href='https://www.edx.org/course/analytics-edge-mitx-15-071x'>The Analytics Edge,</a> that I completed a few months ago in R. This time I am going to use Python and the <a href='http://scikit-learn.org/stable/index.html'>scikit-learn</a> machine learning library.
+
+<a href='https://github.com/mapfumo/nytimes_bog_popularity/blob/master/ipython_notebook.ipynb'>iPython Notebook on Github</a>
+
+<hr>
+
 ## Shiny Application
 <b><a href='https://mapfumo.shinyapps.io/Indigenous_population'>Indigenous population, by State / Territory, 1971 to 2006</a></b>
 
