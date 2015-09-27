@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:og="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Developing Data Products with Python | Antony Mapfumo</title>
+        
+          <meta name="author" content="mapfumo">
+        
+        <meta name="title" content="Developing Data Products with Python" >
+        <link rel="icon" type="image/png" href="/favicon.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:title" content="Developing Data Products with Python" />
+<meta name="twitter:title" content="Developing Data Products with Python" />
+
+<meta name="keywords" content="R, Analytics, Data Science, Scala, Spark, Python, Machine Learning" />
+
+
+<meta name="description" content="Python has great libraries (Scikit-learn, NumPy, Scipy, Pandas, Matplotlib and Seaborn for visualisation) for data science applications and application development in general. I took the famous machine learning iris data set and developed a web based application for determining an iris variety given sepal width, sepal length, petal width and petal length.
+
+">
+<meta property="og:description" content="Python has great libraries (Scikit-learn, NumPy, Scipy, Pandas, Matplotlib and Seaborn for visualisation) for data science applications and application development in general. I took the famous machine learning iris data set and developed a web based application for determining an iris variety given sepal width, sepal length, petal width and petal length.
+
+" />
+<meta name="twitter:description" content="Python has great libraries (Scikit-learn, NumPy, Scipy, Pandas, Matplotlib and Seaborn for visualisation) for data science applications and application development in general. I took the famous machine learning iris data set and developed a web based application for determining an iris variety given sepal width, sepal length, petal width and petal length.
+
+" />
+<meta property="og:type" content="article" />
+<link rel="canonical" href="http://www.mapfumo.net/2015/09/28/developing_data_products_with_python.html" />
+
+<meta property="og:image" content="http://www.mapfumo.net/sharer.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="http://www.mapfumo.net/sharer.png" />
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    </head>
+    <body class="wrap">
+      <!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <![endif]-->
+      <header>
+  <h1 class="site-title"><a href="/">Antony Mapfumo</a></h1>
+  <nav class="main-nav">
+    <a href="#" class="opener show-on-mobiles">...</a>
+    <div class="clear-opener show-on-mobiles"></div>
+    <div class="grid">
+      <ul>
+        <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+	    <li><a href="/publications.html"><i class="fa fa-file"></i>Projects</a></li>
+	    <li><a href="/courses.html"><i class="fa fa-certificate"></i>Courses</a></li>
+		<li><a href="/scala.html"><i class="fa fa-code"></i>Scala</a></li>
+		<li><a href="/spark.html"><i class="fa-folder-open"></i>Spark</a></li>
+		<li><a href="/visualisation.html"><i class="fa fa-bar-chart"></i>Data
+		Visualisation</a></li>
+	    <li><a href="/about.html"><i class="fa fa-info-circle"></i>About</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+      <section class="content">
+        <div id="home" class="grid post">
+<div class="unit whole">
+<article>
+	<header>
+		<h1>Developing Data Products with Python</h1>
+		<p class="meta">
+			<time class="timeago postlist-meta" datetime="2015-09-28"><i class="fa fa-calendar"></i>September 28, 2015</time>
+			<a class="sharer facebook" href="#" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+window.location.href,'_blank','height=300,width=600');return false;"><i class="fa fa-facebook"></i></a>
+			
+				<a class="sharer twitter" href="#" target="_blank" onclick="window.open('https://twitter.com/share?url='+window.location.href,'_blank','height=300,width=600');return false;"><i class="fa fa-twitter"></i></a>
+			
+		</p>
+	</header>
+	<section>
+		
+		<p>Python has great libraries (Scikit-learn, NumPy, Scipy, Pandas, Matplotlib and Seaborn for visualisation) for data science applications and application development in general. I took the famous machine learning <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">iris data set</a> and developed a <a href="http://ec2-52-26-183-208.us-west-2.compute.amazonaws.com">web based application</a> for determining an iris variety given sepal width, sepal length, petal width and petal length.</p>
+
+<h2>Deployment challenges</h2>
+<p>Initially I wanted to deploy the application on <a href="https://devcenter.heroku.com/articles/getting-started-with-python#introduction">Heroku</a> but getting Scipy and Numpy to work proved too cumbersome. I tried pre-built packs with Scipy but Matplotlib would not work with those. There is a nice <a href="https://github.com/kennethreitz/conda-buildpack">Heroku Buildpack for Conda pack</a> but that blew my application beyond the <a href="https://devcenter.heroku.com/articles/limits">300MB limit</a> imposed by Heroku.</p>
+
+<p><img src="/img/iris.png" alt="Initial Screen" style="width:804px;height:628px;" /></p>
+
+<p>Next I tried <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html">Amazon Elastic Beanstalk</a> and I ran into Matplotlib issues again. My application doesn’t necessarily need to showcase the single graph in it to the user but visualisation is important for data science applications.</p>
+
+<p>My final solution was to spin up an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html">Amazon EC2 server</a> running Ubuntu Server 64-bit and install the required packages myself. Apparently the EC2 server I used comes with 1GB RAM and no swap file. While configuring Scipy, the Fortran compiler exhausted all the RAM. I had to configure a swap file first before finishing off. The adavantage this approach is that I got more explicit error messages that enabled me find solutions.</p>
+
+<p><img src="/img/iris_2.png" alt="Initial Screen" style="width:804px;height:628px;" /></p>
+<hr />
+
+<h2>Conclusion</h2>
+<p>Although this is a simple application its a launchpad for more advanced applications. And now that I have a good understanding of Flask I should have little problems in implementing future solutions using Django.</p>
+
+<p>The <a href="http://ec2-52-26-183-208.us-west-2.compute.amazonaws.com">final application</a> can be found here on Amazon and the <a href="https://github.com/mapfumo/iris-flask-app">source here on GitHub.</a></p>
+
+	</section>
+	
+	<footer>
+		<p><a href="#" id="showComments">Comments</a></p>
+		<div id="disqus_thread"></div>
+	</footer>
+	
+</article>
+</div>
+</div>
+      </section>
+      <footer class="grid site-footer">
+        <p>&copy;&nbsp;Antony Mapfumo</p>
+        <p><small>Powered by <a href="http://jekyllrb.com" target="_blank"><em>Jekyll</em></a> using <a href="http://bitwiser.in/bitwiser/" target="_blank"><em>Bitwiser</em></a> theme.</small></p>
+      </footer>
+      
+        <script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-63567996-1', 'mapfumo.net');
+	ga('require', 'displayfeatures');
+	ga('send', 'pageview');
+</script>
+
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+	Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-63567996-1', 'auto');
+		    ga('send', 'pageview');
+
+			</script>
+
+      
+      <script src="/js/script.js"></script>
+    </body>
+</html>

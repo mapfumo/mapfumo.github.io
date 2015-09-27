@@ -9,6 +9,11 @@ sitemap:
 # Projects
 <hr>
 
+## Developing Data Products with Python
+Python has great libraries (Scikit-learn, NumPy, Scipy, Pandas, Matplotlib and Seaborn for visualisation) for data science applications and application development in general. I took the famous machine learning <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">iris data set</a> and developed a <a href="http://ec2-52-26-183-208.us-west-2.compute.amazonaws.com">web based application</a> for determining an iris variety given sepal width, sepal length, petal width and petal length.
+The <a href="http://ec2-52-26-183-208.us-west-2.compute.amazonaws.com">final application</a> can be found here on Amazon and the <a href="https://github.com/mapfumo/iris-flask-app">source here on GitHub.</a>
+<hr>
+
 ## Predicting New York Times blog popularity
 Newspapers and online news aggregators like Google News need to understand which news articles will be the most popular, so that they can prioritize the order in which stories appear. In this competition, you will predict the popularity of a set of New York Times blog articles from the time period September 2014-December 2014.
 
