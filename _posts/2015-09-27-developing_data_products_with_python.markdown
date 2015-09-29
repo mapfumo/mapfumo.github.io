@@ -20,6 +20,6 @@ My final solution was to spin up an <a href="http://docs.aws.amazon.com/AWSEC2/l
 <hr>
 
 <h2>Conclusion</h2>
-Although this is a simple application its a launchpad for more advanced applications. And now that I have a good understanding of Flask I should have little problems in implementing future solutions using Django.
+Although this is a simple application it's a launchpad for more advanced applications. And now that I have a good understanding of Flask I should be comfortable in implementing future solutions using Django.
 
 The <a href="http://ec2-52-26-183-208.us-west-2.compute.amazonaws.com">final application</a> can be found here on Amazon and the <a href="https://github.com/mapfumo/iris-flask-app">source here on GitHub.</a>
