@@ -55,7 +55,7 @@ From the data we can see:-
 * identical mean (9.0) for "x" variables, identical mean (7.5) for "y" variables
 * identical variances, 11 for "x" and 4.1 for "y"
 
-Now lets plot the data:-
+Now lets plot the data.
 <pre><code class="r">
 library(ggplot2)
 anscombe_long <- data.frame()
