@@ -3,8 +3,8 @@ name: Antony Mapfumo
 ##Markdown processor
 markdown: kramdown
 ##syntax highlighter. change it to pygments
-highlighter: pygments
-
+# highlighter: pygments
+highlighter: rouge
 
 gems: [jekyll-paginate]
 
