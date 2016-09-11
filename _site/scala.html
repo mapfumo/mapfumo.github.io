@@ -3,15 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Linux tips and trips | Antony Mapfumo</title>
+        <title>Scala Programming | Antony Mapfumo</title>
         
           <meta name="author" content="mapfumo">
         
-        <meta name="title" content="Linux tips and trips" >
+        <meta name="title" content="Scala Programming" >
         <link rel="icon" type="image/png" href="/favicon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="og:title" content="Linux tips and trips" />
-<meta name="twitter:title" content="Linux tips and trips" />
+        <meta property="og:title" content="Scala Programming" />
+<meta name="twitter:title" content="Scala Programming" />
 
 <meta name="keywords" content="NS3, NS-3, Network Simulation, Python, C++, Network Programming, IEC-61850, Energy Systems, Smart Grid, Battery Storage Units (BSU)" />
 
@@ -65,8 +65,68 @@
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-<h1 id="linux-tips-and-tricks">Linux tips and tricks</h1>
-<p><strong><em><code class="highlighter-rouge">find</code> command</em></strong></p>
+<h1 id="scala">Scala</h1>
+<p>Scala is one of the languages I recommend one should have in their Data Science toolbox. To learn Scala a Java background would be ideal, other c/c++ family of languages would also be fine.
+Scala  is a functional and object-oriented programming language based on Java and compiles to the JVM. It is one of the best languages for crunching big data. Apache Spark is written in Scala.</p>
+
+<ul>
+  <li>Scala is statically typed although type information is not always necessary and it can be inferred.</li>
+  <li>Scala is functional – In Scala functions are objects making them first class values</li>
+  <li>Scala uses existing Java libraries and tools</li>
+</ul>
+
+<p><b>Declarations</b></p>
+
+<p>A variable can be declared with <code class="highlighter-rouge">var</code>(can change later on) or <code class="highlighter-rouge">val</code>(immutable)</p>
+<pre><code class="scala">
+scala&gt; var speed = 10 // we can change speed later
+scala&gt; val gravity = 10 //suitable for constants
+scala&gt; gravity = 20 // will generate an error, gravity is immutable
+</code></pre>
+<hr />
+
+<p><b>Variable type Inference</b></p>
+
+<pre><code class="scala">
+scala&gt; var x = 5 // x will be Int type
+scala&gt; x = "Antony Mapfumo" // This is illegal, error: type mismatch
+scala&gt; x = 20 // Fine, x is still an Int
+scala&gt; var x = "I am a string" // allowed, new declaration
+</code></pre>
+<p>In the above example we could have explicitily declared “x” as an Int:-</p>
+<pre><code class="scala">scala&gt; var x: Int = 5</code></pre>
+<p>It is one of the things I like about Scala as compared to Java, less typing.</p>
+<hr />
+
+<p><b>Multiple assignment with type inference</b></p>
+
+<pre><code class="scala">scala&gt; val (a, b) = (5, "I am a string")</code></pre>
+
+<p><b>“a”</b> will be assigned to Int: 5 whilst <b>“b”</b> will be String: “I am a string”</p>
+
+<hr />
+
+<p><b>Function definition and the implied return</b></p>
+
+<p>Here is a simple function to return the sum of two numbers:-</p>
+<pre><code class="scala">scala&gt; def addNums(x: Int, y: Int): Int = x + y</code></pre>
+
+<p>Notice how there is no return statement, again less typing. We can be implicit and include the return statement,</p>
+
+<pre><code>scala&gt;def addNums(x: Int, y: Int): Int = { return x+y }</code></pre>
+<hr />
+
+<h2 id="resources">Resources</h2>
+<p>For an in-depth look at Scala I recommend the following resources:-</p>
+
+<ul>
+  <li><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming - Cousera</a></li>
+  <li><a href="https://www.coursera.org/course/progfun">Functional Programming Principles in Scala - Cousera</a></li>
+</ul>
+
+<p>I found this video about Scala to be as educational as it is funny. Enjoy!</p>
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/LH75sJAR0hc" frameborder="0" allowfullscreen=""></iframe>
 
 
 	</div>

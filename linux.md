@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Scala Programming
+title: Linux tips and trips
 sitemap:
     priority: 1.0
     changefreq: weekly
@@ -10,4 +10,6 @@ sitemap:
 <script src="js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
-# Linux
+# Linux tips and tricks
+***`find` command***
+
