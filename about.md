@@ -8,22 +8,15 @@ sitemap:
 ---
 #About
 
-## Welcome to my data science journal.
+## Welcome to my PhD journal.
 
-Hi all! I am Antony Mapfumo, a data communications and data science professional, an <a href="http://www.arsenal.com/home">Arsenal</a> fan and open source advocate. For the past few years I have been showing increasing interest in Data Science particularly machine learning in network systems. 
-I have been learning data science core concepts from such great sources as <a
-href="https://www.coursera.org/specialization/jhudatascience/1">Coursera data
-science specialisation</a> MOOC and <a
-href="https://www.edx.org/course/analytics-edge-mitx-15-071x-0">EDX</a> in
-addition to countless hours of YouTube tutorials. I have also enrolled in the IBM sponsored <a href="http://bigdatauniversity.com/">Big Data University</a> and joined resourceful online forums for data  practitioners like <a href="http://www.datasciencecentral.com/">Data Science Central.</a>
-Having postgraduate and undergraduate qualifications in Computer Science has made grasping
-associated programming, statistics and
-algorithms a bit easier.
+Hi all! I am Antony Mapfumo, a data communications professional, an <a
+href="http://www.arsenal.com/home">Arsenal</a> fan and open source advocate. For
+the past few years I have been showing an increasing interest in renewable
+energy technologies with particular interest in battery storage units in the
+smart grid. To that end, I have embarked on a PhD journey in data communications
+for the smart grid at <a href="http://www.qut.edu.au">Queensland University of
+Technology</a>. My thesis is titled "Real-time communications for the
+distributed control of energy systems".
 
-I am keen on exploring the world Machine Learning and applications on a large scale.
-
-I code in <a href="http://www.scala-lang.org/">Scala</a> and <a
-href="https://www.python.org/"> Python</a>, do Statistical Computical in <a
-href="https://www.r-project.org/">R</a>, and I document in <a
-href="http://yihui.name/knitr/">knitr</a> and Markdown.
 
