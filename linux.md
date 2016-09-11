@@ -16,6 +16,6 @@ sitemap:
 # find file(s) and delete
 find . -iname "file-to-find" -exec rm -rf {} \;
 # search for files containing particular text
-grep -r "text-to-find"
+grep -r[nw] "text-to-find" # n - print line number, w - match whole word
 </code></pre>
 
