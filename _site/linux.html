@@ -66,7 +66,13 @@
 <script>hljs.initHighlightingOnLoad();</script>
 
 <h1 id="linux-tips-and-tricks">Linux tips and tricks</h1>
-<p><strong><em><code class="highlighter-rouge">find</code> command</em></strong></p>
+<p><strong><em>Searching for files and files containing particular text</em></strong></p>
+<pre><code class="bash">
+# find file(s) and delete
+find . -iname "file-to-find" -exec rm -rf {} \;
+# search for files containing particular text
+grep -r "text-to-find"
+</code></pre>
 
 
 	</div>

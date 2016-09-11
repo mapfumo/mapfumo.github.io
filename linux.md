@@ -11,5 +11,11 @@ sitemap:
 <script>hljs.initHighlightingOnLoad();</script>
 
 # Linux tips and tricks
-***`find` command***
+***Searching for files and files containing particular text***
+<pre><code class="bash">
+# find file(s) and delete
+find . -iname "file-to-find" -exec rm -rf {} \;
+# search for files containing particular text
+grep -r "text-to-find"
+</code></pre>
 
