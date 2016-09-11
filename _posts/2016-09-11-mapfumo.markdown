@@ -3,6 +3,8 @@ layout: post
 title: The IEC 61850 standard overview
 date: 2016-05-25 22:27:12
 categories: IEC-61850
+tags: [BSU, iec-61850]
+published: true
 ---
 
 The IEC 61850 is at the heart of data communications in the smart grid. The IEC (International Electrotechnical Commission) 61850 standard outlines a framework for communication between several single devices in the power system. The standard was designed to separate the data model from method of communication, address the importance of a structured approach to the design of substation automation systems, utilise existing technologies like Ethernet and TCP/IP, simplify system configuration, device measurement sharing and to enable vendor independence. Although the scope of the IEC 61850 standard was originally substation focussed applications are already operating on wide area substation-to-substation communication using various components of IEC 61850. 
