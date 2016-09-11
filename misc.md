@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Scala Programming
+title: Bits & Pieces
 sitemap:
     priority: 1.0
     changefreq: weekly

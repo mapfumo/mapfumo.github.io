@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Scala Programming
+title: Network Simulator 3 (NS-3)
 sitemap:
     priority: 1.0
     changefreq: weekly
