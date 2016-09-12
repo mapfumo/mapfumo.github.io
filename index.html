@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Antony Mapfumo
+title: Home
 sitemap:
 priority: 1.0
 changefreq: weekly
@@ -12,11 +12,13 @@ lastmod: 2014-07-07T16:57:30+05:30
 	<div class="meta-info">
 		<span class="meta"><time class="timeago postlist-meta" datetime="{{ post.date | date: "%Y-%m-%d" }}"><i class="fa fa-calendar"></i>{{ post.date | date: "%B %-d, %Y" }}</time></span>
 		{% if post.tags and post.tags.size > 0 %}
-			<div class="tags">				
-				{% include post-tags.html %}	
+			<div class="tags">
+				Tagged:
+				{% for tag in post.tags %}
+				<span><i class="fa fa-tag"></i>{{ tag }}</span>
+				{% endfor %}
 			</div>
 		{% endif %}
-		{{ content }}
 	</div>
 	<p class="description">{{ post.excerpt | strip_html}}</p>
 </div>
