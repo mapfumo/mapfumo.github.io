@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The IEC 61850 standard overview
+title: IEC 61850 standard overview
 date: 2016-05-25 22:27:12
 categories: IEC-61850
 tags: [BSU, iec-61850]
