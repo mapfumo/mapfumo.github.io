@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    <url>
+      <loc>http://www.mapfumo.net/iec-61850/2016/05/26/mapfumo.html</loc>
+      
+        <lastmod>2016-05-26T08:27:12+10:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+    </url>
+  
+  
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/about.html</loc>
+        <lastmod>2014-09-07T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/linux.html</loc>
+        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/misc.html</loc>
+        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/ns-3.html</loc>
+        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/publications.html</loc>
+        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/scala.html</loc>
+        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+  
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/spark.html</loc>
+        <lastmod>2015-08-09T20:30:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+    
+  
+    
+  
+    
+      <url>
+        <loc>http://www.mapfumo.net/visualisation.html</loc>
+        <lastmod>2015-06-10T21:01:30+10:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+       </url>
+    
+  
+</urlset>
