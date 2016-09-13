@@ -20,9 +20,9 @@ layout: default
 		{% if page.tags and page.tags.size > 0 %}
 			<div class="tags">
 				Tagged:
-				{% for tag in page.tags %}
-				<span><i class="fa fa-tag"></i>{{ tag }}</span>
-				{% endfor %}
+					  {% for tag in page.tags %}
+					    <span><i class="fa fa-tag"></i><a href="/tags#{{ tag }}" class="tag">{{ tag }}</a></span>
+					  {% endfor %}
 			</div>
 		{% endif %}
 		{{ content }}
