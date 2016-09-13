@@ -1,51 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
-    <url>
-      <loc>http://www.mapfumo.net/2015/09/28/developing_data_products_with_python.html</loc>
-      
-        <lastmod>2015-09-28T05:16:44+10:00</lastmod>
-      
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  
-    <url>
-      <loc>http://www.mapfumo.net/scala/2015/09/04/scala_tuples.html</loc>
-      
-        <lastmod>2015-09-04T05:41:26+10:00</lastmod>
-      
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  
-    <url>
-      <loc>http://www.mapfumo.net/2015/07/29/course_review_-_scalable_machine_learning.html</loc>
-      
-        <lastmod>2015-07-29T03:44:03+10:00</lastmod>
-      
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  
-    <url>
-      <loc>http://www.mapfumo.net/2015/06/29/course_review_-_introduction_to_big_data_with_apache_spark.html</loc>
-      
-        <lastmod>2015-06-29T22:50:59+10:00</lastmod>
-      
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  
-    <url>
-      <loc>http://www.mapfumo.net/2015/05/26/the_analytics_edge.html</loc>
-      
-        <lastmod>2015-05-26T08:27:12+10:00</lastmod>
-      
-      <changefreq>weekly</changefreq>
-      <priority>0.9</priority>
-    </url>
-  
   
     
   
@@ -53,15 +8,6 @@
       <url>
         <loc>http://www.mapfumo.net/about.html</loc>
         <lastmod>2014-09-07T21:01:30+10:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-       </url>
-    
-  
-    
-      <url>
-        <loc>http://www.mapfumo.net/courses.html</loc>
-        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
        </url>
@@ -81,36 +27,9 @@
     
   
     
-      <url>
-        <loc>http://www.mapfumo.net/scala.html</loc>
-        <lastmod>2015-05-30T21:01:30+10:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-       </url>
-    
   
     
   
-    
-  
-    
-      <url>
-        <loc>http://www.mapfumo.net/spark.html</loc>
-        <lastmod>2015-08-09T20:30:30+10:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-       </url>
-    
-  
-    
-  
-    
-      <url>
-        <loc>http://www.mapfumo.net/visualisation.html</loc>
-        <lastmod>2015-06-10T21:01:30+10:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-       </url>
     
   
 </urlset>
