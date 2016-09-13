@@ -3,7 +3,10 @@ name: Antony Mapfumo
 ##Markdown processor
 markdown: kramdown
 ##syntax highlighter. change it to pygments
-highlighter: pygments
+# highlighter: pygments
+highlighter: rouge
+
+gems: [jekyll-paginate]
 
 ##define base_url for valid usage in sitemap.xml and robots.txt
 base_url: http://www.mapfumo.net
@@ -14,10 +17,10 @@ paginate: 5
 paginate_path: "page:num"
 ##The website description (to be used in meta tags)
 description: >
-    PhD in Real-time communications for distributed energy systems journey.
+    PhD journey in real-time communications for distributed control of energy systems
     Smart grid, renewable energy sources. Real-time network protocol development
 ##Some frequently used keywords on your website
-keywords: NS3 Network Simulation, Python, C++, Network Programming, IEC-61850
+keywords: NS3, NS-3, Network Simulation, Python, C++, Network Programming, IEC-61850, Energy Systems, Smart Grid, Battery Storage Units (BSU)
 
 ##define this for disqus comment support
 disqus: datascience-mapfumo
@@ -25,11 +28,6 @@ disqus: datascience-mapfumo
 ##set this to enable google analytics
 ga_id: UA-63567996-1
 ga_domain: mapfumo.net
-
-
-gems: [jekyll-paginate, jekyll-gist]
-
-
 
 ##Some commonly used links
 links:
