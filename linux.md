@@ -19,3 +19,6 @@ find . -iname "file-to-find" -exec rm -rf {} \;
 grep -r[nw] "text-to-find" # n - print line number, w - match whole word
 </code></pre>
 
+### <a href="http://www.tecmint.com/20-funny-commands-of-linux-or-linux-is-fun-in-terminal/">20 Funny Linux Commands: Linux is Fun in Terminal</a>
+
+
