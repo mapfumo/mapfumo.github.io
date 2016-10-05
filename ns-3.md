@@ -36,7 +36,7 @@ python-kiwi python-pygoocanvas libgoocanvas-dev python-pygccxml
 
 ***Download NS-3 (current version is 3.26 as of this writing)***
 <pre><code class="bash">
-http://www.nsnam.org/release/ns-allinone-3.26.tar.bz2
+wget http://www.nsnam.org/release/ns-allinone-3.26.tar.bz2
 tar xfj ns-allinone-3.26.tar.bz2
 cd ns-allinone-3.26
 </code></pre>
