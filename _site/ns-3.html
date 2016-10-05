@@ -68,7 +68,7 @@
 
 <h1 id="network-simulator-3-ns-3">Network Simulator 3 (NS-3)</h1>
 
-<h3 id="introduction"><strong><em>Introduction</em></strong></h3>
+<h2 id="introduction"><strong><em>Introduction</em></strong></h2>
 <p>One of the tools that I will be using for my research is <a href="https://www.nsnam.org/">NS-3</a> (Network Simulator
 Version 3). NS-3 is a discrete-event network simulator written in C++ with
 Python bindings, targeted primarily for
@@ -77,8 +77,33 @@ Discrete event simulation models the behaviour of a complex system as an ordered
 well-defined events. Time moves discretely from event to event.
 This contrasts with continuous simulation in which the simulation continuously tracks the system dynamics over time.</p>
 
-<h3 id="installation"><strong><em>Installation</em></strong></h3>
-<p>Installation instructions can be found <a href="https://www.nsnam.org/wiki/Installation">here</a></p>
+<h2 id="installation-on-ubuntu-1604"><strong><em>Installation on Ubuntu 16.04</em></strong></h2>
+<p><strong><em>Install prerequisites</em></strong></p>
+<pre><code class="bash">
+sudo apt-get install gcc g++ python python-dev mercurial bzr gdb valgrind
+gsl-bin libgsl0-dev libgsl2 flex bison tcpdump sqlite sqlite3 libsqlite3-dev
+libxml2 libxml2-dev libgtk2.0-0 libgtk2.0-dev uncrustify doxygen graphviz
+imagemagick texlive texlive-latex-extra texlive-generic-extra
+texlive-generic-recommended texinfo dia texlive texlive-latex-extra
+texlive-extra-utils texlive-generic-recommended texi2html python-pygraphviz
+python-kiwi python-pygoocanvas libgoocanvas-dev python-pygccxml
+</code></pre>
+
+<p><strong><em>Download NS-3 (current version is 3.26 as of this writing)</em></strong></p>
+<pre><code class="bash">
+http://www.nsnam.org/release/ns-allinone-3.26.tar.bz2
+tar xfj ns-allinone-3.26.tar.bz2
+cd ns-allinone-3.26
+</code></pre>
+
+<p><strong><em>Build, configure and test</em></strong></p>
+<pre><code class="bash">
+./build.py --enable-examples --enable-tests
+cd ns-3.26
+./waf -d debug --enable-examples --enable-tests configure
+./waf
+./test.py
+</code></pre>
 
 <h3 id="configure-eclipse-for-ns-3-coding"><strong><em>Configure Eclipse for NS-3 Coding</em></strong></h3>
 <ol>
@@ -86,27 +111,27 @@ This contrasts with continuous simulation in which the simulation continuously t
   <li>Start <strong>eclipse</strong> and configure <strong>mercurial</strong>. You do this by going to
 <strong><em>Help</em></strong> -&gt; <strong><em>Eclipse Marketplace…</em></strong> and search for <strong><em>“MercurialEclipse
 Project”</em></strong></li>
-  <li>Create a new C++ project (let’s call its it ns325) in the ns-3 root folder. Select <strong><em>Cross GCC</em></strong> as
+  <li>Create a new C++ project (let’s call its it ns326) in the ns-3 root folder. Select <strong><em>Cross GCC</em></strong> as
 the ToolChain {This is important}. Click <strong><em>Next</em></strong>, leave “Debug” and “Release”
 selected for now and click <strong><em>Next</em></strong> and <strong><em>Finish</em></strong></li>
-  <li>Right click on your project (ns325 in my case), select <strong><em>Team</em></strong> -&gt; <strong><em>Share
+  <li>Right click on your project (ns326 in my case), select <strong><em>Team</em></strong> -&gt; <strong><em>Share
 Project…</em></strong>. Select <strong><em>Mercurial</em></strong> then <strong><em>Next</em></strong> and <strong><em>Finish</em></strong></li>
   <li>The next thing to do is to configure <strong><em>WAF</em></strong>. Right click on the project
-(ns325 in my case) and choose properties. Select <strong><em>C/C++ Build</em></strong> and
+(ns326 in my case) and choose properties. Select <strong><em>C/C++ Build</em></strong> and
 uncheck “Use default build command” and “Generate Makefiles automatically”.
 Replace “Build command” with {your-project-path/waf}. In my case that would
-be <strong><em>/home/tony/ns-allinone-3.25/ns-3.25/waf</em></strong> and configure Build
+be <strong><em>/home/tony/ns-allinone-3.26/ns-3.26/waf</em></strong> and configure Build
 directory as {your-project-path/build},
-<strong><em>/home/tony/ns-allinone-3.25/ns-3.25/build</em></strong> in my case. Select
+<strong><em>/home/tony/ns-allinone-3.26/ns-3.26/build</em></strong> in my case. Select
 <strong><em>Behavior</em></strong> tab and uncheck everything. Select <strong><em>Build (incremental
 build)</em></strong> again and type <strong><em>build</em></strong> then select <strong><em>Clean</em></strong> and <strong><em>Stop on
 first build error</em></strong> and click <strong><em>OK</em></strong></li>
   <li>The last thing is to configure the debugger. Click <strong><em>Run</em></strong> -&gt; <strong><em>Debug
-Configurations</em></strong> -&gt; Under <strong><em>Project:</em></strong> click on browse and select your project (ns325 in my case),
+Configurations</em></strong> -&gt; Under <strong><em>Project:</em></strong> click on browse and select your project (ns326 in my case),
 under <strong><em>C/C++ Application</em></strong> type and select <strong><em>scratch-simulator</em></strong>.
 [Remove any spaces under project <strong><em>Name</em></strong>. Select
 <strong><em>Environment tab</em></strong> and click <strong><em>New..</em></strong> variable and add <strong><em>LD_LIBRARY_PATH</em></strong> under name 
-and <strong><em>{Your project path}/build</em></strong>, /home/tony/ns-allinone-3.25/ns-3.25/build in my case.
+and <strong><em>{Your project path}/build</em></strong>, /home/tony/ns-allinone-3.26/ns-3.26/build in my case.
 Apply and close.</li>
 </ol>
 
