@@ -38,8 +38,9 @@ python-kiwi python-pygoocanvas libgoocanvas-dev python-pygccxml
 <pre><code class="bash">
 wget http://www.nsnam.org/release/ns-allinone-3.26.tar.bz2
 tar xfj ns-allinone-3.26.tar.bz2
-cd ns-allinone-3.26
+cd ns-allinone-3.26 
 </code></pre>
+
 
 ***Build, configure and test***
 <pre><code class="bash">
