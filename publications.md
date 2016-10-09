@@ -23,5 +23,5 @@ UltraFlow is an application for collecting and analysing Cisco Netflow data. It
 is written in Python, wxPython, Matplotlib, SQLite and the Python based Twisted network
 programming framework.
 <p><a href='img/netflow.pdf'>Download PDF</a></p>
-<p><a href='https://github.com/mapfumo/netflow'>Download source code on GitHub</a></p>
+<p><a href='https://github.com/mapfumo/netflow'>Download source code from GitHub</a></p>
 
