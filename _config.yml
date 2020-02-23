@@ -17,10 +17,10 @@ paginate: 5
 paginate_path: "page:num"
 ##The website description (to be used in meta tags)
 description: >
-    PhD journey in real-time communications for distributed control of energy systems
+    Machine learning (deep learning) journey. PhD journey in real-time communications for distributed control of energy systems
     Smart grid, renewable energy sources. Real-time network protocol development
 ##Some frequently used keywords on your website
-keywords: NS3, NS-3, Network Simulation, Python, C++, Network Programming, IEC-61850, Energy Systems, Smart Grid, Battery Storage Units (BSU)
+keywords: Deep Learning, NS-3, Network Simulation, Python, C++, Network Programming, IEC-61850, Energy Systems, Smart Grid, Battery Storage Units (BSU)
 
 ##define this for disqus comment support
 disqus: datascience-mapfumo
@@ -40,3 +40,5 @@ links:
 about_image: ants.jpg
 ##comment this if you want full width posts with no sidebar
 sidebar: on
+## Date/future issues
+future: true
