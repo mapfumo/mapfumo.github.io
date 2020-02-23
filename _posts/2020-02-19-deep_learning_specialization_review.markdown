@@ -45,7 +45,7 @@ Of the 5 courses this is the least technical. Here are some takeaways from the c
 
 #### Course 4 - Convolutional Neural Networks
 
-This was the most enjoyable (maybe because I am interested in computer vision) of the 5 courses as the explanations and examples were very clear. I enjoyed the [YOLO](https://pjreddie.com/darknet/yolo/) object detection algorithm section. This course will teach you how to build convolutional neural networks and apply it to image data. The main section are:-
+This was the most enjoyable (maybe because I am interested in computer vision) of the 5 courses as the explanations and examples were very clear. I enjoyed the [YOLO](https://pjreddie.com/darknet/yolo/) object detection algorithm section. This course will teach you how to build convolutional neural networks and apply it to image data. The main sections are:-
 
 - Foundations of Convolutional Neural Networks
 - Deep convolutional models: case studies
@@ -56,7 +56,7 @@ This was the most enjoyable (maybe because I am interested in computer vision) o
 
 In this course you learn about recurrent neural networks, RNNs, and its LSTMs, GRUs and Bidirectional RNNs variants. 
 
-Using word vector representations and embedding layers you can train recurrent neural networks. Examplesapplications are sentiment analysis, named entity recognition and machine translation.
+Using word vector representations and embedding layers you can train recurrent neural networks. Example applications are sentiment analysis, named entity recognition and machine translation.
 
 #### Conclusion
 
