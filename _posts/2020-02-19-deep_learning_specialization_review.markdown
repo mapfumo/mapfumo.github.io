@@ -13,7 +13,7 @@ I have just completed [Andrew Ng's](https://www.coursera.org/instructor/andrewng
 
 #### Course 1 - Neural Networks and Deep Learning
 
-This is the first course of the specialisation. This is a good course of you are just getting started with deep learning. I already had a solid foundation of neural networks and deep learning from reading several books and watching YouTube videos. I was however pleasantly surprised by the way Andrew explained the concepts. Here are some of the highlights:-
+This is the first course of the specialisation. This is a good course if you are just getting started with deep learning. I already had a good foundation of neural networks and deep learning from reading several books and watching YouTube videos. I was however pleasantly surprised by the way Andrew explained the concepts in this course. Here are some of the highlights:-
 
 1. Deep neural networks from the first principles, overview (representation and mathematical concepts), logistic regression
 2. Derivatives - the mathematical application of derivatives to deep learning algorithms like *gradient descent* and *backpropagation* are introduced. It is very helpful is you have prior knowledge of calculus however the instructor does well to explain the applicable concepts here.
@@ -22,7 +22,9 @@ This is the first course of the specialisation. This is a good course of you are
 
 #### Course 2 - Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
 
-This is one of the shortest (the other being Sequence Models) of the five courses with a 3 weeks completion time recommendation. I think the concepts in this course are important enough to covered comprehensively in about 5 weeks. *Regularisation* as a solution to the problem of over-fitting is explained. In addition to *dropout* and *L2 regularisation* other techniques like *data augmentation* (increasing data diversity by cropping and padding for example) *early stopping* are explained. Solutions to the vanishing gradient problem like choosing reasonable scaling when initialising the weights. Optimisation techniques include mini-batch gradient descent. Ability to  implement and apply a variety of other optimisation algorithms as *Momentum, RMSprop* and *Adam*, and check  for their convergence. Implementing neural networks in TensorFlow version 1.x is introduced. I would suggest introducing version 2.0 as it has been out for a while.
+This is one of the shortest (the other being Sequence Models) of the five courses with a 3 week completion time recommendation. I think the concepts in this course are important enough to be covered comprehensively in about 5 weeks. 
+
+*Regularisation* as a solution to the problem of over-fitting is explained. In addition to *dropout* and *L2 regularisation* other techniques like *data augmentation* (increasing data diversity by cropping and padding for example) *early stopping* are explained. Solutions to the vanishing gradient problem like choosing reasonable scaling when initialising the weights. Optimisation techniques include mini-batch gradient descent. Ability to  implement and apply a variety of other optimisation algorithms as *Momentum, RMSprop* and *Adam*, and check  for their convergence. Implementing neural networks in TensorFlow version 1.x is introduced. I would suggest introducing version 2.0 as it has been out for a while.
 
 #### Course 3 - Structuring Machine Learning Projects
 
