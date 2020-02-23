@@ -13,7 +13,7 @@ I have just completed [Andrew Ng's](https://www.coursera.org/instructor/andrewng
 
 #### Course 1 - Neural Networks and Deep Learning
 
-This is the first course of the specialisation. This is a good course if you are just getting started with deep learning. I already had a good foundation of neural networks and deep learning from reading several books and watching YouTube videos. I was however pleasantly surprised by the way Andrew explained the concepts in this course. Here are some of the highlights:-
+This is the first course in the specialisation. This is a good course if you are just getting started with deep learning. I already had a good foundation of neural networks and deep learning from reading several books and watching YouTube videos. I was however pleasantly surprised by the way Andrew explained the concepts in this course. Here are some of the highlights:-
 
 1. Deep neural networks from the first principles, overview (representation and mathematical concepts), logistic regression
 2. Derivatives - the mathematical application of derivatives to deep learning algorithms like *gradient descent* and *backpropagation* are introduced. It is very helpful is you have prior knowledge of calculus however the instructor does well to explain the applicable concepts here.
