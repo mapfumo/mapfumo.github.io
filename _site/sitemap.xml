@@ -2,6 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
     <url>
+      <loc>http://www.mapfumo.net/python/2020/02/21/iris-flask.html</loc>
+      
+        <lastmod>2020-02-22T03:41:28+10:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+    </url>
+  
+    <url>
       <loc>http://www.mapfumo.net/deep-learning/2020/02/15/deep_learning_specialization_review.html</loc>
       
         <lastmod>2020-02-15T12:27:12+10:00</lastmod>
