@@ -1,24 +1,23 @@
 ---
 layout: post
-title: Deep Learning Specialisation - A Brief Course Review
+title: Programming with Google Go Specialization - A Brief Course Review
 date: 2020-11-23 19:55:12
 categories: software-development
 tags: [software-development, courses]
 typora-root-url: ../img
 ---
 
-I have just completed [Andrew Ng's](https://www.coursera.org/instructor/andrewng) [Deep Learning Specialisation](https://www.coursera.org/specializations/deep-learning) course by [deeplearning.ai](https://www.deeplearning.ai/) available through [Coursera](http://bit.ly/2WjYrPB). This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful. I found the assignments to reasonably difficult. The only thing I didn't like is that by forcing you to complete the given code (complete missing blanks) you are a bit constrained. For example it would be nice to state the function signature and leave it to the student to implement it in their own way. The good thing is that one can always make such suggestions through the forums. The courses don't have to be completed in any particular order but I found it more helpful to follow the suggested order.
+Go or [GoLang](golang.org) is an open source statically typed language that was created at Google by Rob Pike, Robert Griesemer, and Ken Thompson. It first appeared in Nov 2009 and has been rapidly gaining in popularity. Some of the language's highlights include clean and highly accessible syntax, garbage collection,  amazing native concurrency, fast compilation speed, excellent tooling, builtin documentation, good cross-platform support, ORM (Object-relational mapping ) library called GORM and excellent support for micro-services. 
+
+I have just completed the ["Programming with Google Go Specialization"](https://www.coursera.org/specializations/google-golang?) course by University of California, Irvine available through [Coursera](http://bit.ly/2WjYrPB) and Instructed by [Professor Ian Harris](https://www.coursera.org/instructor/ianharris). This is my summary and opinion of the course offering. The specialisation consists of 3 courses (Getting Started with Go, Functions, Methods, and Interfaces in Go, Concurrency in Go) and it is suggested that they be completed in 3 months by devoting 2 hours per week.
 
 
 
-#### Course 1 - Neural Networks and Deep Learning
+#### Course 1 - Getting Started with Go
 
-This is the first course in the specialisation. This is a good course if you are just getting started with deep learning. I already had a good foundation of neural networks and deep learning from reading several books and watching YouTube videos. I was however pleasantly surprised by the way Andrew explained the concepts in this course. Here are some of the highlights:-
 
-1. Deep neural networks from the first principles, overview (representation and mathematical concepts), logistic regression
-2. Derivatives - the mathematical application of derivatives to deep learning algorithms like *gradient descent* and *backpropagation* are introduced. It is very helpful is you have prior knowledge of calculus however the instructor does well to explain the applicable concepts here.
-3. Vectorization - the importance of avoiding "for loops" in your code and appreciation of the speed advantage gained by vectorisation offered by the *numpy* Python library when implementing deep learning algorithms
-4. Activation functions
+
+This is the first course in the specialisation. Here you are introduced to the specialization. You will  learn the basics like data types (strings, integers, floating points, etc) and complex types like maps, structs and slices. If you have used other languages like Java, C/C++ or Python the syntax and concepts and applied to Go will be easy to grasp.
 
 #### Course 2 - Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
 
