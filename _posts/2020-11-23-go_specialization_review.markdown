@@ -35,7 +35,7 @@ An interesting demonstration of concurrent algorithms and synchronisation issues
 
 #### Conclusion
 
-This is an intermediate Golang course and sets the a foundation for exploring more advanced topics. The forums are helpful for general discussion and assignments should you get stuck.
+This is an intermediate Golang course and sets asolid foundation for exploring more advanced topics. The forums are helpful for general discussion and assignments should you get stuck.
 
 You get a certificate after successfully completing each course in the specialisation and a final [verified deep learning certificate](https://www.coursera.org/account/accomplishments/specialization/KKHD53ZLEVNL) upon finishing all 3 courses. ![](/img/go_programming_certificate_specialisation.png)
 
