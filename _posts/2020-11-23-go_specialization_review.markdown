@@ -30,7 +30,7 @@ In this course the need for concurrency in relation to microprocessor performanc
 
 
 
-An interesting demonstration of concurrent algorithms and synchronisation issues is the final classic ["Dining Philosopher"]() https://en.wikipedia.org/wiki/Dining_philosophers_problem) programming assignment.
+An interesting demonstration of concurrent algorithms and synchronisation issues is the final classic ["Dining Philosopher"](https://en.wikipedia.org/wiki/Dining_philosophers_problem) programming assignment.
 
 #### Conclusion
 
