@@ -4,7 +4,6 @@ title: Programming with Google Go Specialization - A Brief Course Review
 date: 2020-11-23 19:55:12
 categories: software-development
 tags: [software-development, courses]
-typora-root-url: ../img
 ---
 
 Go or [GoLang](golang.org) is an open source statically typed language that was created at Google by Rob Pike, Robert Griesemer, and Ken Thompson. It first appeared in Nov 2009 and has been rapidly gaining in popularity. Some of the language's highlights include clean and highly accessible syntax, garbage collection,  amazing native concurrency, fast compilation speed, excellent tooling, builtin documentation, good cross-platform support, ORM (Object-relational mapping ) library called GORM and excellent support for micro-services. 
@@ -35,7 +34,7 @@ An interesting demonstration of concurrent algorithms and synchronisation issues
 
 #### Conclusion
 
-This is an intermediate Golang course and sets asolid foundation for exploring more advanced topics. The forums are helpful for general discussion and assignments should you get stuck.
+This is an intermediate Golang course and sets a solid foundation for exploring more advanced topics. The forums are helpful for general discussion and assignments should you get stuck.
 
 You get a certificate after successfully completing each course in the specialisation and a final [verified deep learning certificate](https://www.coursera.org/account/accomplishments/specialization/KKHD53ZLEVNL) upon finishing all 3 courses. ![](/img/go_programming_certificate_specialisation.png)
 
