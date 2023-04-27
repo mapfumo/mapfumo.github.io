@@ -5,7 +5,7 @@ layout:
     
 ---
 
-![Antony Mapfumo](/img/ants-golden-arsenal.jpg#about_image "Antony Mapfumo")
+![Antony Mapfumo](/img/ants-golden-arsenal.jpg#floatleft "Antony Mapfumo")
 
 Welcome to my blog! I'm Antony, a data communications professional with a passion for Applied Blockchain technologies and software development. I'm also a huge fan of [Arsenal football club](https://www.arsenal.com/), and I'm passionate about renewable energy and open-source software.
 
