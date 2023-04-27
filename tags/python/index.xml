@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>python on Antony Mapfumo</title>
+    <link>https://mapfumo.github.io/tags/python/</link>
+    <description>Recent content in python on Antony Mapfumo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 27 Apr 2023 12:02:35 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning web application using Python, Scikit-Learn, Flask</title>
+      <link>https://mapfumo.github.io/posts/machine-learning-flask/</link>
+      <pubDate>Thu, 27 Apr 2023 12:02:35 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/machine-learning-flask/</guid>
+      <description>The scikit-learn Iris data-set consists of 3 (Setosa, Versicolour, and Virginica) species (50 samples per species, for a total of 150 samples) of the iris flower. Each sample has four measurements: sepal length, sepal width, petal length, petal width. Given these measurements a machine learning model can predict the iris specie with a high degree of accuracy. Here I demonstrate a machine learning web application using Python, Scikit-Learn machine learning library and Flask web framework.</description>
+    </item>
+    
+    <item>
+      <title>Deep Learning Specialisation - A Brief Course Review</title>
+      <link>https://mapfumo.github.io/posts/deep_learning_specialisation/</link>
+      <pubDate>Fri, 21 Apr 2023 18:00:58 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/deep_learning_specialisation/</guid>
+      <description>I have just completed Andrew Ng&amp;rsquo;s Deep Learning Specialisation course by deeplearning.ai available through Coursera. This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful.</description>
+    </item>
+    
+  </channel>
+</rss>
