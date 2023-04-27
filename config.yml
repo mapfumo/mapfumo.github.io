@@ -6,11 +6,11 @@ theme: PaperMod
 
 params:
   assets:
-    favicon: "img/favicon.png"
+    favicon: "/img/favicon.png"
   disableThemeToggle: false
   defaultTheme: dark
   homeInfoParams:
-    Title: "Welcome"
+    Title: "Welcome / Mauya / Siyalemukela"
     Content: Welcome to my tech blog where I share insights on distributed systems, 
               applied blockchain, open source software (OSS), and software development.
   socialIcons:
