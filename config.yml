@@ -1,0 +1,54 @@
+baseURL: "https://www.mapfumo.net"
+languageCode: en-us
+title: Antony Mapfumo
+paginate: 3
+theme: PaperMod
+
+params:
+  assets:
+    favicon: "img/favicon.png"
+  disableThemeToggle: false
+  defaultTheme: dark
+  homeInfoParams:
+    Title: "Welcome"
+    Content: Welcome to my tech blog where I share insights on distributed systems, 
+              applied blockchain, open source software (OSS), and software development.
+  socialIcons:
+    - name: twitter
+      url: "https://twitter.com/mapfumo"
+    - name: github
+      url: "https://github.com/mapfumo"
+    - name: email
+      url: "mailto:mapfumo@icloud.com"
+ 
+           
+  cover:
+    linkFullImages: true
+
+  ShowBreadCrumbs: true
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+
+menu:
+  main:
+    - identifier: categories
+      name: Categories
+      url: /categories/
+      weight: 5
+    - identifier: portfolio
+      name: Portfolio
+      url: /portfolio/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 15
+    - identifier: archives
+      name: Archives
+      url: /archives/
+      weight: 20
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 25
