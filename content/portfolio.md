@@ -29,7 +29,7 @@ Abstract — Australia Post operates optical character recognition based mail so
 
 ### Cisco NetFlow Collector and Analyser
 
-Abstract — unUltraFlow is an application for collecting and analysing Cisco Netflow data. It
+Abstract — UltraFlow is an application for collecting and analysing Cisco Netflow data. It
 is written in Python, wxPython, Matplotlib, SQLite and the Python based Twisted network
 programming framework.
 A prototype was developed in Python. The source code is available on [GitHub](https://github.com/mapfumo/netflow)
