@@ -11,8 +11,7 @@ params:
   defaultTheme: dark
   homeInfoParams:
     Title: "Welcome / Mauya / Siyalemukela"
-    Content: Welcome to my tech blog where I share insights on distributed systems, 
-              applied blockchain, open source software (OSS), and software development.
+    Content: Welcome to my tech blog where I share insights into data communications, distributed systems, machine learning, Event-Driven Systems, Microservices, distributed energy systems, open source software, design science research, and software development.
   socialIcons:
     - name: twitter
       url: "https://twitter.com/mapfumo"
@@ -20,8 +19,7 @@ params:
       url: "https://github.com/mapfumo"
     - name: email
       url: "mailto:mapfumo@icloud.com"
- 
-           
+
   cover:
     linkFullImages: true
 
