@@ -38,6 +38,10 @@ menu:
       name: Portfolio
       url: /portfolio/
       weight: 10
+    - identifier: tutorials
+      name: Tutorials
+      url: /tutorials/
+      weight: 12
     - identifier: tags
       name: Tags
       url: /tags/
