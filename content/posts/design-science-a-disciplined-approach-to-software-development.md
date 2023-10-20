@@ -6,8 +6,8 @@ cover:
     image: /img/software.jpg
     alt: 'Antony mapfumo - Design Science Research'
     caption: 'Artifacts are software applications, user interfaces, prototypes, Prototypes, etc.'
-tags: ["python", "deep learning"]
-categories: ["AI", "Tech"]
+tags: ["research"]
+categories: ["Software Development"]
 ---
 
 In the dynamic realm of software development, the pursuit of effective problem-solving methodologies is ceaseless. One approach gaining increasing recognition is Design Science, a disciplined methodology that seamlessly blends scientific inquiry and practical application. In this blog post, I delve into the importance of Design Science in the context of software development, focusing on its disciplined and systematic nature.
