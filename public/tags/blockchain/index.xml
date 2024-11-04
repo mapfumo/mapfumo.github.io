@@ -2,27 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>blockchain on Antony Mapfumo</title>
-    <link>https://www.mapfumo.net/tags/blockchain/</link>
+    <link>https://mapfumo.github.io/tags/blockchain/</link>
     <description>Recent content in blockchain on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Apr 2023 15:30:45 +1000</lastBuildDate><atom:link href="https://www.mapfumo.net/tags/blockchain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Nov 2024 07:29:49 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/tags/blockchain/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Genesis</title>
-      <link>https://www.mapfumo.net/posts/welcome/</link>
-      <pubDate>Thu, 13 Apr 2023 15:30:45 +1000</pubDate>
+      <title>You Can&#39;t Escape Rust: Rust for Blockchain</title>
+      <link>https://mapfumo.github.io/posts/you-cant-escape-rust/</link>
+      <pubDate>Mon, 04 Nov 2024 07:29:49 +1000</pubDate>
       
-      <guid>https://www.mapfumo.net/posts/welcome/</guid>
-      <description>Welcome to my technical journal and random posts.</description>
-    </item>
-    
-    <item>
-      <title>Second</title>
-      <link>https://www.mapfumo.net/posts/second/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.mapfumo.net/posts/second/</guid>
-      <description>This is a second post</description>
+      <guid>https://mapfumo.github.io/posts/you-cant-escape-rust/</guid>
+      <description>I thought I could “get away with it”—avoiding Rust, that is. A few years back, I started trying to learn Rust, but honestly, it was for all the wrong reasons. I thought it would just be &amp;ldquo;cool to know.&amp;rdquo; As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler. Fast forward to 2024, and my career path has taken me deeper into blockchain development.</description>
     </item>
     
   </channel>

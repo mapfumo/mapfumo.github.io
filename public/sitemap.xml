@@ -2,35 +2,81 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.mapfumo.net/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/tags/blockchain/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/categories/blockchain/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/categories/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/tags/blockchain/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/posts/welcome/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/categories/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/tags/linux/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/posts/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/posts/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/tags/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/categories/sport/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/posts/you-cant-escape-rust/</loc>
+    <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/tags/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</loc>
+    <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/categories/tech/</loc>
-    <lastmod>2023-04-13T15:30:45+10:00</lastmod>
+    <loc>https://mapfumo.github.io/tags/research/</loc>
+    <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/archives/</loc>
+    <loc>https://mapfumo.github.io/categories/software-development/</loc>
+    <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>https://www.mapfumo.net/posts/second/</loc>
+    <loc>https://mapfumo.github.io/tags/dev/</loc>
+    <lastmod>2023-04-27T12:02:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/categories/machine-learning/</loc>
+    <lastmod>2023-04-27T12:02:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/posts/machine-learning-flask/</loc>
+    <lastmod>2023-04-27T12:02:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/tags/python/</loc>
+    <lastmod>2023-04-27T12:02:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/tags/go/</loc>
+    <lastmod>2023-04-22T17:33:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/posts/go_specialisation/</loc>
+    <lastmod>2023-04-22T17:33:35+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/categories/ai/</loc>
+    <lastmod>2023-04-21T18:00:58+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/tags/deep-learning/</loc>
+    <lastmod>2023-04-21T18:00:58+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/posts/deep_learning_specialisation/</loc>
+    <lastmod>2023-04-21T18:00:58+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/categories/tech/</loc>
+    <lastmod>2023-04-21T18:00:58+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/posts/iec-61850/</loc>
+    <lastmod>2022-04-22T18:30:41+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/categories/network-engineering/</loc>
+    <lastmod>2022-04-22T18:30:41+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/tags/smart-grid/</loc>
+    <lastmod>2022-04-22T18:30:41+10:00</lastmod>
+  </url><url>
+    <loc>https://mapfumo.github.io/about/</loc>
+  </url><url>
+    <loc>https://mapfumo.github.io/archives/</loc>
+  </url><url>
+    <loc>https://mapfumo.github.io/portfolio/</loc>
+  </url><url>
+    <loc>https://mapfumo.github.io/tutorials/</loc>
   </url>
 </urlset>

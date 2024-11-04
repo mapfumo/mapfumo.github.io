@@ -10,7 +10,7 @@ tags: ["blockchain"]
 categories: ["Blockchain"]
 ---
 
-I thought I could “get away with it”—avoiding Rust, that is. A few years back, I started trying to learn Rust, but honestly, it was for all the wrong reasons. I thought it would just be "cool to know." As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler.
+I thought I could “get away with it” — avoiding Rust, that is. A few years back, I started learning Rust, but honestly, it was for all the wrong reasons. I thought it would be just "cool to know" this relatively young language. As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler.
 Fast forward to 2024, and my career path has taken me deeper into blockchain development. Naturally, Solidity dominates on the Ethereum network, but anyone who’s built on Ethereum knows the pain of high gas fees and relatively long block times. That got me exploring alternatives, and that’s when I came across the Solana blockchain. Rust is the main language for Solana, so here I am again, facing off with Rust. Sure, you can also write Solana programs (smart contracts in the Ethereum world) in Python, C, or C++, but Rust is the gold standard here.
 Last time, I tried to brute-force my way through learning Rust and got discouraged, particularly by the borrow checker. But now I’m approaching it differently, taking my time and following what works. Here’s what I’ve found to be the best way to learn Rust:
 

@@ -2,27 +2,64 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Antony Mapfumo</title>
-    <link>https://www.mapfumo.net/posts/</link>
+    <link>https://mapfumo.github.io/posts/</link>
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Apr 2023 15:30:45 +1000</lastBuildDate><atom:link href="https://www.mapfumo.net/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Nov 2024 07:29:49 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Genesis</title>
-      <link>https://www.mapfumo.net/posts/welcome/</link>
-      <pubDate>Thu, 13 Apr 2023 15:30:45 +1000</pubDate>
+      <title>You Can&#39;t Escape Rust: Rust for Blockchain</title>
+      <link>https://mapfumo.github.io/posts/you-cant-escape-rust/</link>
+      <pubDate>Mon, 04 Nov 2024 07:29:49 +1000</pubDate>
       
-      <guid>https://www.mapfumo.net/posts/welcome/</guid>
-      <description>Welcome to my technical journal and random posts.</description>
+      <guid>https://mapfumo.github.io/posts/you-cant-escape-rust/</guid>
+      <description>I thought I could “get away with it”—avoiding Rust, that is. A few years back, I started trying to learn Rust, but honestly, it was for all the wrong reasons. I thought it would just be &amp;ldquo;cool to know.&amp;rdquo; As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler. Fast forward to 2024, and my career path has taken me deeper into blockchain development.</description>
     </item>
     
     <item>
-      <title>Second</title>
-      <link>https://www.mapfumo.net/posts/second/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>Design Science: A Disciplined Approach to Software Development</title>
+      <link>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</link>
+      <pubDate>Fri, 20 Oct 2023 14:20:17 +1000</pubDate>
       
-      <guid>https://www.mapfumo.net/posts/second/</guid>
-      <description>This is a second post</description>
+      <guid>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</guid>
+      <description>In the dynamic realm of software development, the pursuit of effective problem-solving methodologies is ceaseless. One approach gaining increasing recognition is Design Science, a disciplined methodology that seamlessly blends scientific inquiry and practical application. In this blog post, I delve into the importance of Design Science in the context of software development, focusing on its disciplined and systematic nature.
+Understanding Design Science Design Science, as articulated by Johannesson and Perjons, revolves around the scientific exploration and creation of artifacts aimed at addressing real-world issues of general interest.</description>
+    </item>
+    
+    <item>
+      <title>Machine Learning web application using Python, Scikit-Learn, Flask</title>
+      <link>https://mapfumo.github.io/posts/machine-learning-flask/</link>
+      <pubDate>Thu, 27 Apr 2023 12:02:35 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/machine-learning-flask/</guid>
+      <description>The scikit-learn Iris data-set consists of 3 (Setosa, Versicolour, and Virginica) species (50 samples per species, for a total of 150 samples) of the iris flower. Each sample has four measurements: sepal length, sepal width, petal length, petal width. Given these measurements a machine learning model can predict the iris specie with a high degree of accuracy. Here I demonstrate a machine learning web application using Python, Scikit-Learn machine learning library and Flask web framework.</description>
+    </item>
+    
+    <item>
+      <title>Programming with Google Go Specialization - A Brief Course Review</title>
+      <link>https://mapfumo.github.io/posts/go_specialisation/</link>
+      <pubDate>Sat, 22 Apr 2023 17:33:35 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/go_specialisation/</guid>
+      <description>Go or GoLang is an open source statically typed language that was created at Google by Rob Pike, Robert Griesemer, and Ken Thompson. It first appeared in Nov 2009 and has been rapidly gaining in popularity. Some of the language&amp;rsquo;s highlights include clean and highly accessible syntax, garbage collection, amazing native concurrency, fast compilation speed, excellent tooling, builtin documentation, good cross-platform support, ORM (Object-relational mapping ) library called GORM and excellent support for micro-services.</description>
+    </item>
+    
+    <item>
+      <title>Deep Learning Specialisation - A Brief Course Review</title>
+      <link>https://mapfumo.github.io/posts/deep_learning_specialisation/</link>
+      <pubDate>Fri, 21 Apr 2023 18:00:58 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/deep_learning_specialisation/</guid>
+      <description>I have just completed Andrew Ng&amp;rsquo;s Deep Learning Specialisation course by deeplearning.ai available through Coursera. This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful.</description>
+    </item>
+    
+    <item>
+      <title>Iec 61850</title>
+      <link>https://mapfumo.github.io/posts/iec-61850/</link>
+      <pubDate>Fri, 22 Apr 2022 18:30:41 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/iec-61850/</guid>
+      <description>The IEC 61850 is at the heart of data communications in the smart grid. The IEC (International Electrotechnical Commission) 61850 standard outlines a framework for communication between several single devices in the power system. The standard was designed to separate the data model from method of communication, address the importance of a structured approach to the design of substation automation systems, utilise existing technologies like Ethernet and TCP/IP, simplify system configuration, device measurement sharing and to enable vendor independence.</description>
     </item>
     
   </channel>
