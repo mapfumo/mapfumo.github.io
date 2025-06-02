@@ -1,9 +1,9 @@
 baseURL: "https://mapfumo.github.io/"
 languageCode: en-us
 title: Antony Mapfumo
-paginate: 3
+pagination:
+  pagerSize: 3
 theme: PaperMod
-
 params:
   assets:
     favicon: "/img/favicon.png"
@@ -19,15 +19,12 @@ params:
       url: "https://github.com/mapfumo"
     - name: email
       url: "mailto:mapfumo@icloud.com"
-
   cover:
     linkFullImages: true
-
   ShowBreadCrumbs: true
   ShowReadingTime: true
   ShowShareButtons: true
   ShowPostNavLinks: true
-
 menu:
   main:
     - identifier: categories
