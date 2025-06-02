@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Antony Mapfumo</title>
-    <link>https://mapfumo.github.io/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Solana Vault Program - Part 1 - Backend</title>
-      <link>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</link>
+      <link>http://localhost:1313/posts/solana-vault-program-part-1-backend/</link>
       <pubDate>Mon, 02 Jun 2025 13:42:58 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</guid>
+      <guid>http://localhost:1313/posts/solana-vault-program-part-1-backend/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Welcome to this beginner-friendly guide to &lt;strong&gt;Solana programs&lt;/strong&gt; — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.&lt;/p&gt;
 &lt;p&gt;Whether you&amp;rsquo;re new to Solana or transitioning from other blockchain platforms, this tutorial is designed to help you start building quickly and confidently. You&amp;rsquo;ll learn what makes Solana programs unique, how they take advantage of the network&amp;rsquo;s high-performance architecture, and why more developers are choosing Solana for their next-generation applications. Most importantly, you’ll gain hands-on experience by building, deploying, and interacting with your own on-chain program.&lt;/p&gt;</description>
@@ -20,10 +20,10 @@
     
     <item>
       <title>You Can&#39;t Escape Rust: Rust for Blockchain</title>
-      <link>https://mapfumo.github.io/posts/you-cant-escape-rust/</link>
+      <link>http://localhost:1313/posts/you-cant-escape-rust/</link>
       <pubDate>Mon, 04 Nov 2024 07:29:49 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/you-cant-escape-rust/</guid>
+      <guid>http://localhost:1313/posts/you-cant-escape-rust/</guid>
       <description>&lt;p&gt;I thought I could “get away with it” — avoiding Rust, that is. A few years back, I started learning Rust, but honestly, it was for all the wrong reasons. I thought it would be just &amp;ldquo;cool to know&amp;rdquo; this relatively young language. As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler.
 Fast forward to 2024, and my career path has taken me deeper into blockchain development. Naturally, Solidity dominates on the Ethereum network, but anyone who’s built on Ethereum knows the pain of high gas fees and relatively long block times. That got me exploring alternatives, and that’s when I came across the Solana blockchain. Rust is the main language for Solana, so here I am again, facing off with Rust. Sure, you can also write Solana programs (smart contracts in the Ethereum world) in Python, C, or C++, but Rust is the gold standard here.
 Last time, I tried to brute-force my way through learning Rust and got discouraged, particularly by the borrow checker. But now I’m approaching it differently, taking my time and following what works. Here’s what I’ve found so far to be the best way to learn Rust:&lt;/p&gt;</description>
@@ -31,10 +31,10 @@ Last time, I tried to brute-force my way through learning Rust and got discourag
     
     <item>
       <title>Design Science: A Disciplined Approach to Software Development</title>
-      <link>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</link>
+      <link>http://localhost:1313/posts/design-science-a-disciplined-approach-to-software-development/</link>
       <pubDate>Fri, 20 Oct 2023 14:20:17 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</guid>
+      <guid>http://localhost:1313/posts/design-science-a-disciplined-approach-to-software-development/</guid>
       <description>&lt;p&gt;In the dynamic realm of software development, the pursuit of effective problem-solving methodologies is ceaseless. One approach gaining increasing recognition is Design Science, a disciplined methodology that seamlessly blends scientific inquiry and practical application. In this blog post, I delve into the importance of Design Science in the context of software development, focusing on its disciplined and systematic nature.&lt;/p&gt;
 &lt;h3 id=&#34;understanding-design-science&#34;&gt;Understanding Design Science&lt;/h3&gt;
 &lt;p&gt;Design Science, as articulated by Johannesson and Perjons, revolves around the scientific exploration and creation of artifacts aimed at addressing real-world issues of general interest. These artifacts encompass a broad spectrum, from software applications and user interfaces to algorithms and data structures. What truly sets Design Science apart is its unwavering commitment to resolving practical problems with precision.The primary objective is to develop solutions and innovations.&lt;/p&gt;</description>
@@ -42,65 +42,92 @@ Last time, I tried to brute-force my way through learning Rust and got discourag
     
     <item>
       <title>Machine Learning web application using Python, Scikit-Learn, Flask</title>
-      <link>https://mapfumo.github.io/posts/machine-learning-flask/</link>
+      <link>http://localhost:1313/posts/machine-learning-flask/</link>
       <pubDate>Thu, 27 Apr 2023 12:02:35 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/machine-learning-flask/</guid>
+      <guid>http://localhost:1313/posts/machine-learning-flask/</guid>
       <description>&lt;p&gt;The scikit-learn Iris data-set consists of 3 (Setosa, Versicolour, and Virginica) species (50 samples per species, for a total of 150 samples) of the iris flower. Each sample has four measurements: sepal length, sepal width, petal length, petal width. Given these measurements a machine learning model can predict the iris specie with a high degree of accuracy. Here I demonstrate a machine learning web application using &lt;em&gt;Python&lt;/em&gt;, &lt;em&gt;Scikit-Learn&lt;/em&gt; machine learning library and &lt;em&gt;Flask&lt;/em&gt; web framework. The application is then deployed on an Amazon EC2 instance. The source is on &lt;strong&gt;&lt;a href=&#34;https://github.com/mapfumo/iris-flask&#34;&gt;GitHub&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Programming with Google Go Specialization - A Brief Course Review</title>
-      <link>https://mapfumo.github.io/posts/go_specialisation/</link>
+      <link>http://localhost:1313/posts/go_specialisation/</link>
       <pubDate>Sat, 22 Apr 2023 17:33:35 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/go_specialisation/</guid>
+      <guid>http://localhost:1313/posts/go_specialisation/</guid>
       <description>&lt;p&gt;Go or &lt;a href=&#34;golang.org&#34;&gt;GoLang&lt;/a&gt; is an open source statically typed language that was created at Google by Rob Pike, Robert Griesemer, and Ken Thompson. It first appeared in Nov 2009 and has been rapidly gaining in popularity. Some of the language&amp;rsquo;s highlights include clean and highly accessible syntax, garbage collection,  amazing native concurrency, fast compilation speed, excellent tooling, builtin documentation, good cross-platform support, ORM (Object-relational mapping ) library called GORM and excellent support for micro-services.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Deep Learning Specialisation - A Brief Course Review</title>
-      <link>https://mapfumo.github.io/posts/deep_learning_specialisation/</link>
+      <link>http://localhost:1313/posts/deep_learning_specialisation/</link>
       <pubDate>Fri, 21 Apr 2023 18:00:58 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/deep_learning_specialisation/</guid>
+      <guid>http://localhost:1313/posts/deep_learning_specialisation/</guid>
       <description>&lt;p&gt;I have just completed &lt;a href=&#34;https://www.coursera.org/instructor/andrewng&#34;&gt;Andrew Ng&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://www.coursera.org/specializations/deep-learning&#34;&gt;Deep Learning Specialisation&lt;/a&gt; course by &lt;a href=&#34;https://www.deeplearning.ai/&#34;&gt;deeplearning.ai&lt;/a&gt; available through &lt;a href=&#34;http://bit.ly/2WjYrPB&#34;&gt;Coursera&lt;/a&gt;. This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful. I found the assignments to reasonably difficult. The only thing I didn&amp;rsquo;t like is that by forcing you to complete the given code (complete missing blanks) you are a bit constrained. For example it would be nice to state the function signature and leave it to the student to implement it in their own way. The good thing is that one can always make such suggestions through the forums. The courses don&amp;rsquo;t have to be completed in any particular order but I found it more helpful to follow the suggested order.&lt;/p&gt;</description>
     </item>
     
     <item>
+      <title>Hello Hugo - My first Post</title>
+      <link>http://localhost:1313/posts/first/</link>
+      <pubDate>Thu, 13 Apr 2023 15:08:28 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/first/</guid>
+      <description>&lt;h1 id=&#34;an-h1-header&#34;&gt;An h1 header&lt;/h1&gt;
+&lt;p&gt;Paragraphs are separated by a blank line.&lt;/p&gt;
+&lt;p&gt;2nd paragraph. &lt;em&gt;Italic&lt;/em&gt;, &lt;strong&gt;bold&lt;/strong&gt;, and &lt;code&gt;monospace&lt;/code&gt;. Itemized lists
+look like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;this one&lt;/li&gt;
+&lt;li&gt;that one&lt;/li&gt;
+&lt;li&gt;the other one&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text
+content starts at 4-columns in.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Block quotes are
+written like so.&lt;/p&gt;
+&lt;p&gt;They can span multiple paragraphs,
+if you like.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all
+in chapters 12&amp;ndash;14&amp;rdquo;). Three dots &amp;hellip; will be converted to an ellipsis.
+Unicode is supported. ☺&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Iec 61850</title>
-      <link>https://mapfumo.github.io/posts/iec-61850/</link>
+      <link>http://localhost:1313/posts/iec-61850/</link>
       <pubDate>Fri, 22 Apr 2022 18:30:41 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/iec-61850/</guid>
+      <guid>http://localhost:1313/posts/iec-61850/</guid>
       <description>&lt;p&gt;The IEC 61850 is at the heart of data communications in the smart grid. The IEC (International Electrotechnical Commission) 61850 standard outlines a framework for communication between several single devices in the power system. The standard was designed to separate the data model from method of communication, address the importance of a structured approach to the design of substation automation systems, utilise existing technologies like Ethernet and TCP/IP, simplify system configuration, device measurement sharing and to enable vendor independence. Although the scope of the IEC 61850 standard was originally substation focussed applications are already operating on wide area substation-to-substation communication using various components of IEC 61850.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>https://mapfumo.github.io/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://mapfumo.github.io/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>Aut inveniam viam aut faciam</description>
     </item>
     
     
     <item>
       <title>Portfolio</title>
-      <link>https://mapfumo.github.io/portfolio/</link>
+      <link>http://localhost:1313/portfolio/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://mapfumo.github.io/portfolio/</guid>
+      <guid>http://localhost:1313/portfolio/</guid>
       <description>portfolio</description>
     </item>
     
     <item>
       <title>Tutorials</title>
-      <link>https://mapfumo.github.io/tutorials/</link>
+      <link>http://localhost:1313/tutorials/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://mapfumo.github.io/tutorials/</guid>
+      <guid>http://localhost:1313/tutorials/</guid>
       <description>portfolio</description>
     </item>
     
