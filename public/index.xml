@@ -6,14 +6,24 @@
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Nov 2024 07:29:49 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Solana Vault Program - Part 1 - Backend</title>
+      <link>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</link>
+      <pubDate>Mon, 02 Jun 2025 13:42:58 +1000</pubDate>
+      
+      <guid>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</guid>
+      <description>Introduction Welcome to this beginner-friendly guide to Solana programs — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.
+Whether you&amp;rsquo;re new to Solana or transitioning from other blockchain platforms, this tutorial is designed to help you start building quickly and confidently. You&amp;rsquo;ll learn what makes Solana programs unique, how they take advantage of the network&amp;rsquo;s high-performance architecture, and why more developers are choosing Solana for their next-generation applications.</description>
+    </item>
+    
     <item>
       <title>You Can&#39;t Escape Rust: Rust for Blockchain</title>
       <link>https://mapfumo.github.io/posts/you-cant-escape-rust/</link>
       <pubDate>Mon, 04 Nov 2024 07:29:49 +1000</pubDate>
       
       <guid>https://mapfumo.github.io/posts/you-cant-escape-rust/</guid>
-      <description>I thought I could “get away with it”—avoiding Rust, that is. A few years back, I started trying to learn Rust, but honestly, it was for all the wrong reasons. I thought it would just be &amp;ldquo;cool to know.&amp;rdquo; As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler. Fast forward to 2024, and my career path has taken me deeper into blockchain development.</description>
+      <description>I thought I could “get away with it” — avoiding Rust, that is. A few years back, I started learning Rust, but honestly, it was for all the wrong reasons. I thought it would be just &amp;ldquo;cool to know&amp;rdquo; this relatively young language. As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler. Fast forward to 2024, and my career path has taken me deeper into blockchain development.</description>
     </item>
     
     <item>
