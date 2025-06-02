@@ -5,6 +5,9 @@ draft: false
 cover:
   image: /img/solana_prog.png
   alt: "Antony mapfumo - Solana Vault Program - Part 1 - Backend"
+  caption: "Solana Programs, Accounts, Anchor, and the Solana Blockchain"
+tags: ["blockchain"]
+categories: ["Blockchain"]
 ---
 
 ## Introduction
