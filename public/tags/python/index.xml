@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>python on Antony Mapfumo</title>
-    <link>https://mapfumo.github.io/tags/python/</link>
-    <description>Recent content in python on Antony Mapfumo</description>
+    <title>Python on Antony Mapfumo</title>
+    <link>http://localhost:1313/tags/python/</link>
+    <description>Recent content in Python on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Apr 2023 12:02:35 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 27 Apr 2023 12:02:35 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Machine Learning web application using Python, Scikit-Learn, Flask</title>
-      <link>https://mapfumo.github.io/posts/machine-learning-flask/</link>
+      <link>http://localhost:1313/posts/machine-learning-flask/</link>
       <pubDate>Thu, 27 Apr 2023 12:02:35 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/machine-learning-flask/</guid>
-      <description>The scikit-learn Iris data-set consists of 3 (Setosa, Versicolour, and Virginica) species (50 samples per species, for a total of 150 samples) of the iris flower. Each sample has four measurements: sepal length, sepal width, petal length, petal width. Given these measurements a machine learning model can predict the iris specie with a high degree of accuracy. Here I demonstrate a machine learning web application using Python, Scikit-Learn machine learning library and Flask web framework.</description>
+      <guid>http://localhost:1313/posts/machine-learning-flask/</guid>
+      <description>&lt;p&gt;The scikit-learn Iris data-set consists of 3 (Setosa, Versicolour, and Virginica) species (50 samples per species, for a total of 150 samples) of the iris flower. Each sample has four measurements: sepal length, sepal width, petal length, petal width. Given these measurements a machine learning model can predict the iris specie with a high degree of accuracy. Here I demonstrate a machine learning web application using &lt;em&gt;Python&lt;/em&gt;, &lt;em&gt;Scikit-Learn&lt;/em&gt; machine learning library and &lt;em&gt;Flask&lt;/em&gt; web framework. The application is then deployed on an Amazon EC2 instance. The source is on &lt;strong&gt;&lt;a href=&#34;https://github.com/mapfumo/iris-flask&#34;&gt;GitHub&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Deep Learning Specialisation - A Brief Course Review</title>
-      <link>https://mapfumo.github.io/posts/deep_learning_specialisation/</link>
+      <link>http://localhost:1313/posts/deep_learning_specialisation/</link>
       <pubDate>Fri, 21 Apr 2023 18:00:58 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/deep_learning_specialisation/</guid>
-      <description>I have just completed Andrew Ng&amp;rsquo;s Deep Learning Specialisation course by deeplearning.ai available through Coursera. This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful.</description>
+      <guid>http://localhost:1313/posts/deep_learning_specialisation/</guid>
+      <description>&lt;p&gt;I have just completed &lt;a href=&#34;https://www.coursera.org/instructor/andrewng&#34;&gt;Andrew Ng&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://www.coursera.org/specializations/deep-learning&#34;&gt;Deep Learning Specialisation&lt;/a&gt; course by &lt;a href=&#34;https://www.deeplearning.ai/&#34;&gt;deeplearning.ai&lt;/a&gt; available through &lt;a href=&#34;http://bit.ly/2WjYrPB&#34;&gt;Coursera&lt;/a&gt;. This is my summary and opinion of the course offering. The specialisation consists of 5 courses and it is suggested that they be completed in 3 months by devoting 11 hours per week. It really depends on your previous knowledge, experience and how quickly you can grasp the concepts. When stuck with the assignments and concepts I found the forum to be very helpful. I found the assignments to reasonably difficult. The only thing I didn&amp;rsquo;t like is that by forcing you to complete the given code (complete missing blanks) you are a bit constrained. For example it would be nice to state the function signature and leave it to the student to implement it in their own way. The good thing is that one can always make such suggestions through the forums. The courses don&amp;rsquo;t have to be completed in any particular order but I found it more helpful to follow the suggested order.&lt;/p&gt;</description>
     </item>
     
   </channel>
