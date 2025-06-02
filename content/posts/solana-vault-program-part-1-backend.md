@@ -12,7 +12,7 @@ categories: ["Blockchain"]
 
 ## Introduction
 
-intro - Welcome to this beginner-friendly guide to **Solana programs** — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.
+Welcome to this beginner-friendly guide to **Solana programs** — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.
 
 Whether you're new to Solana or transitioning from other blockchain platforms, this tutorial is designed to help you start building quickly and confidently. You'll learn what makes Solana programs unique, how they take advantage of the network's high-performance architecture, and why more developers are choosing Solana for their next-generation applications. Most importantly, you’ll gain hands-on experience by building, deploying, and interacting with your own on-chain program.
 
