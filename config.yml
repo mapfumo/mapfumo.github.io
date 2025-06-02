@@ -7,6 +7,13 @@ theme: PaperMod
 params:
   assets:
     favicon: "/img/favicon.png"
+  social:
+    - name: twitter
+      url: "https://twitter.com/mapfumo"
+    - name: github
+      url: "https://github.com/mapfumo"
+    - name: email
+      url: "mailto:mapfumo@icloud.com"
   disableThemeToggle: false
   defaultTheme: dark
   homeInfoParams:
