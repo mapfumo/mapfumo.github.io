@@ -8,7 +8,7 @@ ShowReadingTime: false
 params:
   assets:
     favicon: "/img/favicon.png"
-  social: social:true
+  social: true
   disableThemeToggle: false
   defaultTheme: dark
   homeInfoParams:

@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Blockchain on Antony Mapfumo</title>
-    <link>http://localhost:1313/categories/blockchain/</link>
+    <link>https://mapfumo.github.io/categories/blockchain/</link>
     <description>Recent content in Blockchain on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="http://localhost:1313/categories/blockchain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/categories/blockchain/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Solana Vault Program - Part 1 - Backend</title>
-      <link>http://localhost:1313/posts/solana-vault-program-part-1-backend/</link>
+      <link>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</link>
       <pubDate>Mon, 02 Jun 2025 13:42:58 +1000</pubDate>
       
-      <guid>http://localhost:1313/posts/solana-vault-program-part-1-backend/</guid>
+      <guid>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Ants - Welcome to this beginner-friendly guide to &lt;strong&gt;Solana programs&lt;/strong&gt; — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.&lt;/p&gt;
+&lt;p&gt;Welcome to this beginner-friendly guide to &lt;strong&gt;Solana programs&lt;/strong&gt; — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.&lt;/p&gt;
 &lt;p&gt;Whether you&amp;rsquo;re new to Solana or transitioning from other blockchain platforms, this tutorial is designed to help you start building quickly and confidently. You&amp;rsquo;ll learn what makes Solana programs unique, how they take advantage of the network&amp;rsquo;s high-performance architecture, and why more developers are choosing Solana for their next-generation applications. Most importantly, you’ll gain hands-on experience by building, deploying, and interacting with your own on-chain program.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>You Can&#39;t Escape Rust: Rust for Blockchain</title>
-      <link>http://localhost:1313/posts/you-cant-escape-rust/</link>
+      <link>https://mapfumo.github.io/posts/you-cant-escape-rust/</link>
       <pubDate>Mon, 04 Nov 2024 07:29:49 +1000</pubDate>
       
-      <guid>http://localhost:1313/posts/you-cant-escape-rust/</guid>
+      <guid>https://mapfumo.github.io/posts/you-cant-escape-rust/</guid>
       <description>&lt;p&gt;I thought I could “get away with it” — avoiding Rust, that is. A few years back, I started learning Rust, but honestly, it was for all the wrong reasons. I thought it would be just &amp;ldquo;cool to know&amp;rdquo; this relatively young language. As it turns out, that’s not exactly the best motivator when dealing with a language known for a steep learning curve and a strict compiler.
 Fast forward to 2024, and my career path has taken me deeper into blockchain development. Naturally, Solidity dominates on the Ethereum network, but anyone who’s built on Ethereum knows the pain of high gas fees and relatively long block times. That got me exploring alternatives, and that’s when I came across the Solana blockchain. Rust is the main language for Solana, so here I am again, facing off with Rust. Sure, you can also write Solana programs (smart contracts in the Ethereum world) in Python, C, or C++, but Rust is the gold standard here.
 Last time, I tried to brute-force my way through learning Rust and got discouraged, particularly by the borrow checker. But now I’m approaching it differently, taking my time and following what works. Here’s what I’ve found so far to be the best way to learn Rust:&lt;/p&gt;</description>

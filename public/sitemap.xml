@@ -2,87 +2,84 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://mapfumo.github.io/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/blockchain/</loc>
+    <loc>https://mapfumo.github.io/categories/blockchain/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/blockchain/</loc>
+    <loc>https://mapfumo.github.io/tags/blockchain/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://mapfumo.github.io/categories/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://mapfumo.github.io/posts/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/solana-vault-program-part-1-backend/</loc>
+    <loc>https://mapfumo.github.io/posts/solana-vault-program-part-1-backend/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://mapfumo.github.io/tags/</loc>
     <lastmod>2025-06-02T13:42:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/you-cant-escape-rust/</loc>
+    <loc>https://mapfumo.github.io/posts/you-cant-escape-rust/</loc>
     <lastmod>2024-11-04T07:29:49+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/design-science-a-disciplined-approach-to-software-development/</loc>
+    <loc>https://mapfumo.github.io/posts/design-science-a-disciplined-approach-to-software-development/</loc>
     <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/research/</loc>
+    <loc>https://mapfumo.github.io/tags/research/</loc>
     <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/software-development/</loc>
+    <loc>https://mapfumo.github.io/categories/software-development/</loc>
     <lastmod>2023-10-20T14:20:17+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/dev/</loc>
+    <loc>https://mapfumo.github.io/tags/dev/</loc>
     <lastmod>2023-04-27T12:02:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/machine-learning/</loc>
+    <loc>https://mapfumo.github.io/categories/machine-learning/</loc>
     <lastmod>2023-04-27T12:02:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/machine-learning-flask/</loc>
+    <loc>https://mapfumo.github.io/posts/machine-learning-flask/</loc>
     <lastmod>2023-04-27T12:02:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/python/</loc>
+    <loc>https://mapfumo.github.io/tags/python/</loc>
     <lastmod>2023-04-27T12:02:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/go/</loc>
+    <loc>https://mapfumo.github.io/tags/go/</loc>
     <lastmod>2023-04-22T17:33:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/go_specialisation/</loc>
+    <loc>https://mapfumo.github.io/posts/go_specialisation/</loc>
     <lastmod>2023-04-22T17:33:35+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/ai/</loc>
+    <loc>https://mapfumo.github.io/categories/ai/</loc>
     <lastmod>2023-04-21T18:00:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/deep-learning/</loc>
+    <loc>https://mapfumo.github.io/tags/deep-learning/</loc>
     <lastmod>2023-04-21T18:00:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/deep_learning_specialisation/</loc>
+    <loc>https://mapfumo.github.io/posts/deep_learning_specialisation/</loc>
     <lastmod>2023-04-21T18:00:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/tech/</loc>
+    <loc>https://mapfumo.github.io/categories/tech/</loc>
     <lastmod>2023-04-21T18:00:58+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/first/</loc>
-    <lastmod>2023-04-13T15:08:28+10:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/iec-61850/</loc>
+    <loc>https://mapfumo.github.io/posts/iec-61850/</loc>
     <lastmod>2022-04-22T18:30:41+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/network-engineering/</loc>
+    <loc>https://mapfumo.github.io/categories/network-engineering/</loc>
     <lastmod>2022-04-22T18:30:41+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/smart-grid/</loc>
+    <loc>https://mapfumo.github.io/tags/smart-grid/</loc>
     <lastmod>2022-04-22T18:30:41+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://mapfumo.github.io/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>https://mapfumo.github.io/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/portfolio/</loc>
+    <loc>https://mapfumo.github.io/portfolio/</loc>
   </url><url>
-    <loc>http://localhost:1313/tutorials/</loc>
+    <loc>https://mapfumo.github.io/tutorials/</loc>
   </url>
 </urlset>
