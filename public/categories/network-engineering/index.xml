@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Network Engineering on Antony Mapfumo</title>
-    <link>https://mapfumo.github.io/categories/network-engineering/</link>
+    <link>http://localhost:1313/categories/network-engineering/</link>
     <description>Recent content in Network Engineering on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 22 Apr 2022 18:30:41 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/categories/network-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 22 Apr 2022 18:30:41 +1000</lastBuildDate><atom:link href="http://localhost:1313/categories/network-engineering/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Iec 61850</title>
-      <link>https://mapfumo.github.io/posts/iec-61850/</link>
+      <link>http://localhost:1313/posts/iec-61850/</link>
       <pubDate>Fri, 22 Apr 2022 18:30:41 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/iec-61850/</guid>
+      <guid>http://localhost:1313/posts/iec-61850/</guid>
       <description>&lt;p&gt;The IEC 61850 is at the heart of data communications in the smart grid. The IEC (International Electrotechnical Commission) 61850 standard outlines a framework for communication between several single devices in the power system. The standard was designed to separate the data model from method of communication, address the importance of a structured approach to the design of substation automation systems, utilise existing technologies like Ethernet and TCP/IP, simplify system configuration, device measurement sharing and to enable vendor independence. Although the scope of the IEC 61850 standard was originally substation focussed applications are already operating on wide area substation-to-substation communication using various components of IEC 61850.&lt;/p&gt;</description>
     </item>
     

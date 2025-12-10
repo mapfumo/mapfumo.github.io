@@ -88,7 +88,8 @@ content starts at 4-columns in.&lt;/p&gt;
 &lt;p&gt;Block quotes are
 written like so.&lt;/p&gt;
 &lt;p&gt;They can span multiple paragraphs,
-if you like.&lt;/p&gt;&lt;/blockquote&gt;
+if you like.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all
 in chapters 12&amp;ndash;14&amp;rdquo;). Three dots &amp;hellip; will be converted to an ellipsis.
 Unicode is supported. ☺&lt;/p&gt;</description>

@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Go on Antony Mapfumo</title>
-    <link>https://mapfumo.github.io/tags/go/</link>
+    <link>http://localhost:1313/tags/go/</link>
     <description>Recent content in Go on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 22 Apr 2023 17:33:35 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 Apr 2023 17:33:35 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Programming with Google Go Specialization - A Brief Course Review</title>
-      <link>https://mapfumo.github.io/posts/go_specialisation/</link>
+      <link>http://localhost:1313/posts/go_specialisation/</link>
       <pubDate>Sat, 22 Apr 2023 17:33:35 +1000</pubDate>
       
-      <guid>https://mapfumo.github.io/posts/go_specialisation/</guid>
+      <guid>http://localhost:1313/posts/go_specialisation/</guid>
       <description>&lt;p&gt;Go or &lt;a href=&#34;golang.org&#34;&gt;GoLang&lt;/a&gt; is an open source statically typed language that was created at Google by Rob Pike, Robert Griesemer, and Ken Thompson. It first appeared in Nov 2009 and has been rapidly gaining in popularity. Some of the language&amp;rsquo;s highlights include clean and highly accessible syntax, garbage collection,  amazing native concurrency, fast compilation speed, excellent tooling, builtin documentation, good cross-platform support, ORM (Object-relational mapping ) library called GORM and excellent support for micro-services.&lt;/p&gt;</description>
     </item>
     
