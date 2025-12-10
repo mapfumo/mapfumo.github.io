@@ -1,6 +1,6 @@
 ---
 title: "About"
-Description: "Aut inveniam viam aut faciam"
+Description: 'Aut inveniam viam aut faciam - "I shall either find a way or make one"'
 layout:
 ---
 
