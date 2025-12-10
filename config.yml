@@ -13,7 +13,8 @@ params:
   defaultTheme: dark
   homeInfoParams:
     Title: "Welcome / Mauya / Siyalemukela"
-    Content: Welcome to my tech blog where I share insights into data communications, distributed systems, machine learning, Event-Driven Systems, Microservices, distributed energy systems, open source software, design science research, and software development.
+    Content: Welcome to my tech blog, where I explore practical engineering topics across **data communications, embedded systems, IIoT, distributed technologies, and energy-aware system design**. I focus on clear, grounded insights drawn from real experiments, open-source work, and ongoing research in high-performance connected devices.
+
   socialIcons:
     - name: twitter
       url: "https://twitter.com/mapfumo"

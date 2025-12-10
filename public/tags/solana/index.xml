@@ -5,18 +5,6 @@
     <link>http://localhost:1313/tags/solana/</link>
     <description>Recent content in Solana on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 02 Jun 2025 13:42:58 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/solana/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Solana Vault Program - Part 1 - Backend</title>
-      <link>http://localhost:1313/posts/solana-vault-program-part-1-backend/</link>
-      <pubDate>Mon, 02 Jun 2025 13:42:58 +1000</pubDate>
-      
-      <guid>http://localhost:1313/posts/solana-vault-program-part-1-backend/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Welcome to this beginner-friendly guide to &lt;strong&gt;Solana programs&lt;/strong&gt; — the engine behind some of the fastest and most cost-efficient decentralized applications in the blockchain ecosystem.&lt;/p&gt;
-&lt;p&gt;Whether you&amp;rsquo;re new to Solana or transitioning from other blockchain platforms, this tutorial is designed to help you start building quickly and confidently. You&amp;rsquo;ll learn what makes Solana programs unique, how they take advantage of the network&amp;rsquo;s high-performance architecture, and why more developers are choosing Solana for their next-generation applications. Most importantly, you’ll gain hands-on experience by building, deploying, and interacting with your own on-chain program.&lt;/p&gt;</description>
-    </item>
-    
+    <language>en-us</language><atom:link href="http://localhost:1313/tags/solana/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
