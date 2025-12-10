@@ -64,19 +64,9 @@
   </url><url>
     <loc>http://localhost:1313/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/anchor/</loc>
-  </url><url>
     <loc>http://localhost:1313/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/blockchain/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/blockchain/</loc>
-  </url><url>
     <loc>http://localhost:1313/portfolio/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/rust/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/solana/</loc>
   </url><url>
     <loc>http://localhost:1313/tutorials/</loc>
   </url>

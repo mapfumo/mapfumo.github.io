@@ -6,6 +6,8 @@ layout:
 
 ---
 
+![Antony Mapfumo](/img/ants.jpg#floatleft "Antony Mapfumo")
+
 I'm Antony — a network engineer currently focused on **Industrial IoT (IIoT)** and **embedded systems**. My work centres on building reliable, efficient, and purpose-driven technology using tools such as **Embedded Rust/C++**, **STM32 microcontrollers**, **LoRa/LoRaWAN**, and **industrial communication protocols**.
 
 This blog documents my journey into IIoT engineering: from working with sensors, microcontrollers, and logic analyzers to designing deterministic, energy-aware systems. My aim is to make complex technical topics clear, practical, and grounded in real-world engineering.
