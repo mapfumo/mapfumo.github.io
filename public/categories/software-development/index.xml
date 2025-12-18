@@ -6,7 +6,17 @@
     <description>Recent content in Software Development on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Apr 2023 12:02:35 +1000</lastBuildDate><atom:link href="http://localhost:1313/categories/software-development/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 20 Oct 2025 14:20:17 +1000</lastBuildDate><atom:link href="http://localhost:1313/categories/software-development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Design Science: A Disciplined Approach to Engineering Embedded Systems</title>
+      <link>http://localhost:1313/posts/design-science-a-disciplined-approach-to-software-development/</link>
+      <pubDate>Mon, 20 Oct 2025 14:20:17 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/design-science-a-disciplined-approach-to-software-development/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;Design Science&lt;/strong&gt; is a research methodology and problem-solving framework that focuses on the &lt;strong&gt;creation and evaluation of artifacts&lt;/strong&gt; designed to solve real-world problems. Rather than studying systems passively, Design Science emphasizes &lt;strong&gt;active construction, experimentation, and rigorous evaluation&lt;/strong&gt;. Its principles have traditionally been applied in information systems and software development, but they are equally relevant to modern embedded and IIoT engineering.&lt;/p&gt;
+&lt;p&gt;In complex engineering domains — including &lt;strong&gt;embedded systems, IoT, and distributed sensor networks&lt;/strong&gt; — the challenge is not just writing code or assembling hardware. It’s about systematically creating artifacts that &lt;strong&gt;solve practical problems effectively, reliably, and efficiently&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Machine Learning web application using Python, Scikit-Learn, Flask</title>
       <link>http://localhost:1313/posts/machine-learning-flask/</link>
