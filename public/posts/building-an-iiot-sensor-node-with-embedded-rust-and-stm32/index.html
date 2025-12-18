@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Building an IIoT Sensor Node With Embedded Rust and Stm32 | Antony Mapfumo</title>
 <meta name="keywords" content="Rust, Embedded Rust, MCU">
-<meta name="description" content="1. Introduction
+<meta name="description" content="1. Introduction / Hook
 I come from a networking background. For years, my world revolved around packets, routing tables, latency, and uptime. Over time, it became clear that the boundary between IT and OT (Operational Technology) was becoming less rigid as industrial systems moved onto standard IP networks. Networks were no longer just carrying business traffic — they were increasingly responsible for transporting sensor data, telemetry, and control signals from the physical world. That realization pushed me toward Industrial IoT (IIoT) and, inevitably, embedded systems.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/">
@@ -112,7 +112,7 @@ I come from a networking background. For years, my world revolved around packets
     <h1 class="post-title">
       Building an IIoT Sensor Node With Embedded Rust and Stm32
     </h1>
-    <div class="post-meta">Dec 18, 2025 · 8 min
+    <div class="post-meta">Dec 18, 2025 · 9 min
 
 </div>
   </header> 
@@ -120,10 +120,11 @@ I come from a networking background. For years, my world revolved around packets
             rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/nucleo.jpg" alt="STM32F446RE NUCLEO board with SHT31-D temperature & humidity sensor and SSD1306 OLED display"></a>
         <p>Nucleo Board</p>
 </figure>
-  <div class="post-content"><h2 id="1-introduction">1. Introduction<a hidden class="anchor" aria-hidden="true" href="#1-introduction">#</a></h2>
+  <div class="post-content"><h2 id="1-introduction--hook">1. Introduction / Hook<a hidden class="anchor" aria-hidden="true" href="#1-introduction--hook">#</a></h2>
 <p>I come from a networking background. For years, my world revolved around packets, routing tables, latency, and uptime. Over time, it became clear that the boundary between IT and OT (Operational Technology) was becoming less rigid as industrial systems moved onto standard IP networks. Networks were no longer just carrying business traffic — they were increasingly responsible for transporting sensor data, telemetry, and control signals from the physical world. That realization pushed me toward Industrial IoT (IIoT) and, inevitably, embedded systems.</p>
 <p>Industrial environments demand something very different from hobby electronics or web backends. They demand predictability, reliability, and correctness under constraints. A temperature sensor that occasionally crashes is annoying at home; in an industrial setting, it can mean downtime, damaged equipment, or safety risks. I wanted a foundation that takes correctness seriously, without sacrificing performance or control.</p>
 <p>This project — an IIoT temperature and humidity sensor node built with Embedded Rust on an STM32F446RE — is part of that transition. It is intentionally simple in scope, but deliberate in design. No operating system. No heap. No dynamic allocation. Just a microcontroller, a high-accuracy sensor, and a small display, tied together with explicit, auditable code.</p>
+<p><strong>Three months ago, I had never used a soldering iron.</strong> Today, I have a fully operational sensor node. This journey from a beginner to a functioning IIoT system illustrates that determination and methodical learning can rapidly turn a novice into someone capable of building professional-grade embedded systems.</p>
 <p>In this post, I’ll walk through the motivation, hardware choices, software architecture, and the very real challenges encountered along the way. If you’re a network engineer curious about embedded systems, or an embedded developer evaluating Rust for production, this project is meant to be a practical, grounded example.</p>
 <hr>
 <h2 id="2-why-embedded-rust">2. Why Embedded Rust?<a hidden class="anchor" aria-hidden="true" href="#2-why-embedded-rust">#</a></h2>
@@ -230,7 +231,7 @@ SSD1306  ─┘             |
 <p><a href="https://github.com/mapfumo/sht31-d-nucleo">https://github.com/mapfumo/sht31-d-nucleo</a></p>
 <hr>
 <h2 id="7-where-this-design-fits-in-the-real-world">7. Where This Design Fits in the Real World<a hidden class="anchor" aria-hidden="true" href="#7-where-this-design-fits-in-the-real-world">#</a></h2>
-<p>This project is intentionally modest in scope. It is not a control system, and it is not designed for hard real-time actuation. That constraint is a feature, not a limitation. Many industrial problems are about <em>monitoring</em>, <em>evidence</em>, and <em>trend detection</em> rather than immediate control. In those contexts, simplicity and reliability matter more than complexity.</p>
+<p>This project is intentionally modest in scope. It is not a control system, and it is not designed for hard real-time actuation. That constraint is a feature, not a limitation. Many industrial problems are about <em>monitoring</em>, <em>evidence</em>, and <em>trend detection</em> rather than immediate control. In those contexts, simplicity and reliability matter more than complexity or performance.</p>
 <p>Below are environments where this exact design — or a lightly adapted version of it — fits naturally.</p>
 <h3 id="agriculture-and-controlled-environments">Agriculture and Controlled Environments<a hidden class="anchor" aria-hidden="true" href="#agriculture-and-controlled-environments">#</a></h3>
 <p>Greenhouses, crop storage facilities, and drying operations depend heavily on stable temperature and humidity ranges. Failures are often gradual rather than catastrophic: reduced yield, spoilage, or quality degradation over time.</p>
@@ -284,7 +285,7 @@ SSD1306  ─┘             |
 <li>Industrial protocols (Modbus, OPC-UA)</li>
 <li>Wireless sensor networks</li>
 </ul>
-<p>This project is a foundation, not a finish line.</p>
+<p>This project is a foundation, not a finish line. For future versions of this node, frameworks like Embassy Rust may be considered. Embassy provides async/await concurrency on bare-metal MCUs, which could simplify handling multiple sensors, non-blocking I2C/SPI operations, and low-power scheduling. For the current single-sensor design, a simple polling loop remains sufficient and predictable.</p>
 <hr>
 <h2 id="13-conclusion">13. Conclusion<a hidden class="anchor" aria-hidden="true" href="#13-conclusion">#</a></h2>
 <p>This project demonstrates that Embedded Rust is not theoretical — it’s practical, efficient, and well-suited to IIoT systems. With explicit design, strong tooling, and careful constraints, it’s possible to build systems that are both safe and performant.</p>

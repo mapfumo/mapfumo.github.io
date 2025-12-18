@@ -13,7 +13,7 @@
       <pubDate>Thu, 18 Dec 2025 17:23:13 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/</guid>
-      <description>&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;
+      <description>&lt;h2 id=&#34;1-introduction--hook&#34;&gt;1. Introduction / Hook&lt;/h2&gt;
 &lt;p&gt;I come from a networking background. For years, my world revolved around packets, routing tables, latency, and uptime. Over time, it became clear that the boundary between IT and OT (Operational Technology) was becoming less rigid as industrial systems moved onto standard IP networks. Networks were no longer just carrying business traffic — they were increasingly responsible for transporting sensor data, telemetry, and control signals from the physical world. That realization pushed me toward Industrial IoT (IIoT) and, inevitably, embedded systems.&lt;/p&gt;</description>
     </item>
     

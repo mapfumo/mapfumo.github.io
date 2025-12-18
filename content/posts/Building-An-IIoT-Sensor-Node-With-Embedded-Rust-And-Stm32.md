@@ -10,13 +10,15 @@ tags: ["Rust", "Embedded Rust", "MCU"]
 categories: ["IIoT", "Tech"]
 ---
 
-## 1. Introduction
+## 1. Introduction / Hook
 
 I come from a networking background. For years, my world revolved around packets, routing tables, latency, and uptime. Over time, it became clear that the boundary between IT and OT (Operational Technology) was becoming less rigid as industrial systems moved onto standard IP networks. Networks were no longer just carrying business traffic — they were increasingly responsible for transporting sensor data, telemetry, and control signals from the physical world. That realization pushed me toward Industrial IoT (IIoT) and, inevitably, embedded systems.
 
 Industrial environments demand something very different from hobby electronics or web backends. They demand predictability, reliability, and correctness under constraints. A temperature sensor that occasionally crashes is annoying at home; in an industrial setting, it can mean downtime, damaged equipment, or safety risks. I wanted a foundation that takes correctness seriously, without sacrificing performance or control.
 
 This project — an IIoT temperature and humidity sensor node built with Embedded Rust on an STM32F446RE — is part of that transition. It is intentionally simple in scope, but deliberate in design. No operating system. No heap. No dynamic allocation. Just a microcontroller, a high-accuracy sensor, and a small display, tied together with explicit, auditable code.
+
+**Three months ago, I had never used a soldering iron.** Today, I have a fully operational sensor node. This journey from a beginner to a functioning IIoT system illustrates that determination and methodical learning can rapidly turn a novice into someone capable of building professional-grade embedded systems.
 
 In this post, I’ll walk through the motivation, hardware choices, software architecture, and the very real challenges encountered along the way. If you’re a network engineer curious about embedded systems, or an embedded developer evaluating Rust for production, this project is meant to be a practical, grounded example.
 
@@ -181,7 +183,7 @@ https://github.com/mapfumo/sht31-d-nucleo
 
 ## 7. Where This Design Fits in the Real World
 
-This project is intentionally modest in scope. It is not a control system, and it is not designed for hard real-time actuation. That constraint is a feature, not a limitation. Many industrial problems are about _monitoring_, _evidence_, and _trend detection_ rather than immediate control. In those contexts, simplicity and reliability matter more than complexity.
+This project is intentionally modest in scope. It is not a control system, and it is not designed for hard real-time actuation. That constraint is a feature, not a limitation. Many industrial problems are about _monitoring_, _evidence_, and _trend detection_ rather than immediate control. In those contexts, simplicity and reliability matter more than complexity or performance.
 
 Below are environments where this exact design — or a lightly adapted version of it — fits naturally.
 
@@ -261,7 +263,7 @@ Hardware cost is modest, and the toolchain is entirely open.
 - Industrial protocols (Modbus, OPC-UA)
 - Wireless sensor networks
 
-This project is a foundation, not a finish line.
+This project is a foundation, not a finish line. For future versions of this node, frameworks like Embassy Rust may be considered. Embassy provides async/await concurrency on bare-metal MCUs, which could simplify handling multiple sensors, non-blocking I2C/SPI operations, and low-power scheduling. For the current single-sensor design, a simple polling loop remains sufficient and predictable.
 
 ---
 
