@@ -10,7 +10,7 @@ tags: ["Rust", "Embedded Rust", "MCU"]
 categories: ["IIoT", "Tech"]
 ---
 
-## 1. Introduction / Hook
+## 1. Introduction
 
 I come from a networking background. For years, my world revolved around packets, routing tables, latency, and uptime. Over time, it became clear that the boundary between IT and OT (Operational Technology) was becoming less rigid as industrial systems moved onto standard IP networks. Networks were no longer just carrying business traffic — they were increasingly responsible for transporting sensor data, telemetry, and control signals from the physical world. That realization pushed me toward Industrial IoT (IIoT) and, inevitably, embedded systems.
 
