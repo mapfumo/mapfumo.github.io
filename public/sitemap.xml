@@ -3,36 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <loc>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</loc>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/embedded-rust/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/iiot/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/mcu/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/rtic/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/rust/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-12-24T17:53:41+10:00</lastmod>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/tech/</loc>
+    <lastmod>2026-01-01T20:14:18+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</loc>
     <lastmod>2025-12-24T17:53:41+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/</loc>

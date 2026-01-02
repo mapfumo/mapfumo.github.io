@@ -6,7 +6,19 @@
     <description>Recent content in Embedded Rust on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 18 Dec 2025 17:23:13 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/embedded-rust/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Dec 2025 17:53:41 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/embedded-rust/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Deterministic IIoT Systems With Embedded Rust and RTIC</title>
+      <link>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</link>
+      <pubDate>Wed, 24 Dec 2025 17:53:41 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</guid>
+      <description>&lt;p&gt;In the world of Industrial IoT (IIoT), reliability is everything. Sensors must read accurately, actuators must respond predictably, and communication must flow without surprises. On the embedded side, this means precise control of hardware resources, minimal overhead, and code that behaves deterministically. Enter Embedded Rust and RTIC—a pairing that gives engineers both safety and performance without compromise.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;why-embedded-rust&#34;&gt;Why Embedded Rust?&lt;/h2&gt;
+&lt;p&gt;Rust’s focus on memory safety, zero-cost abstractions, and strict compile-time checks makes it ideal for embedded systems. Unlike C, Rust prevents &lt;strong&gt;entire classes of bugs&lt;/strong&gt; like null pointer dereferences or buffer overflows. When your MCU has just a few kilobytes of RAM, these protections are not optional—they’re essential.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Building an IIoT Sensor Node With Embedded Rust and Stm32</title>
       <link>http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/</link>

@@ -6,7 +6,18 @@
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 24 Dec 2025 17:53:41 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Jan 2026 20:14:18 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Binary Protocols and Reliable LoRa Communication</title>
+      <link>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</link>
+      <pubDate>Thu, 01 Jan 2026 20:14:18 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</guid>
+      <description>&lt;p&gt;The first two weeks of this project focused on getting data moving: sensors reading correctly, LoRa modules talking, and messages arriving at the other end. That phase was intentionally simple and text-based. It worked, but it was never meant to last.&lt;/p&gt;
+&lt;p&gt;This week was about moving closer to how real embedded systems behave in the field: binary data, explicit integrity checks, and predictable delivery behavior.&lt;/p&gt;
+&lt;p&gt;Human-readable messages are convenient for debugging, but they waste bandwidth and hide failure modes. Radios don&amp;rsquo;t care about readability — they care about airtime, reliability, and determinism. This week&amp;rsquo;s work was about aligning the system with those realities.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Building Deterministic IIoT Systems With Embedded Rust and RTIC</title>
       <link>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</link>
