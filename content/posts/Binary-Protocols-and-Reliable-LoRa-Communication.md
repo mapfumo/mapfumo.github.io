@@ -5,7 +5,7 @@ draft: false
 cover:
   image: /img/binary_protocol.png
   alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
-  caption: "Nucleo Board"
+  caption: "LoRA Network, STM32F446RE NUCLEO boards"
 tags: ["Rust", "Embedded Rust", "MCU", "RTIC"]
 categories: ["IIoT", "Tech"]
 ---
