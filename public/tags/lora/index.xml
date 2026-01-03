@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Lora on Antony Mapfumo</title>
+    <link>http://localhost:1313/tags/lora/</link>
+    <description>Recent content in Lora on Antony Mapfumo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 Dec 2025 09:42:11 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/lora/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Gateway Firmware - From Wireless to Desktop, Wk5</title>
+      <link>http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/</link>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/</guid>
+      <description>&lt;h1 id=&#34;gateway-firmware-when-plans-b-and-c-beat-plan-a-week-5&#34;&gt;Gateway Firmware: When Plans B and C Beat Plan A (Week 5)&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Series&lt;/strong&gt;: 4-Month Embedded Rust Learning Roadmap&lt;br&gt;
+&lt;strong&gt;Week&lt;/strong&gt;: 5 of 16&lt;br&gt;
+&lt;strong&gt;Date&lt;/strong&gt;: December 2024&lt;br&gt;
+&lt;strong&gt;Tags&lt;/strong&gt;: &lt;code&gt;embedded-rust&lt;/code&gt;, &lt;code&gt;rtic&lt;/code&gt;, &lt;code&gt;lora&lt;/code&gt;, &lt;code&gt;stm32&lt;/code&gt;, &lt;code&gt;gateway&lt;/code&gt;, &lt;code&gt;json&lt;/code&gt;, &lt;code&gt;defmt&lt;/code&gt;, &lt;code&gt;adaptive-architecture&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Week 5 was supposed to be straightforward: add USB-CDC to Node 2, stream JSON telemetry to the desktop. Simple, right?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Spoiler&lt;/strong&gt;: The &amp;ldquo;simple&amp;rdquo; solution was blocked by hardware. Then the &amp;ldquo;good&amp;rdquo; solution was blocked by firmware. The &lt;strong&gt;working&lt;/strong&gt; solution came from adapting to constraints instead of fighting them.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

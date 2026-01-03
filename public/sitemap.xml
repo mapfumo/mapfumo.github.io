@@ -3,39 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/embedded-rust/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/</loc>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/iiot/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/mcu/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/rtic/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/rust/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/stm32/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-12-12T20:14:18+10:00</lastmod>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/tech/</loc>
+    <lastmod>2026-01-04T09:42:11+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</loc>
     <lastmod>2025-12-12T20:14:18+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/lora-sensor-fusion-when-simple-becomes-reliable/</loc>

@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Gateway Firmware - From Wireless to Desktop, Wk5 | Antony Mapfumo</title>
+<meta name="keywords" content="Rust, Embedded Rust, lora, json, MCU, STM32, RTIC, defmt">
+<meta name="description" content="Week 5 was supposed to be straightforward: add USB-CDC to Node 2, stream JSON telemetry to the desktop. Simple, right?
+Spoiler: The &ldquo;simple&rdquo; solution was blocked by hardware. Then the &ldquo;good&rdquo; solution was blocked by firmware. The working solution came from adapting to constraints instead of fighting them.
+This is the story of how Week 5 became a lesson in engineering pragmatism - and why the best solution isn&rsquo;t always the most elegant one.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Gateway Firmware - From Wireless to Desktop, Wk5
+    </h1>
+    <div class="post-meta">Dec 13, 2025 · 18 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk5_image.png" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk5_image.png" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>LoRA Network, STM32F446RE NUCLEO boards</p>
+</figure>
+  <div class="post-content"><p>Week 5 was supposed to be straightforward: add USB-CDC to Node 2, stream JSON telemetry to the desktop. Simple, right?</p>
+<p><strong>Spoiler</strong>: The &ldquo;simple&rdquo; solution was blocked by hardware. Then the &ldquo;good&rdquo; solution was blocked by firmware. The <strong>working</strong> solution came from adapting to constraints instead of fighting them.</p>
+<p>This is the story of how Week 5 became a lesson in <strong>engineering pragmatism</strong> - and why the best solution isn&rsquo;t always the most elegant one.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ol>
+<li><a href="#the-objective">The Objective</a></li>
+<li><a href="#the-three-attempts">The Three Attempts</a>
+<ul>
+<li><a href="#plan-a-usb-cdc-blocked-by-hardware">Plan A: USB-CDC (Blocked by Hardware)</a></li>
+<li><a href="#plan-b-usart2-vcp-blocked-by-firmware">Plan B: USART2 VCP (Blocked by Firmware)</a></li>
+<li><a href="#plan-c-defmtrtt-success">Plan C: defmt/RTT (Success)</a></li>
+</ul>
+</li>
+<li><a href="#five-critical-lessons">Five Critical Lessons</a></li>
+<li><a href="#results-at-the-end-of-week-5">Results</a></li>
+<li><a href="#why-this-matters-in-the-plan">Why This Matters</a></li>
+<li><a href="#next-steps-week-6-preview">Next Steps</a></li>
+</ol>
+<hr>
+<h2 id="the-objective">The Objective<a hidden class="anchor" aria-hidden="true" href="#the-objective">#</a></h2>
+<p>Week 5 had a clear goal: <strong>transform Node 2 from a simple LoRa receiver into a production gateway</strong> that bridges wireless sensor data to desktop infrastructure.</p>
+<h3 id="the-requirements">The Requirements<a hidden class="anchor" aria-hidden="true" href="#the-requirements">#</a></h3>
+<ol>
+<li><strong>Desktop accessibility</strong>: Get sensor data off the MCU and into a format desktop tools can consume</li>
+<li><strong>Real-time streaming</strong>: Process data as it arrives, not in batches</li>
+<li><strong>Human-readable</strong>: JSON format for easy debugging and integration</li>
+<li><strong>Efficient</strong>: Compact representation to minimize overhead</li>
+<li><strong>Robust</strong>: System must handle errors gracefully</li>
+</ol>
+<h3 id="the-foundation">The Foundation<a hidden class="anchor" aria-hidden="true" href="#the-foundation">#</a></h3>
+<p>Week 5 builds directly on Week 3&rsquo;s binary protocol:</p>
+<ul>
+<li>✅ LoRa packets arrive with sensor data</li>
+<li>✅ CRC validation ensures integrity</li>
+<li>✅ ACK/NACK provides reliability</li>
+<li>✅ OLED displays real-time metrics</li>
+</ul>
+<p><strong>Missing piece</strong>: No way to get data to the desktop.</p>
+<hr>
+<h2 id="the-three-attempts">The Three Attempts<a hidden class="anchor" aria-hidden="true" href="#the-three-attempts">#</a></h2>
+<h3 id="plan-a-usb-cdc-blocked-by-hardware">Plan A: USB-CDC (Blocked by Hardware)<a hidden class="anchor" aria-hidden="true" href="#plan-a-usb-cdc-blocked-by-hardware">#</a></h3>
+<h4 id="the-idea">The Idea<a hidden class="anchor" aria-hidden="true" href="#the-idea">#</a></h4>
+<p>Use the STM32F446&rsquo;s USB OTG_FS peripheral (PA11/PA12) to create a virtual serial port.</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Native USB, no middleware needed</li>
+<li>High bandwidth (~12 Mbps Full-Speed USB)</li>
+<li>Standard CDC class (built into all OSes)</li>
+<li>Clean, professional solution</li>
+</ul>
+<p><strong>Implementation would look like</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// USB OTG_FS on PA11 (D-) and PA12 (D+)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> usb <span style="color:#f92672">=</span> <span style="color:#66d9ef">USB</span> {
+</span></span><span style="display:flex;"><span>    usb_global: <span style="color:#a6e22e">dp</span>.<span style="color:#66d9ef">OTG_FS_GLOBAL</span>,
+</span></span><span style="display:flex;"><span>    usb_device: <span style="color:#a6e22e">dp</span>.<span style="color:#66d9ef">OTG_FS_DEVICE</span>,
+</span></span><span style="display:flex;"><span>    usb_pwrclk: <span style="color:#a6e22e">dp</span>.<span style="color:#66d9ef">OTG_FS_PWRCLK</span>,
+</span></span><span style="display:flex;"><span>    pin_dm: <span style="color:#a6e22e">gpioa</span>.pa11.into_alternate(),
+</span></span><span style="display:flex;"><span>    pin_dp: <span style="color:#a6e22e">gpioa</span>.pa12.into_alternate(),
+</span></span><span style="display:flex;"><span>    hclk: <span style="color:#a6e22e">clocks</span>.hclk(),
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> usb_bus <span style="color:#f92672">=</span> UsbBus::new(usb, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> <span style="color:#66d9ef">EP_MEMORY</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> serial <span style="color:#f92672">=</span> SerialPort::new(<span style="color:#f92672">&amp;</span>usb_bus);
+</span></span></code></pre></div><h4 id="the-discovery">The Discovery<a hidden class="anchor" aria-hidden="true" href="#the-discovery">#</a></h4>
+<p>I grabbed my Nucleo-F446RE, checked the schematic, and found the problem:</p>
+<p><strong>PA11 and PA12 are not connected to anything.</strong></p>
+<p>The Nucleo board has:</p>
+<ul>
+<li>✅ ST-Link debugger with USB connector</li>
+<li>✅ Virtual COM Port capability (in theory)</li>
+<li>❌ No native USB connector</li>
+<li>❌ PA11/PA12 not broken out to headers</li>
+</ul>
+<p><strong>Impact</strong>: Would need external USB hardware (breakout board, wiring, drivers). This defeats the &ldquo;use what you have&rdquo; principle that guides the learning plan.</p>
+<p><strong>Decision</strong>: Plan A is blocked. Move to Plan B.</p>
+<hr>
+<h3 id="plan-b-usart2-vcp-blocked-by-firmware">Plan B: USART2 VCP (Blocked by Firmware)<a hidden class="anchor" aria-hidden="true" href="#plan-b-usart2-vcp-blocked-by-firmware">#</a></h3>
+<h4 id="the-idea-1">The Idea<a hidden class="anchor" aria-hidden="true" href="#the-idea-1">#</a></h4>
+<p>The ST-Link debugger chip on the Nucleo has a Virtual COM Port (VCP) feature. Some pins on the STM32 (PA2/PA3 for USART2) are connected to the ST-Link chip, which can bridge them to USB.</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>No additional hardware needed</li>
+<li>Uses same USB cable as programming</li>
+<li>Standard serial port interface (<code>/dev/ttyACM0</code>)</li>
+<li>Simple UART implementation in firmware</li>
+</ul>
+<p><strong>How it should work</strong>:</p>
+<pre tabindex="0"><code>STM32 USART2 (PA2/PA3) → ST-Link chip → USB → Desktop (/dev/ttyACM0)
+</code></pre><h4 id="the-implementation">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation">#</a></h4>
+<p>I implemented the firmware side:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Configure USART2 at 115200 baud
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> vcp_uart <span style="color:#f92672">=</span> Serial::new(
+</span></span><span style="display:flex;"><span>    dp.<span style="color:#66d9ef">USART2</span>,
+</span></span><span style="display:flex;"><span>    (gpioa.pa2, gpioa.pa3),
+</span></span><span style="display:flex;"><span>    SerialConfig::default().baudrate(<span style="color:#ae81ff">115200.</span>bps()),
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>clocks,
+</span></span><span style="display:flex;"><span>).unwrap();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// In UART interrupt, after parsing LoRa packet:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> format_json_telemetry(<span style="color:#f92672">..</span>.);
+</span></span><span style="display:flex;"><span>cx.shared.vcp_uart.lock(<span style="color:#f92672">|</span>uart<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> byte <span style="color:#66d9ef">in</span> json.as_bytes() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> _ <span style="color:#f92672">=</span> nb::<span style="color:#a6e22e">block!</span>(uart.write(<span style="color:#f92672">*</span>byte));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p><strong>Firmware logs showed</strong>:</p>
+<pre tabindex="0"><code>[INFO] JSON sent via VCP: {&#34;ts&#34;:12345,&#34;id&#34;:&#34;N2&#34;,...}
+</code></pre><p>Success! Firmware is sending data to USART2.</p>
+<h4 id="the-discovery-1">The Discovery<a hidden class="anchor" aria-hidden="true" href="#the-discovery-1">#</a></h4>
+<p>But on the desktop:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ls /dev/ttyACM*
+</span></span><span style="display:flex;"><span>ls: cannot access <span style="color:#e6db74">&#39;/dev/ttyACM*&#39;</span>: No such file or directory
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ dmesg | tail
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># No new USB devices detected</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ lsusb
+</span></span><span style="display:flex;"><span>Bus <span style="color:#ae81ff">001</span> Device 010: ID 0483:374b STMicroelectronics ST-LINK/V2.1
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Only shows ST-Link, no CDC interface</span>
+</span></span></code></pre></div><p>The ST-Link chip <strong>sees</strong> the USART2 traffic (I verified with logic analyzer), but it&rsquo;s not exposing a virtual COM port to the OS.</p>
+<p><strong>Root cause</strong>: The ST-Link firmware on this board variant doesn&rsquo;t have VCP functionality enabled. Some Nucleo boards do, some don&rsquo;t. Mine doesn&rsquo;t.</p>
+<p><strong>Options</strong>:</p>
+<ol>
+<li>Upgrade ST-Link firmware (risky, requires ST&rsquo;s tools, could brick the debugger)</li>
+<li>Buy a different Nucleo board (not in the spirit of &ldquo;use what you have&rdquo;)</li>
+<li>Find another solution</li>
+</ol>
+<p><strong>Decision</strong>: Plan B is blocked. Move to Plan C.</p>
+<hr>
+<h3 id="plan-c-defmtrtt-success">Plan C: defmt/RTT (Success)<a hidden class="anchor" aria-hidden="true" href="#plan-c-defmtrtt-success">#</a></h3>
+<h4 id="the-realization">The Realization<a hidden class="anchor" aria-hidden="true" href="#the-realization">#</a></h4>
+<p>I sat back and thought: <em>What&rsquo;s already working reliably?</em></p>
+<p><strong>Answer</strong>: defmt logging via RTT (Real-Time Transfer).</p>
+<p>Every time I run <code>probe-rs</code>, I get clean, reliable logs:</p>
+<pre tabindex="0"><code>$ probe-rs run --chip STM32F446RETx &lt;binary&gt;
+[INFO] Init complete
+[INFO] UART INT: 44 bytes, complete=true
+[INFO] Binary RX - T:284 H:537 G:83440
+</code></pre><p><strong>What if</strong>: Instead of treating RTT as &ldquo;just for debugging,&rdquo; what if I make it the <strong>primary telemetry channel</strong>?</p>
+<h4 id="the-implementation-1">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation-1">#</a></h4>
+<p>No hardware changes needed. No new code needed. Just a perspective shift:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// After parsing LoRa packet and formatting JSON:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;JSON sent via VCP: {}&#34;</span>, json.as_str());
+</span></span></code></pre></div><p>That <code>defmt::info!</code> line was already there (I added it for debugging). It outputs:</p>
+<pre tabindex="0"><code>[INFO] JSON sent via VCP: {&#34;ts&#34;:3500,&#34;id&#34;:&#34;N2&#34;,&#34;n1&#34;:{&#34;t&#34;:28.3,&#34;h&#34;:54.5,&#34;g&#34;:82948},&#34;n2&#34;:{},&#34;sig&#34;:{&#34;rssi&#34;:-30,&#34;snr&#34;:13},&#34;sts&#34;:{&#34;rx&#34;:1,&#34;err&#34;:0}}
+</code></pre><p>Perfect. It&rsquo;s:</p>
+<ul>
+<li>✅ Clean JSON (one per line)</li>
+<li>✅ Timestamped by defmt</li>
+<li>✅ Newline-delimited (easy parsing)</li>
+<li>✅ Visible in probe-rs output</li>
+<li>✅ Zero additional hardware or configuration</li>
+</ul>
+<h4 id="week-6-integration">Week 6 Integration<a hidden class="anchor" aria-hidden="true" href="#week-6-integration">#</a></h4>
+<p>Week 6&rsquo;s desktop service will:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Spawn probe-rs as subprocess
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> Command::new(<span style="color:#e6db74">&#34;probe-rs&#34;</span>)
+</span></span><span style="display:flex;"><span>    .args(<span style="color:#f92672">&amp;</span>[<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;--chip&#34;</span>, <span style="color:#e6db74">&#34;STM32F446RETx&#34;</span>, binary_path])
+</span></span><span style="display:flex;"><span>    .stdout(Stdio::piped())
+</span></span><span style="display:flex;"><span>    .spawn()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Read output line-by-line
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> reader <span style="color:#f92672">=</span> BufReader::new(child.stdout.take().unwrap());
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> line <span style="color:#66d9ef">in</span> reader.lines() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> line.contains(<span style="color:#e6db74">&#34;JSON sent via VCP:&#34;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> extract_json_from_log(<span style="color:#f92672">&amp;</span>line);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> telemetry: <span style="color:#a6e22e">Telemetry</span> <span style="color:#f92672">=</span> serde_json::from_str(<span style="color:#f92672">&amp;</span>json)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>        process_telemetry(telemetry).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Advantages</strong>:</p>
+<ul>
+<li>Uses existing debug infrastructure</li>
+<li>No special drivers or hardware</li>
+<li>Works reliably on any system with probe-rs</li>
+<li>Clean separation: firmware logs, service parses</li>
+</ul>
+<p><strong>Disadvantages</strong>:</p>
+<ul>
+<li>Requires probe-rs to be running (fine for development/testing)</li>
+<li>Not suitable for truly remote deployment (but that&rsquo;s Week 7&rsquo;s MQTT goal)</li>
+</ul>
+<p><strong>Decision</strong>: Plan C works. Ship it.</p>
+<hr>
+<h2 id="five-critical-lessons">Five Critical Lessons<a hidden class="anchor" aria-hidden="true" href="#five-critical-lessons">#</a></h2>
+<h3 id="lesson-1-uart-error-flags-are-silent-killers">Lesson 1: UART Error Flags Are Silent Killers<a hidden class="anchor" aria-hidden="true" href="#lesson-1-uart-error-flags-are-silent-killers">#</a></h3>
+<h4 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h4>
+<p>After 20-30 packets, the gateway would mysteriously stop receiving LoRa data. UART appeared &ldquo;stuck.&rdquo; LED still blinking (system not crashed), OLED frozen on last packet.</p>
+<h4 id="the-investigation">The Investigation<a hidden class="anchor" aria-hidden="true" href="#the-investigation">#</a></h4>
+<p>I added extensive logging to the UART interrupt handler:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, ...)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(<span style="color:#f92672">..</span>.) {
+</span></span><span style="display:flex;"><span>    defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;UART interrupt fired&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> uart_status <span style="color:#f92672">=</span> uart.status_register();
+</span></span><span style="display:flex;"><span>    defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Status: {:?}&#34;</span>, uart_status);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ... rest of handler
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><strong>Logs showed</strong>:</p>
+<pre tabindex="0"><code>[INFO] UART interrupt fired
+[INFO] Status: ORE (Overrun Error) set
+[INFO] UART interrupt fired
+[INFO] Status: ORE set
+[INFO] UART interrupt fired
+[INFO] Status: ORE set
+</code></pre><p>Interrupt firing repeatedly, but <strong>no new data</strong>.</p>
+<h4 id="the-root-cause">The Root Cause<a hidden class="anchor" aria-hidden="true" href="#the-root-cause">#</a></h4>
+<p>The STM32 UART has error flags in the status register (SR):</p>
+<ul>
+<li><strong>ORE (Overrun Error)</strong>: UART received byte before previous was read</li>
+<li><strong>FE (Framing Error)</strong>: Stop bit not detected where expected</li>
+<li><strong>NF (Noise Flag)</strong>: Noise detected on RX line during sampling</li>
+</ul>
+<p><strong>Critical behavior</strong>: Once set, these flags <strong>block new data reception</strong> until explicitly cleared.</p>
+<p><strong>How they get set</strong>:</p>
+<ul>
+<li>ORE: Interrupt handler too slow (new byte arrives before previous processed)</li>
+<li>FE: Noise spike, baud rate mismatch, loose connection</li>
+<li>NF: Electrical noise on RX line</li>
+</ul>
+<h4 id="the-solution">The Solution<a hidden class="anchor" aria-hidden="true" href="#the-solution">#</a></h4>
+<p>Clear error flags <strong>proactively</strong> at the start of every UART interrupt:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, ...)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(<span style="color:#66d9ef">mut</span> cx: <span style="color:#a6e22e">uart4_handler</span>::Context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// FIRST: Clear any error flags
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> uart_ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">unsafe</span> { <span style="color:#f92672">&amp;*</span>pac::<span style="color:#66d9ef">UART4</span>::ptr() };
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> sr <span style="color:#f92672">=</span> uart_ptr.sr().read();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> has_ore <span style="color:#f92672">=</span> sr.ore().bit_is_set();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> has_fe <span style="color:#f92672">=</span> sr.fe().bit_is_set();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> has_nf <span style="color:#f92672">=</span> sr.nf().bit_is_set();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> has_ore <span style="color:#f92672">||</span> has_fe <span style="color:#f92672">||</span> has_nf {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Reading DR clears error flags
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> _ <span style="color:#f92672">=</span> uart_ptr.dr().read();
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">warn!</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;UART errors cleared: ORE={} FE={} NF={}&#34;</span>,
+</span></span><span style="display:flex;"><span>            has_ore, has_fe, has_nf
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// NOW safe to read new data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cx.shared.lora_uart.lock(<span style="color:#f92672">|</span>uart<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Ok(byte) <span style="color:#f92672">=</span> uart.read() {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// ... process byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Results</strong>:</p>
+<ul>
+<li>ORE flag appears occasionally (~1% of receptions)</li>
+<li>System recovers automatically</li>
+<li>No more &ldquo;stuck&rdquo; UART</li>
+<li>Runs indefinitely without lockup</li>
+</ul>
+<h4 id="the-lesson">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson">#</a></h4>
+<blockquote>
+<p><strong>Error flags in UART peripherals must be handled proactively. Reactive handling (only when noticed) is too late.</strong></p>
+</blockquote>
+<p>This is especially critical for:</p>
+<ul>
+<li>Long-running systems (days/weeks uptime)</li>
+<li>Noisy RF environments (LoRa module on breadboard)</li>
+<li>Systems that can&rsquo;t afford to restart</li>
+</ul>
+<p><strong>Best practice</strong>: Clear error flags in <strong>every</strong> UART interrupt, even if you think your code is fast enough.</p>
+<hr>
+<h3 id="lesson-2-graceful-degradation--defensive-panics">Lesson 2: Graceful Degradation &gt; Defensive Panics<a hidden class="anchor" aria-hidden="true" href="#lesson-2-graceful-degradation--defensive-panics">#</a></h3>
+<h4 id="the-design-question">The Design Question<a hidden class="anchor" aria-hidden="true" href="#the-design-question">#</a></h4>
+<p>Week 5 adds an optional BMP280 sensor to the gateway for local temperature/pressure readings. But what if the sensor isn&rsquo;t connected?</p>
+<p><strong>Option 1: Panic</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> bmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">BMP280</span>::new(<span style="color:#f92672">..</span>.).unwrap();  <span style="color:#75715e">// ❌ Panic if sensor missing
+</span></span></span></code></pre></div><p><strong>Option 2: Log and Continue</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> bmp_result <span style="color:#f92672">=</span> <span style="color:#66d9ef">BMP280</span>::new(<span style="color:#f92672">..</span>.);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">match</span> bmp_result {
+</span></span><span style="display:flex;"><span>    Ok(sensor) <span style="color:#f92672">=&gt;</span> defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;BMP280 ready&#34;</span>),
+</span></span><span style="display:flex;"><span>    Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">warn!</span>(<span style="color:#e6db74">&#34;BMP280 init failed: {:?}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Gateway will continue without local sensors&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Option 3: Retry Forever</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> bmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">match</span> <span style="color:#66d9ef">BMP280</span>::new(<span style="color:#f92672">..</span>.) {
+</span></span><span style="display:flex;"><span>        Ok(s) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">break</span> s,
+</span></span><span style="display:flex;"><span>        Err(_) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">continue</span>,  <span style="color:#75715e">// ❌ Infinite loop if sensor never responds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h4 id="the-decision">The Decision<a hidden class="anchor" aria-hidden="true" href="#the-decision">#</a></h4>
+<p><strong>Chose Option 2</strong> because:</p>
+<ol>
+<li>
+<p><strong>BMP280 is not critical to core mission</strong></p>
+<ul>
+<li>Gateway&rsquo;s job: LoRa → Desktop bridge</li>
+<li>Local sensors are <strong>nice to have</strong>, not <strong>need to have</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Testing flexibility</strong></p>
+<ul>
+<li>Can test gateway without all hardware</li>
+<li>Can deploy in environments where local sensors aren&rsquo;t needed</li>
+</ul>
+</li>
+<li>
+<p><strong>Incremental bring-up</strong></p>
+<ul>
+<li>Get core working first</li>
+<li>Add optional features later</li>
+</ul>
+</li>
+</ol>
+<h4 id="the-implementation-2">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation-2">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Initialize with Result handling
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> bmp_result <span style="color:#f92672">=</span> <span style="color:#66d9ef">BMP280</span>::new(
+</span></span><span style="display:flex;"><span>    bmp_i2c,
+</span></span><span style="display:flex;"><span>    bmp280_ehal::Address::SdoGnd,
+</span></span><span style="display:flex;"><span>    bmp280_ehal::Config { <span style="color:#f92672">..</span>. },
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Store sensor state
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> gateway_temp: Option<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">f32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> None;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> gateway_pressure: Option<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">f32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> None;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">match</span> bmp_result {
+</span></span><span style="display:flex;"><span>    Ok(sensor) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;BMP280 initialized successfully&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Could read initial values here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">warn!</span>(<span style="color:#e6db74">&#34;BMP280 init failed: {:?}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>        defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Gateway will continue without local sensors&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Leave gateway_temp and gateway_pressure as None
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>JSON output adapts</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// With BMP280:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>{<span style="color:#e6db74">&#34;n2&#34;</span>:{<span style="color:#e6db74">&#34;t&#34;</span>:<span style="color:#ae81ff">24.8</span>,<span style="color:#e6db74">&#34;p&#34;</span>:<span style="color:#ae81ff">1013.25</span>}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Without BMP280:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>{<span style="color:#e6db74">&#34;n2&#34;</span>:{}}
+</span></span></code></pre></div><p>Week 6 service can handle both formats - missing fields just mean &ldquo;no data available.&rdquo;</p>
+<h4 id="the-lesson-1">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-1">#</a></h4>
+<blockquote>
+<p><strong>Optional features should be truly optional. Panicking on nice-to-have failures is hostile to your future self.</strong></p>
+</blockquote>
+<p>This pattern enabled:</p>
+<ul>
+<li>Testing gateway without BMP280 (saved time during development)</li>
+<li>Clear system status (logs show what&rsquo;s working, what&rsquo;s not)</li>
+<li>Graceful degradation (core mission succeeds even if extras fail)</li>
+</ul>
+<p><strong>When to panic</strong>: Safety-critical failures only (memory corruption, hardware fault that makes correct operation impossible).</p>
+<p><strong>When to log and continue</strong>: Optional features, peripherals not needed for core mission.</p>
+<hr>
+<h3 id="lesson-3-compact-json-is-still-json">Lesson 3: Compact JSON Is Still JSON<a hidden class="anchor" aria-hidden="true" href="#lesson-3-compact-json-is-still-json">#</a></h3>
+<h4 id="the-challenge">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h4>
+<p>Embedded systems have limited stack space. The gateway&rsquo;s JSON telemetry includes:</p>
+<ul>
+<li>Timestamp</li>
+<li>Node IDs</li>
+<li>Sensor readings (temperature, humidity, gas, pressure)</li>
+<li>Signal quality (RSSI, SNR)</li>
+<li>Statistics (packet counts, errors)</li>
+</ul>
+<p><strong>Naive approach</strong> with verbose field names:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;timestamp_milliseconds&#34;</span>: <span style="color:#ae81ff">12345</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;gateway_node_id&#34;</span>: <span style="color:#e6db74">&#34;N2&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;remote_node_sensors&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;temperature_celsius&#34;</span>: <span style="color:#ae81ff">28.4</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;relative_humidity_percent&#34;</span>: <span style="color:#ae81ff">53.7</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;gas_resistance_ohms&#34;</span>: <span style="color:#ae81ff">83440</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;gateway_local_sensors&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;temperature_celsius&#34;</span>: <span style="color:#ae81ff">24.8</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;pressure_hectopascals&#34;</span>: <span style="color:#ae81ff">1013.25</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;radio_signal_quality&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;rssi_dbm&#34;</span>: <span style="color:#ae81ff">-36</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;snr_db&#34;</span>: <span style="color:#ae81ff">12</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;reception_statistics&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;total_packets_received&#34;</span>: <span style="color:#ae81ff">42</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;crc_validation_errors&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Size</strong>: ~380 bytes with formatting, ~280 bytes compact</p>
+<p><strong>Buffer requirement</strong>: <code>heapless::String&lt;512&gt;</code> minimum</p>
+<h4 id="the-solution-1">The Solution<a hidden class="anchor" aria-hidden="true" href="#the-solution-1">#</a></h4>
+<p>Use <strong>short, consistent field names</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;ts&#34;</span>: <span style="color:#ae81ff">12345</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;N2&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;n1&#34;</span>: { <span style="color:#f92672">&#34;t&#34;</span>: <span style="color:#ae81ff">28.4</span>, <span style="color:#f92672">&#34;h&#34;</span>: <span style="color:#ae81ff">53.7</span>, <span style="color:#f92672">&#34;g&#34;</span>: <span style="color:#ae81ff">83440</span> },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;n2&#34;</span>: { <span style="color:#f92672">&#34;t&#34;</span>: <span style="color:#ae81ff">24.8</span>, <span style="color:#f92672">&#34;p&#34;</span>: <span style="color:#ae81ff">1013.25</span> },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;sig&#34;</span>: { <span style="color:#f92672">&#34;rssi&#34;</span>: <span style="color:#ae81ff">-36</span>, <span style="color:#f92672">&#34;snr&#34;</span>: <span style="color:#ae81ff">12</span> },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;sts&#34;</span>: { <span style="color:#f92672">&#34;rx&#34;</span>: <span style="color:#ae81ff">42</span>, <span style="color:#f92672">&#34;err&#34;</span>: <span style="color:#ae81ff">0</span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Size</strong>: ~117 bytes (59% reduction)</p>
+<p><strong>Buffer</strong>: <code>heapless::String&lt;256&gt;</code> would suffice, using 512 for headroom</p>
+<h4 id="the-mapping">The Mapping<a hidden class="anchor" aria-hidden="true" href="#the-mapping">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Full Name</th>
+          <th>Short</th>
+          <th>Type</th>
+          <th>Example</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>timestamp_milliseconds</code></td>
+          <td><code>ts</code></td>
+          <td>u32</td>
+          <td><code>12345</code></td>
+      </tr>
+      <tr>
+          <td><code>gateway_node_id</code></td>
+          <td><code>id</code></td>
+          <td>string</td>
+          <td><code>&quot;N2&quot;</code></td>
+      </tr>
+      <tr>
+          <td><code>temperature_celsius</code></td>
+          <td><code>t</code></td>
+          <td>f32</td>
+          <td><code>28.4</code></td>
+      </tr>
+      <tr>
+          <td><code>relative_humidity_percent</code></td>
+          <td><code>h</code></td>
+          <td>f32</td>
+          <td><code>53.7</code></td>
+      </tr>
+      <tr>
+          <td><code>gas_resistance_ohms</code></td>
+          <td><code>g</code></td>
+          <td>u32</td>
+          <td><code>83440</code></td>
+      </tr>
+      <tr>
+          <td><code>pressure_hectopascals</code></td>
+          <td><code>p</code></td>
+          <td>f32</td>
+          <td><code>1013.25</code></td>
+      </tr>
+      <tr>
+          <td><code>rssi_dbm</code></td>
+          <td><code>rssi</code></td>
+          <td>i8</td>
+          <td><code>-36</code></td>
+      </tr>
+      <tr>
+          <td><code>snr_db</code></td>
+          <td><code>snr</code></td>
+          <td>i8</td>
+          <td><code>12</code></td>
+      </tr>
+      <tr>
+          <td><code>total_packets_received</code></td>
+          <td><code>rx</code></td>
+          <td>u32</td>
+          <td><code>42</code></td>
+      </tr>
+      <tr>
+          <td><code>crc_validation_errors</code></td>
+          <td><code>err</code></td>
+          <td>u32</td>
+          <td><code>0</code></td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="the-tradeoffs">The Tradeoffs<a hidden class="anchor" aria-hidden="true" href="#the-tradeoffs">#</a></h4>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ 59% size reduction</li>
+<li>✅ Lower bandwidth requirements</li>
+<li>✅ Faster serialization</li>
+<li>✅ Smaller stack footprint</li>
+</ul>
+<p><strong>Costs</strong>:</p>
+<ul>
+<li>❌ Less self-documenting</li>
+<li>❌ Requires documentation of field meanings</li>
+</ul>
+<p><strong>Mitigation</strong>: Week 6 service has explicit struct definitions that map short names to clear types:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(Deserialize)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Telemetry</span> {
+</span></span><span style="display:flex;"><span>    ts: <span style="color:#66d9ef">u32</span>,           <span style="color:#75715e">// timestamp_ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    id: String,        <span style="color:#75715e">// node_id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    n1: <span style="color:#a6e22e">Node1Data</span>,     <span style="color:#75715e">// node_1_sensors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    n2: <span style="color:#a6e22e">Node2Data</span>,     <span style="color:#75715e">// node_2_sensors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    sig: <span style="color:#a6e22e">SignalQuality</span>,
+</span></span><span style="display:flex;"><span>    sts: <span style="color:#a6e22e">Statistics</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Code is self-documenting even if JSON isn&rsquo;t.</p>
+<h4 id="the-lesson-2">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-2">#</a></h4>
+<blockquote>
+<p><strong>JSON doesn&rsquo;t have to be verbose. Short field names reduce bandwidth while maintaining structure and type safety.</strong></p>
+</blockquote>
+<p>This matters for:</p>
+<ul>
+<li>Embedded systems with limited stack space</li>
+<li>Systems transmitting lots of telemetry (every 10 seconds adds up)</li>
+<li>Battery-powered devices (less data = less power)</li>
+</ul>
+<p><strong>Best practice</strong>: Use short field names in wire format, verbose names in code. Let the compiler enforce correctness.</p>
+<hr>
+<h3 id="lesson-4-newline-delimited-json-ndjson-for-streaming">Lesson 4: Newline-Delimited JSON (NDJSON) for Streaming<a hidden class="anchor" aria-hidden="true" href="#lesson-4-newline-delimited-json-ndjson-for-streaming">#</a></h3>
+<h4 id="the-problem-with-json-arrays">The Problem with JSON Arrays<a hidden class="anchor" aria-hidden="true" href="#the-problem-with-json-arrays">#</a></h4>
+<p>Standard approach for multiple JSON objects uses arrays:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;ts&#34;</span>: <span style="color:#ae81ff">1000</span>, <span style="color:#f92672">&#34;t&#34;</span>: <span style="color:#ae81ff">28.4</span>, <span style="color:#960050;background-color:#1e0010">...</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;ts&#34;</span>: <span style="color:#ae81ff">2000</span>, <span style="color:#f92672">&#34;t&#34;</span>: <span style="color:#ae81ff">28.5</span>, <span style="color:#960050;background-color:#1e0010">...</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;ts&#34;</span>: <span style="color:#ae81ff">3000</span>, <span style="color:#f92672">&#34;t&#34;</span>: <span style="color:#ae81ff">28.6</span>, <span style="color:#960050;background-color:#1e0010">...</span>}
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p><strong>Issues</strong>:</p>
+<ol>
+<li><strong>Can&rsquo;t parse until complete</strong>: Need closing <code>]</code> before deserializing</li>
+<li><strong>Unbounded growth</strong>: Array gets larger over time</li>
+<li><strong>Single point of failure</strong>: One corrupted object invalidates entire array</li>
+<li><strong>Memory intensive</strong>: Must buffer entire array before processing</li>
+</ol>
+<p>For streaming telemetry (one packet every 10 seconds, running for days), this is unworkable.</p>
+<h4 id="the-ndjson-solution">The NDJSON Solution<a hidden class="anchor" aria-hidden="true" href="#the-ndjson-solution">#</a></h4>
+<p><strong>Newline-Delimited JSON</strong> (also called JSON Lines): Each line is a complete, independent JSON object.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{<span style="color:#f92672">&#34;ts&#34;</span>:<span style="color:#ae81ff">1000</span>,<span style="color:#f92672">&#34;t&#34;</span>:<span style="color:#ae81ff">28.4</span>,<span style="color:#960050;background-color:#1e0010">...</span>}
+</span></span><span style="display:flex;"><span>{<span style="color:#f92672">&#34;ts&#34;</span>:<span style="color:#ae81ff">2000</span>,<span style="color:#f92672">&#34;t&#34;</span>:<span style="color:#ae81ff">28.5</span>,<span style="color:#960050;background-color:#1e0010">...</span>}
+</span></span><span style="display:flex;"><span>{<span style="color:#f92672">&#34;ts&#34;</span>:<span style="color:#ae81ff">3000</span>,<span style="color:#f92672">&#34;t&#34;</span>:<span style="color:#ae81ff">28.6</span>,<span style="color:#960050;background-color:#1e0010">...</span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ol>
+<li>✅ <strong>Process line-by-line</strong>: Parse each as it arrives</li>
+<li>✅ <strong>Fixed buffer size</strong>: One line maximum</li>
+<li>✅ <strong>Resilient</strong>: Corrupted line doesn&rsquo;t affect others</li>
+<li>✅ <strong>Standard format</strong>: Widely supported (NDJSON, JSON Lines, LDJSON)</li>
+</ol>
+<h4 id="embedded-implementation">Embedded Implementation<a hidden class="anchor" aria-hidden="true" href="#embedded-implementation">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">format_json_telemetry</span>(<span style="color:#f92672">..</span>.) -&gt; <span style="color:#a6e22e">heapless</span>::String<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">512</span><span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> json <span style="color:#f92672">=</span> heapless::String::new();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Build JSON object
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">write!</span>(json, <span style="color:#e6db74">&#34;{{</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">ts</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">:{},&#34;</span>, timestamp_ms)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">write!</span>(json, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">id</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">:</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">N2</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">,&#34;</span>)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ... more fields ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// CRITICAL: Add newline terminator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">write!</span>(json, <span style="color:#e6db74">&#34;}}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)<span style="color:#f92672">?</span>;  <span style="color:#75715e">// Close root object, add \n
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    json
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="desktop-processing-week-6">Desktop Processing (Week 6)<a hidden class="anchor" aria-hidden="true" href="#desktop-processing-week-6">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tokio::io::{BufReader, AsyncBufReadExt};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> reader <span style="color:#f92672">=</span> BufReader::new(probe_rs_stdout);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> lines <span style="color:#f92672">=</span> reader.lines();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(line) <span style="color:#f92672">=</span> lines.next_line().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> line.contains(<span style="color:#e6db74">&#34;JSON sent via VCP:&#34;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> extract_json(<span style="color:#f92672">&amp;</span>line);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Each line is independently parseable
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">match</span> serde_json::from_str::<span style="color:#f92672">&lt;</span>Telemetry<span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>json) {
+</span></span><span style="display:flex;"><span>            Ok(telemetry) <span style="color:#f92672">=&gt;</span> process_telemetry(telemetry).<span style="color:#66d9ef">await</span>,
+</span></span><span style="display:flex;"><span>            Err(e) <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">warn!</span>(<span style="color:#e6db74">&#34;Corrupted line, skipping: {}&#34;</span>, e),
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Resilience</strong>: If one line is corrupted (RF noise, UART error), we:</p>
+<ul>
+<li>Log the error</li>
+<li>Skip that line</li>
+<li>Continue processing next line</li>
+</ul>
+<p>No cascade failure. No accumulated state. Perfect for streaming.</p>
+<h4 id="the-lesson-3">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-3">#</a></h4>
+<blockquote>
+<p><strong>Streaming data needs streaming formats. NDJSON is line-oriented processing made simple.</strong></p>
+</blockquote>
+<p>When to use NDJSON:</p>
+<ul>
+<li>Telemetry streams (embedded → desktop)</li>
+<li>Log aggregation</li>
+<li>Event processing</li>
+<li>Any scenario with unbounded data over time</li>
+</ul>
+<p>When to use JSON arrays:</p>
+<ul>
+<li>Fixed, small datasets</li>
+<li>RESTful API responses</li>
+<li>Configuration files</li>
+</ul>
+<hr>
+<h3 id="lesson-5-the-drain-all-pattern-for-uart-interrupts">Lesson 5: The &ldquo;Drain All&rdquo; Pattern for UART Interrupts<a hidden class="anchor" aria-hidden="true" href="#lesson-5-the-drain-all-pattern-for-uart-interrupts">#</a></h3>
+<h4 id="the-evolution-of-uart-handling">The Evolution of UART Handling<a hidden class="anchor" aria-hidden="true" href="#the-evolution-of-uart-handling">#</a></h4>
+<p><strong>Week 2 lesson</strong>: Interrupt handlers must be fast.</p>
+<p><strong>Week 5 addition</strong>: Interrupt handlers should <strong>drain hardware FIFOs completely</strong>.</p>
+<h4 id="the-naive-approach">The Naive Approach<a hidden class="anchor" aria-hidden="true" href="#the-naive-approach">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, ...)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(<span style="color:#f92672">..</span>.) {
+</span></span><span style="display:flex;"><span>    cx.shared.lora_uart.lock(<span style="color:#f92672">|</span>uart<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Read one byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(byte) <span style="color:#f92672">=</span> uart.read() {
+</span></span><span style="display:flex;"><span>            buffer.push(byte);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Problem</strong>: If message is 44 bytes:</p>
+<ul>
+<li>Interrupt fires 44 times</li>
+<li>Each interrupt: acquire lock, read 1 byte, release lock</li>
+<li>44× context switching overhead</li>
+<li>UART FIFO can overflow if handler is slightly slow</li>
+</ul>
+<h4 id="the-drain-all-pattern">The &ldquo;Drain All&rdquo; Pattern<a hidden class="anchor" aria-hidden="true" href="#the-drain-all-pattern">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, ...)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(<span style="color:#f92672">..</span>.) {
+</span></span><span style="display:flex;"><span>    cx.shared.lora_uart.lock(<span style="color:#f92672">|</span>uart<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Drain ALL available bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Ok(byte) <span style="color:#f92672">=</span> uart.read() {
+</span></span><span style="display:flex;"><span>            buffer.push(byte);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> byte <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;\n&#39;</span> {
+</span></span><span style="display:flex;"><span>                message_complete <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Process complete message OUTSIDE lock
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> message_complete {
+</span></span><span style="display:flex;"><span>        parse_and_handle();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ol>
+<li>✅ <strong>Single interrupt</strong> for complete message (not 44 separate interrupts)</li>
+<li>✅ <strong>Single lock acquisition</strong> (not 44)</li>
+<li>✅ <strong>FIFO never overflows</strong> (always drained faster than filled)</li>
+<li>✅ <strong>Lower latency</strong> (process complete message immediately)</li>
+</ol>
+<h4 id="real-world-impact">Real-World Impact<a hidden class="anchor" aria-hidden="true" href="#real-world-impact">#</a></h4>
+<p><strong>Before</strong> (read one byte per interrupt):</p>
+<pre tabindex="0"><code>[INFO] UART INT: 1 byte
+[INFO] UART INT: 1 byte
+... (42 more interrupts)
+[INFO] UART INT: 1 byte, complete=true
+</code></pre><p><strong>After</strong> (drain all):</p>
+<pre tabindex="0"><code>[INFO] UART INT: 44 bytes, complete=true
+</code></pre><p><strong>Measured improvement</strong>:</p>
+<ul>
+<li>Interrupt count: 44 → 1 (98% reduction)</li>
+<li>Total ISR time: ~440µs → ~50µs (89% reduction)</li>
+<li>Latency to process message: ~440µs → ~50µs</li>
+</ul>
+<h4 id="the-pattern-applied">The Pattern Applied<a hidden class="anchor" aria-hidden="true" href="#the-pattern-applied">#</a></h4>
+<p>This pattern works for any peripheral with buffering:</p>
+<p><strong>SPI</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">!</span>spi.is_rx_empty() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> byte <span style="color:#f92672">=</span> spi.read()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    rx_buffer.push(byte);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>DMA</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> dma.has_data() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> chunk <span style="color:#f92672">=</span> dma.read_chunk()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    process_chunk(chunk);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>I2C</strong> (where applicable):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> i2c.bytes_available() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> byte <span style="color:#f92672">=</span> i2c.read_byte()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    handle_byte(byte);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="the-lesson-4">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-4">#</a></h4>
+<blockquote>
+<p><strong>Hardware FIFOs should be drained completely in each interrupt, not one item at a time.</strong></p>
+</blockquote>
+<p><strong>Why it matters</strong>:</p>
+<ul>
+<li>Reduces interrupt overhead</li>
+<li>Prevents FIFO overflow</li>
+<li>Improves latency</li>
+<li>Makes timing more predictable</li>
+</ul>
+<p><strong>When not to drain all</strong>: If processing is so expensive that draining everything would exceed interrupt budget. In that case, use DMA or process in background task.</p>
+<hr>
+<h2 id="results-at-the-end-of-week-5">Results at the End of Week 5<a hidden class="anchor" aria-hidden="true" href="#results-at-the-end-of-week-5">#</a></h2>
+<h3 id="system-behavior">System Behavior<a hidden class="anchor" aria-hidden="true" href="#system-behavior">#</a></h3>
+<p>By the end of Week 5:</p>
+<p><strong>LoRa Gateway Core</strong>: 100% ✅</p>
+<ul>
+<li>Binary protocol with CRC validation working reliably</li>
+<li>ACK/NACK transmission on every packet</li>
+<li>RSSI/SNR extraction from LoRa module</li>
+<li>Packet parsing with error recovery</li>
+</ul>
+<p><strong>JSON Telemetry</strong>: 100% ✅</p>
+<ul>
+<li>Compact 117-byte NDJSON format</li>
+<li>Includes all sensor data, signal quality, statistics</li>
+<li>Timestamp since boot for ordering</li>
+<li>Gracefully handles missing sensors</li>
+</ul>
+<p><strong>Output Method</strong>: defmt/RTT ✅</p>
+<ul>
+<li>JSON appears in probe-rs logs</li>
+<li>Clean, parseable format</li>
+<li>Ready for Week 6 service integration</li>
+<li>No special hardware or drivers needed</li>
+</ul>
+<p><strong>Robustness</strong>: 100% ✅</p>
+<ul>
+<li>UART error flag clearing prevents lockup</li>
+<li>BMP280 initialization doesn&rsquo;t panic if sensor missing</li>
+<li>System recovers from CRC errors automatically</li>
+<li>Runs indefinitely without manual intervention</li>
+</ul>
+<h3 id="performance-metrics">Performance Metrics<a hidden class="anchor" aria-hidden="true" href="#performance-metrics">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>JSON Size</strong></td>
+          <td>117 bytes</td>
+          <td>59% smaller than verbose format</td>
+      </tr>
+      <tr>
+          <td><strong>Update Rate</strong></td>
+          <td>~10 seconds</td>
+          <td>Matches Node 1 transmission</td>
+      </tr>
+      <tr>
+          <td><strong>CPU Overhead</strong></td>
+          <td>&lt;5%</td>
+          <td>LED timing stays consistent</td>
+      </tr>
+      <tr>
+          <td><strong>RAM Usage</strong></td>
+          <td>~19 KB</td>
+          <td>Out of 128 KB (15%)</td>
+      </tr>
+      <tr>
+          <td><strong>Flash Usage</strong></td>
+          <td>~68 KB</td>
+          <td>Out of 512 KB (13%)</td>
+      </tr>
+      <tr>
+          <td><strong>UART Interrupts</strong></td>
+          <td>1 per packet</td>
+          <td>Was 44, now 1 (98% reduction)</td>
+      </tr>
+      <tr>
+          <td><strong>Error Recovery</strong></td>
+          <td>Automatic</td>
+          <td>UART flags cleared, CRC errors logged</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="signal-quality-typical">Signal Quality (Typical)<a hidden class="anchor" aria-hidden="true" href="#signal-quality-typical">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>RSSI</strong></td>
+          <td>-30 to -40 dBm</td>
+          <td>Indoor, ~5m range</td>
+      </tr>
+      <tr>
+          <td><strong>SNR</strong></td>
+          <td>10 to 15 dB</td>
+          <td>Clean reception</td>
+      </tr>
+      <tr>
+          <td><strong>Packet Loss</strong></td>
+          <td>&lt;1%</td>
+          <td>Due to CRC validation</td>
+      </tr>
+      <tr>
+          <td><strong>CRC Errors</strong></td>
+          <td>~0.5%</td>
+          <td>Occasional RF noise</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="example-output">Example Output<a hidden class="anchor" aria-hidden="true" href="#example-output">#</a></h3>
+<p><strong>probe-rs Terminal</strong>:</p>
+<pre tabindex="0"><code>[INFO] BMP280 initialized successfully
+[INFO] Init complete - entering main loop
+[INFO] UART INT: 44 bytes, complete=true
+[INFO] Processing buffer: 44 bytes
+[INFO] Binary RX - T:284 H:537 G:83440 Pkt:42 RSSI:-36 SNR:12
+[INFO] JSON sent via VCP: {&#34;ts&#34;:12345,&#34;id&#34;:&#34;N2&#34;,&#34;n1&#34;:{&#34;t&#34;:28.4,&#34;h&#34;:53.7,&#34;g&#34;:83440},&#34;n2&#34;:{&#34;t&#34;:24.8,&#34;p&#34;:1013.25},&#34;sig&#34;:{&#34;rssi&#34;:-36,&#34;snr&#34;:12},&#34;sts&#34;:{&#34;rx&#34;:42,&#34;err&#34;:0}}
+</code></pre><p><strong>OLED Display</strong>:</p>
+<pre tabindex="0"><code>T:28.4C H:53.7%
+Gas:83k
+N2 RX #0042
+Net:18 915MHz
+RSSI:-36 SNR:12 #42
+</code></pre><p>Everything is <strong>explainable and predictable</strong>.</p>
+<hr>
+<h2 id="why-this-matters-in-the-plan">Why This Matters in the Plan<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-in-the-plan">#</a></h2>
+<h3 id="the-meta-lesson-adaptive-engineering">The Meta-Lesson: Adaptive Engineering<a hidden class="anchor" aria-hidden="true" href="#the-meta-lesson-adaptive-engineering">#</a></h3>
+<p>Week 5&rsquo;s journey through three implementation attempts teaches something more valuable than any single technical lesson:</p>
+<blockquote>
+<p><strong>The best solution is the one that works reliably with the constraints you actually have.</strong></p>
+</blockquote>
+<p><strong>Plan A (USB-CDC)</strong> was elegant, professional, &ldquo;the right way.&rdquo;<br>
+<strong>Plan B (USART2 VCP)</strong> was practical, used existing hardware, &ldquo;good enough.&rdquo;<br>
+<strong>Plan C (defmt/RTT)</strong> was unconventional, reused debug infrastructure, &ldquo;hacky.&rdquo;</p>
+<p><strong>But Plan C works.</strong> And in engineering, <strong>working beats elegant</strong>.</p>
+<h3 id="when-to-adapt-vs-when-to-push-through">When to Adapt vs. When to Push Through<a hidden class="anchor" aria-hidden="true" href="#when-to-adapt-vs-when-to-push-through">#</a></h3>
+<p><strong>Signs it&rsquo;s time to adapt</strong>:</p>
+<ul>
+<li>❌ Hardware limitation you can&rsquo;t change (PA11/PA12 not connected)</li>
+<li>❌ Firmware limitation requiring risky upgrade (ST-Link VCP)</li>
+<li>❌ Solution requires buying new hardware (defeats learning goals)</li>
+<li>❌ Workaround is more complex than alternative approach</li>
+</ul>
+<p><strong>Signs to push through</strong>:</p>
+<ul>
+<li>✅ Software bug you can fix</li>
+<li>✅ Timing issue you can optimize</li>
+<li>✅ Configuration problem you can solve</li>
+<li>✅ Learning opportunity that deepens understanding</li>
+</ul>
+<p><strong>Week 5 decision matrix</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Approach</th>
+          <th>Blocker Type</th>
+          <th>Effort to Fix</th>
+          <th>Decision</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>USB-CDC</td>
+          <td>Hardware (unfixable)</td>
+          <td>High (new board)</td>
+          <td>❌ Adapt</td>
+      </tr>
+      <tr>
+          <td>USART2 VCP</td>
+          <td>Firmware (risky)</td>
+          <td>Medium (ST-Link upgrade)</td>
+          <td>❌ Adapt</td>
+      </tr>
+      <tr>
+          <td>defmt/RTT</td>
+          <td>None</td>
+          <td>Zero (already working)</td>
+          <td>✅ Use it</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="what-week-5-enables">What Week 5 Enables<a hidden class="anchor" aria-hidden="true" href="#what-week-5-enables">#</a></h3>
+<p>By the end of this week:</p>
+<p><strong>Foundation for Week 6</strong>:</p>
+<ul>
+<li>✅ JSON telemetry streaming (ready to parse)</li>
+<li>✅ NDJSON format (perfect for line-by-line processing)</li>
+<li>✅ Compact representation (efficient parsing)</li>
+<li>✅ Robust error handling (desktop service won&rsquo;t crash on bad data)</li>
+</ul>
+<p><strong>Architecture decisions locked in</strong>:</p>
+<ul>
+<li>✅ defmt/RTT as primary telemetry output (Week 6 will parse probe-rs logs)</li>
+<li>✅ Compact JSON field names (Week 6 will have mapping structs)</li>
+<li>✅ Optional sensors with graceful fallback (Week 6 handles missing fields)</li>
+<li>✅ UART error recovery (long-running stability)</li>
+</ul>
+<p><strong>Lessons to carry forward</strong>:</p>
+<ul>
+<li>✅ Adapt to constraints, don&rsquo;t fight them</li>
+<li>✅ Graceful degradation &gt; defensive panics</li>
+<li>✅ Streaming formats for streaming data</li>
+<li>✅ Proactive error handling for peripherals</li>
+</ul>
+<hr>
+<h2 id="next-steps-week-6-preview">Next Steps: Week 6 Preview<a hidden class="anchor" aria-hidden="true" href="#next-steps-week-6-preview">#</a></h2>
+<p>With the gateway reliably outputting JSON telemetry, Week 6 will build the <strong>desktop service</strong> that consumes it.</p>
+<h3 id="week-6-goals">Week 6 Goals<a hidden class="anchor" aria-hidden="true" href="#week-6-goals">#</a></h3>
+<p><strong>1. Async Rust Service (Tokio)</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tokio::process::{Command, ChildStdout};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tokio::io::{BufReader, AsyncBufReadExt};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Spawn probe-rs as subprocess
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> Command::new(<span style="color:#e6db74">&#34;probe-rs&#34;</span>)
+</span></span><span style="display:flex;"><span>    .args(<span style="color:#f92672">&amp;</span>[<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;--chip&#34;</span>, <span style="color:#e6db74">&#34;STM32F446RETx&#34;</span>, binary_path])
+</span></span><span style="display:flex;"><span>    .stdout(Stdio::piped())
+</span></span><span style="display:flex;"><span>    .spawn()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Process output asynchronously
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> stdout <span style="color:#f92672">=</span> child.stdout.take().unwrap();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> reader <span style="color:#f92672">=</span> BufReader::new(stdout);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> lines <span style="color:#f92672">=</span> reader.lines();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(line) <span style="color:#f92672">=</span> lines.next_line().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> line.contains(<span style="color:#e6db74">&#34;JSON sent via VCP:&#34;</span>) {
+</span></span><span style="display:flex;"><span>        handle_telemetry_line(line).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>2. Structured Telemetry Processing</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Deserialize)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Telemetry</span> {
+</span></span><span style="display:flex;"><span>    ts: <span style="color:#66d9ef">u32</span>,           <span style="color:#75715e">// timestamp_ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    id: String,        <span style="color:#75715e">// node_id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    n1: <span style="color:#a6e22e">Node1Data</span>,     <span style="color:#75715e">// remote sensors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    n2: <span style="color:#a6e22e">Node2Data</span>,     <span style="color:#75715e">// gateway sensors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    sig: <span style="color:#a6e22e">SignalQuality</span>,
+</span></span><span style="display:flex;"><span>    sts: <span style="color:#a6e22e">Statistics</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">handle_telemetry_line</span>(line: String) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> extract_json_from_log(<span style="color:#f92672">&amp;</span>line);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> telemetry: <span style="color:#a6e22e">Telemetry</span> <span style="color:#f92672">=</span> serde_json::from_str(<span style="color:#f92672">&amp;</span>json)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Telemetry received: T={:.1}°C H={:.1}% RSSI={}&#34;</span>,
+</span></span><span style="display:flex;"><span>        telemetry.n1.t, telemetry.n1.h, telemetry.sig.rssi
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Store to database, publish to MQTT, etc.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    store_telemetry(telemetry).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>3. Structured Logging (tracing)</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tracing::{info, warn, error};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[instrument(skip(telemetry))]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">process_telemetry</span>(telemetry: <span style="color:#a6e22e">Telemetry</span>) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(
+</span></span><span style="display:flex;"><span>        node_id <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>telemetry.id,
+</span></span><span style="display:flex;"><span>        temperature <span style="color:#f92672">=</span> telemetry.n1.t,
+</span></span><span style="display:flex;"><span>        humidity <span style="color:#f92672">=</span> telemetry.n1.h,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Processing telemetry packet&#34;</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> telemetry.sts.err <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">warn!</span>(
+</span></span><span style="display:flex;"><span>            errors <span style="color:#f92672">=</span> telemetry.sts.err,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;CRC errors detected&#34;</span>
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>4. Graceful Shutdown</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tokio::signal;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Spawn probe-rs subprocess
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> child <span style="color:#f92672">=</span> spawn_probe_rs().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Set up Ctrl+C handler
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>        signal::ctrl_c().<span style="color:#66d9ef">await</span>.unwrap();
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Shutdown signal received&#34;</span>);
+</span></span><span style="display:flex;"><span>        child.kill().<span style="color:#66d9ef">await</span>.ok();
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Run service
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    run_telemetry_service().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="week-7-preparation">Week 7 Preparation<a hidden class="anchor" aria-hidden="true" href="#week-7-preparation">#</a></h3>
+<p>Week 6 lays foundation for Week 7&rsquo;s <strong>MQTT and InfluxDB integration</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Week 7: Publish to MQTT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> mqtt_client <span style="color:#f92672">=</span> mqtt::Client::new(<span style="color:#e6db74">&#34;mqtt://localhost:1883&#34;</span>)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish(<span style="color:#e6db74">&#34;sensors/node1/temperature&#34;</span>, telemetry.n1.t).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Week 7: Store in InfluxDB
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> influx_client <span style="color:#f92672">=</span> influxdb::Client::new(<span style="color:#e6db74">&#34;http://localhost:8086&#34;</span>)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>influx_client.write_point(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;sensor_data&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">vec!</span>[
+</span></span><span style="display:flex;"><span>        (<span style="color:#e6db74">&#34;temperature&#34;</span>, telemetry.n1.t),
+</span></span><span style="display:flex;"><span>        (<span style="color:#e6db74">&#34;humidity&#34;</span>, telemetry.n1.h),
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 5 taught that <strong>constraints aren&rsquo;t roadblocks - they&rsquo;re guardrails</strong> that guide you to solutions you might not have considered.</p>
+<p><strong>What I planned</strong>: Elegant USB-CDC virtual serial port<br>
+<strong>What I built</strong>: defmt/RTT telemetry pipeline<br>
+<strong>What I learned</strong>: Adaptability beats purism</p>
+<h3 id="the-technical-achievements">The Technical Achievements<a hidden class="anchor" aria-hidden="true" href="#the-technical-achievements">#</a></h3>
+<ul>
+<li>✅ Gateway bridges embedded → desktop reliably</li>
+<li>✅ JSON telemetry streams via defmt/RTT</li>
+<li>✅ Compact NDJSON format (117 bytes/packet)</li>
+<li>✅ UART error recovery prevents lockups</li>
+<li>✅ Graceful degradation with optional sensors</li>
+<li>✅ Ready for Week 6 integration</li>
+</ul>
+<h3 id="the-deeper-lessons">The Deeper Lessons<a hidden class="anchor" aria-hidden="true" href="#the-deeper-lessons">#</a></h3>
+<ol>
+<li><strong>Adaptive engineering</strong>: Plans A and B failed. Plan C worked. Ship what works.</li>
+<li><strong>Proactive error handling</strong>: UART flags must be cleared before they cause problems</li>
+<li><strong>Graceful degradation</strong>: Optional features should be truly optional</li>
+<li><strong>Compact representation</strong>: JSON doesn&rsquo;t have to be verbose</li>
+<li><strong>Streaming formats</strong>: NDJSON perfect for line-oriented processing</li>
+<li><strong>Drain hardware FIFOs</strong>: Read everything available, not one item at a time</li>
+</ol>
+<h3 id="the-path-forward">The Path Forward<a hidden class="anchor" aria-hidden="true" href="#the-path-forward">#</a></h3>
+<p>Week 5 transformed Node 2 from a simple receiver into a <strong>production gateway</strong>. Week 6 will transform that gateway&rsquo;s output into a <strong>production data pipeline</strong>.</p>
+<p>The foundation is solid. The telemetry is reliable. The architecture is adaptive.</p>
+<p><strong>This is how reliable systems are built</strong>: one pragmatic decision at a time.</p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code-repository">Code Repository<a hidden class="anchor" aria-hidden="true" href="#code-repository">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk5-gateway-firmware">Week 5 Source Code</a></li>
+</ul>
+<h3 id="related-posts">Related Posts<a hidden class="anchor" aria-hidden="true" href="#related-posts">#</a></h3>
+<ul>
+<li><a href="https://www.mapfumo.net/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/">Week 1: Building Deterministic IIoT Systems</a></li>
+<li><a href="https://www.mapfumo.net/posts/lora-sensor-fusion-week-2/">Week 2: LoRa Sensor Fusion</a></li>
+<li><a href="https://github.com/mapfumo/wk3-binary-protocol">Week 3: Binary Protocols &amp; CRC</a></li>
+</ul>
+<h3 id="technical-references">Technical References<a hidden class="anchor" aria-hidden="true" href="#technical-references">#</a></h3>
+<ul>
+<li><a href="https://www.st.com/resource/en/reference_manual/dm00031020.pdf">STM32F4 UART Error Handling</a> (Section 30.6.1)</li>
+<li><a href="http://ndjson.org/">NDJSON Specification</a></li>
+<li><a href="https://defmt.ferrous-systems.com/">defmt Book</a></li>
+<li><a href="https://probe.rs/">probe-rs Documentation</a></li>
+<li><a href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf">BMP280 Datasheet</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/rust/">Rust</a></li>
+      <li><a href="http://localhost:1313/tags/embedded-rust/">Embedded Rust</a></li>
+      <li><a href="http://localhost:1313/tags/lora/">Lora</a></li>
+      <li><a href="http://localhost:1313/tags/json/">Json</a></li>
+      <li><a href="http://localhost:1313/tags/mcu/">MCU</a></li>
+      <li><a href="http://localhost:1313/tags/stm32/">STM32</a></li>
+      <li><a href="http://localhost:1313/tags/rtic/">RTIC</a></li>
+      <li><a href="http://localhost:1313/tags/defmt/">Defmt</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Binary Protocols and Reliable LoRa Communication</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Gateway Firmware - From Wireless to Desktop, Wk5 on twitter"
+        href="https://twitter.com/intent/tweet/?text=Gateway%20Firmware%20-%20From%20Wireless%20to%20Desktop%2c%20Wk5&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f&amp;hashtags=Rust%2cEmbeddedRust%2clora%2cjson%2cMCU%2cSTM32%2cRTIC%2cdefmt">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Gateway Firmware - From Wireless to Desktop, Wk5 on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f&amp;title=Gateway%20Firmware%20-%20From%20Wireless%20to%20Desktop%2c%20Wk5&amp;summary=Gateway%20Firmware%20-%20From%20Wireless%20to%20Desktop%2c%20Wk5&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Gateway Firmware - From Wireless to Desktop, Wk5 on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f&title=Gateway%20Firmware%20-%20From%20Wireless%20to%20Desktop%2c%20Wk5">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Gateway Firmware - From Wireless to Desktop, Wk5 on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Gateway Firmware - From Wireless to Desktop, Wk5 on whatsapp"
+        href="https://api.whatsapp.com/send?text=Gateway%20Firmware%20-%20From%20Wireless%20to%20Desktop%2c%20Wk5%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fgateway-firmware-from-wireless-to-desktop-wk5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
