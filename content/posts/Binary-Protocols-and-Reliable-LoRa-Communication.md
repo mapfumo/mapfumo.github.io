@@ -1,12 +1,12 @@
 ---
 title: "Binary Protocols and Reliable LoRa Communication"
-date: 2026-01-01T20:14:18+10:00
+date: 2025-12-12T20:14:18+10:00
 draft: false
 cover:
   image: /img/binary_protocol.png
   alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
   caption: "LoRA Network, STM32F446RE NUCLEO boards"
-tags: ["Rust", "Embedded Rust", "MCU", "RTIC"]
+tags: ["Rust", "Embedded Rust", "MCU", "STM32", "RTIC"]
 categories: ["IIoT", "Tech"]
 ---
 

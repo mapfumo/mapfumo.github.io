@@ -6,11 +6,54 @@
     <description>Recent content in Rust on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 24 Dec 2025 17:53:41 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Dec 2025 20:14:18 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Binary Protocols and Reliable LoRa Communication</title>
+      <link>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</link>
+      <pubDate>Fri, 12 Dec 2025 20:14:18 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/</guid>
+      <description>&lt;p&gt;The first two weeks of this project focused on getting data moving: sensors reading correctly, LoRa modules talking, and messages arriving at the other end. That phase was intentionally simple and text-based. It worked, but it was never meant to last.&lt;/p&gt;
+&lt;p&gt;This week was about moving closer to how real embedded systems behave in the field: binary data, explicit integrity checks, and predictable delivery behavior.&lt;/p&gt;
+&lt;p&gt;Human-readable messages are convenient for debugging, but they waste bandwidth and hide failure modes. Radios don&amp;rsquo;t care about readability — they care about airtime, reliability, and determinism. This week&amp;rsquo;s work was about aligning the system with those realities.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2</title>
+      <link>http://localhost:1313/posts/lora-sensor-fusion-when-simple-becomes-reliable/</link>
+      <pubDate>Fri, 05 Dec 2025 17:53:41 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/lora-sensor-fusion-when-simple-becomes-reliable/</guid>
+      <description>&lt;p&gt;Building a reliable embedded system involves far more than getting code to compile. It&amp;rsquo;s a process of learning where hardware limits, timing guarantees, and data representation quietly shape everything above them.&lt;/p&gt;
+&lt;p&gt;Week 2 of the Plan focused on making those constraints explicit.&lt;/p&gt;
+&lt;p&gt;The result is a dual-node LoRa sensor fusion system built on the STM32F446RE using Rust and RTIC 1.1 — not as a showcase, but as a foundation.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;table-of-contents&#34;&gt;Table of Contents&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;#the-objective&#34;&gt;The Objective&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#system-overview&#34;&gt;System Overview&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#five-critical-lessons&#34;&gt;Five Critical Lessons&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#lesson-1-the-51-byte-myth-and-a-self-inflicted-limit&#34;&gt;Lesson 1: The 51-Byte Myth&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#lesson-2-rtic-timing-when-helpful-code-becomes-harmful&#34;&gt;Lesson 2: UART Timing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#lesson-3-sensor-fusion-by-selection-not-averaging&#34;&gt;Lesson 3: Sensor Fusion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#lesson-4-units-displays-and-small-lies-that-matter&#34;&gt;Lesson 4: Data Representation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#lesson-5-shared-hardware-forces-honest-design&#34;&gt;Lesson 5: Shared Hardware&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#results-at-the-end-of-week-2&#34;&gt;Results&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#why-this-matters-in-the-plan&#34;&gt;Why This Matters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#next-steps-week-3-preview&#34;&gt;Next Steps&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-objective&#34;&gt;The Objective&lt;/h2&gt;
+&lt;p&gt;The goal for this week was deliberately narrow:&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Building Deterministic IIoT Systems With Embedded Rust and RTIC</title>
       <link>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</link>
-      <pubDate>Wed, 24 Dec 2025 17:53:41 +1000</pubDate>
+      <pubDate>Tue, 02 Dec 2025 17:53:41 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/</guid>
       <description>&lt;p&gt;In the world of Industrial IoT (IIoT), reliability is everything. Sensors must read accurately, actuators must respond predictably, and communication must flow without surprises. On the embedded side, this means precise control of hardware resources, minimal overhead, and code that behaves deterministically. Enter Embedded Rust and RTIC—a pairing that gives engineers both safety and performance without compromise.&lt;/p&gt;
@@ -22,7 +65,7 @@
     <item>
       <title>Building an IIoT Sensor Node With Embedded Rust and Stm32</title>
       <link>http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/</link>
-      <pubDate>Thu, 18 Dec 2025 17:23:13 +1000</pubDate>
+      <pubDate>Tue, 18 Nov 2025 17:23:13 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/building-an-iiot-sensor-node-with-embedded-rust-and-stm32/</guid>
       <description>&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;

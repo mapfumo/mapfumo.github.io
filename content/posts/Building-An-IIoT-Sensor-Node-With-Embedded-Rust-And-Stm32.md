@@ -1,6 +1,6 @@
 ---
 title: "Building an IIoT Sensor Node With Embedded Rust and Stm32"
-date: 2025-12-18T17:23:13+10:00
+date: 2025-11-18T17:23:13+10:00
 draft: false
 cover:
   image: /img/nucleo.jpg

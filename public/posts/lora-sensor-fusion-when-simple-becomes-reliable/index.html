@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 | Antony Mapfumo</title>
+<meta name="keywords" content="Rust, Embedded Rust, MCU, RTIC, STM32, RTIC">
+<meta name="description" content="Building a reliable embedded system involves far more than getting code to compile. It&rsquo;s a process of learning where hardware limits, timing guarantees, and data representation quietly shape everything above them.
+Week 2 of the Plan focused on making those constraints explicit.
+The result is a dual-node LoRa sensor fusion system built on the STM32F446RE using Rust and RTIC 1.1 — not as a showcase, but as a foundation.
+
+Table of Contents
+
+The Objective
+System Overview
+Five Critical Lessons
+
+Lesson 1: The 51-Byte Myth
+Lesson 2: UART Timing
+Lesson 3: Sensor Fusion
+Lesson 4: Data Representation
+Lesson 5: Shared Hardware
+
+
+Results
+Why This Matters
+Next Steps
+
+
+The Objective
+The goal for this week was deliberately narrow:">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/lora-sensor-fusion-when-simple-becomes-reliable/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lora-sensor-fusion-when-simple-becomes-reliable/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2
+    </h1>
+    <div class="post-meta">Dec 5, 2025 · 13 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk2_image.png" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk2_image.png" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>LoRA Network, STM32F446RE NUCLEO boards</p>
+</figure>
+  <div class="post-content"><p>Building a reliable embedded system involves far more than getting code to compile. It&rsquo;s a process of learning where hardware limits, timing guarantees, and data representation quietly shape everything above them.</p>
+<p>Week 2 of the Plan focused on making those constraints explicit.</p>
+<p>The result is a dual-node LoRa sensor fusion system built on the STM32F446RE using Rust and RTIC 1.1 — not as a showcase, but as a foundation.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ol>
+<li><a href="#the-objective">The Objective</a></li>
+<li><a href="#system-overview">System Overview</a></li>
+<li><a href="#five-critical-lessons">Five Critical Lessons</a>
+<ul>
+<li><a href="#lesson-1-the-51-byte-myth-and-a-self-inflicted-limit">Lesson 1: The 51-Byte Myth</a></li>
+<li><a href="#lesson-2-rtic-timing-when-helpful-code-becomes-harmful">Lesson 2: UART Timing</a></li>
+<li><a href="#lesson-3-sensor-fusion-by-selection-not-averaging">Lesson 3: Sensor Fusion</a></li>
+<li><a href="#lesson-4-units-displays-and-small-lies-that-matter">Lesson 4: Data Representation</a></li>
+<li><a href="#lesson-5-shared-hardware-forces-honest-design">Lesson 5: Shared Hardware</a></li>
+</ul>
+</li>
+<li><a href="#results-at-the-end-of-week-2">Results</a></li>
+<li><a href="#why-this-matters-in-the-plan">Why This Matters</a></li>
+<li><a href="#next-steps-week-3-preview">Next Steps</a></li>
+</ol>
+<hr>
+<h2 id="the-objective">The Objective<a hidden class="anchor" aria-hidden="true" href="#the-objective">#</a></h2>
+<p>The goal for this week was deliberately narrow:</p>
+<ul>
+<li>Build a two-node LoRa system</li>
+<li>Fuse data from multiple sensors on the transmitting node</li>
+<li>Display and verify the data locally</li>
+<li>Receive, parse, and observe it on a second node</li>
+</ul>
+<p><strong>No cloud.</strong><br>
+<strong>No dashboards.</strong><br>
+<strong>No retries or binary framing yet.</strong></p>
+<p>Just a system that behaves predictably end-to-end.</p>
+<p>This constraint was intentional. Before moving to binary protocols, CRC validation, or retry logic, the foundation must be solid. Week 2 was about making that foundation explicit.</p>
+<hr>
+<h2 id="system-overview">System Overview<a hidden class="anchor" aria-hidden="true" href="#system-overview">#</a></h2>
+<p>The system consists of two cooperating nodes:</p>
+<h3 id="node-1--the-sensor-node">Node 1 — The Sensor Node<a hidden class="anchor" aria-hidden="true" href="#node-1--the-sensor-node">#</a></h3>
+<p><strong>Hardware</strong>:</p>
+<ul>
+<li>STM32F446RE (Cortex-M4F @ 84 MHz)</li>
+<li>SHT31-D for temperature and humidity</li>
+<li>BME680 for gas resistance (VOC indication)</li>
+<li>SSD1306 OLED 128×64 display</li>
+<li>REYAX RYLR998 LoRa module (UART @ 115,200 baud)</li>
+</ul>
+<p><strong>Function</strong>:</p>
+<ul>
+<li>Samples environmental sensors at 1 Hz</li>
+<li>Displays measurements locally on OLED</li>
+<li>Transmits fused telemetry via LoRa</li>
+</ul>
+<h3 id="node-2--the-gateway">Node 2 — The Gateway<a hidden class="anchor" aria-hidden="true" href="#node-2--the-gateway">#</a></h3>
+<p><strong>Hardware</strong>:</p>
+<ul>
+<li>STM32F446RE (Cortex-M4F @ 84 MHz)</li>
+<li>BMP280 for local temperature/pressure reference</li>
+<li>SSD1306 OLED 128×64 display</li>
+<li>REYAX RYLR998 LoRa module (UART @ 115,200 baud)</li>
+</ul>
+<p><strong>Function</strong>:</p>
+<ul>
+<li>Receives LoRa packets</li>
+<li>Displays decoded sensor values</li>
+<li>Shows signal quality metrics (RSSI/SNR)</li>
+<li>Provides sanity checks with local BMP280</li>
+</ul>
+<p><strong>Communication Protocol</strong>: The nodes use the LoRa module&rsquo;s AT command interface — intentionally simple and inspectable at this stage. Example transmission:</p>
+<pre tabindex="0"><code>AT+SEND=0,20,T:28.5H:55.2G:142\r\n
+</code></pre><p>Where:</p>
+<ul>
+<li><code>T:28.5</code> = Temperature in °C (from SHT31)</li>
+<li><code>H:55.2</code> = Humidity in % RH (from SHT31)</li>
+<li><code>G:142</code> = Gas resistance in kΩ (from BME680)</li>
+</ul>
+<hr>
+<h2 id="five-critical-lessons">Five Critical Lessons<a hidden class="anchor" aria-hidden="true" href="#five-critical-lessons">#</a></h2>
+<p>Week 2 taught five lessons about constraints, each one exposing a hidden assumption or design flaw. Together, they transformed an unreliable prototype into a predictable system.</p>
+<hr>
+<h3 id="lesson-1-the-51-byte-myth-and-a-self-inflicted-limit">Lesson 1: The 51-Byte Myth (and a Self-Inflicted Limit)<a hidden class="anchor" aria-hidden="true" href="#lesson-1-the-51-byte-myth-and-a-self-inflicted-limit">#</a></h3>
+<h4 id="the-symptom">The Symptom<a hidden class="anchor" aria-hidden="true" href="#the-symptom">#</a></h4>
+<p>Early tests revealed a puzzling problem: LoRa packets were being truncated. Only 28–30 bytes of each message arrived intact at the receiver.</p>
+<p>A 40-byte payload would arrive as:</p>
+<pre tabindex="0"><code>T:28.5H:55.2G:142k
+</code></pre><p>But a 50-byte payload would be cut off mid-transmission:</p>
+<pre tabindex="0"><code>T:28.52H:55.24G:142kOhm Pres
+</code></pre><h4 id="the-initial-hypothesis">The Initial Hypothesis<a hidden class="anchor" aria-hidden="true" href="#the-initial-hypothesis">#</a></h4>
+<p>At first glance, this looked like a LoRa limitation. In LoRaWAN contexts, a <strong>51-byte payload cap</strong> is often cited due to regional regulations and duty cycle restrictions.</p>
+<p>But the RYLR998 is <strong>not LoRaWAN</strong>. It&rsquo;s a simple point-to-point LoRa transceiver. The datasheet clearly states it supports payloads up to <strong>240 bytes</strong>.</p>
+<h4 id="the-real-culprit">The Real Culprit<a hidden class="anchor" aria-hidden="true" href="#the-real-culprit">#</a></h4>
+<p>The limit turned out to be <strong>self-imposed</strong>.</p>
+<p>Both the transmit and receive paths were using <code>heapless::String</code> buffers sized far too conservatively:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Original (too small)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> tx_buffer: String<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> String::new();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> rx_buffer: String<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> String::new();
+</span></span></code></pre></div><p>At 32 bytes, these buffers couldn&rsquo;t hold full AT commands with sensor data. The RYLR998&rsquo;s AT command format includes overhead:</p>
+<pre tabindex="0"><code>AT+SEND=0,&lt;len&gt;,&lt;payload&gt;\r\n
+</code></pre><p>A payload of 20 bytes requires ~30 bytes total once you include the command wrapper. The 32-byte buffer was <strong>barely sufficient</strong>, and any additional data would overflow.</p>
+<h4 id="the-fix">The Fix<a hidden class="anchor" aria-hidden="true" href="#the-fix">#</a></h4>
+<p>The solution was simple but instructive:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Corrected (255 bytes to match LoRa module capability)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> tx_buffer: String<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">255</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> String::new();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> rx_buffer: String<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">255</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> String::new();
+</span></span></code></pre></div><p><strong>Size operations based on actual payload length</strong>, not assumptions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a6e22e">write!</span>(tx_buffer, <span style="color:#e6db74">&#34;AT+SEND=0,{},{}</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, payload.len(), payload)<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><h4 id="the-lesson">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson">#</a></h4>
+<p><strong>Embedded constraints don&rsquo;t just come from hardware — they also come from our own defensive choices.</strong></p>
+<p>This was a reminder to:</p>
+<ol>
+<li><strong>Read datasheets carefully</strong> (240 bytes, not 51)</li>
+<li><strong>Question &ldquo;common knowledge&rdquo;</strong> (LoRaWAN limits don&rsquo;t apply to point-to-point LoRa)</li>
+<li><strong>Size buffers based on actual requirements</strong>, not conservative guesses</li>
+</ol>
+<hr>
+<h3 id="lesson-2-rtic-timing-when-helpful-code-becomes-harmful">Lesson 2: RTIC Timing (When Helpful Code Becomes Harmful)<a hidden class="anchor" aria-hidden="true" href="#lesson-2-rtic-timing-when-helpful-code-becomes-harmful">#</a></h3>
+<h4 id="the-new-symptom">The New Symptom<a hidden class="anchor" aria-hidden="true" href="#the-new-symptom">#</a></h4>
+<p>After fixing the buffer sizes, a second issue emerged: <strong>scrambled data</strong>.</p>
+<p>Packets arrived, but characters were:</p>
+<ul>
+<li>Missing</li>
+<li>Reordered</li>
+<li>Corrupted</li>
+</ul>
+<p>Example received payload:</p>
+<pre tabindex="0"><code>T:28H:55.2G4k    // Expected: T:28.5H:55.2G:142k
+</code></pre><p>The root cause wasn&rsquo;t LoRa at all — it was <strong>timing</strong>.</p>
+<h4 id="understanding-uart-at-115200-baud">Understanding UART at 115,200 Baud<a hidden class="anchor" aria-hidden="true" href="#understanding-uart-at-115200-baud">#</a></h4>
+<p>At 115,200 baud with 8N1 configuration (8 data bits, no parity, 1 stop bit), each byte requires 10 bit times:</p>
+<pre tabindex="0"><code>Byte time = 10 bits ÷ 115,200 bits/sec ≈ 86.8 µs
+</code></pre><p><strong>A new byte arrives every ~87 microseconds.</strong></p>
+<p>If the UART interrupt handler takes longer than 87 µs to execute, the next byte will arrive before the previous one is fully processed. The hardware FIFO will overflow, and bytes will be lost.</p>
+<h4 id="the-harmful-code">The Harmful Code<a hidden class="anchor" aria-hidden="true" href="#the-harmful-code">#</a></h4>
+<p>During debugging, I had added diagnostic logic to the UART interrupt handler:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, shared = [lora_uart, display], priority = 2)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(ctx: <span style="color:#a6e22e">uart4_handler</span>::Context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> uart <span style="color:#f92672">=</span> ctx.shared.lora_uart;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> display <span style="color:#f92672">=</span> ctx.shared.display;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    (uart, display).lock(<span style="color:#f92672">|</span>uart, display<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(byte) <span style="color:#f92672">=</span> uart.read() {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// ❌ BAD: Expensive operations in ISR
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            defmt::<span style="color:#a6e22e">debug!</span>(<span style="color:#e6db74">&#34;RX: {:02x}&#34;</span>, byte);  <span style="color:#75715e">// RTT logging (slow!)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            rx_buffer.push(byte).ok();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> byte <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;\n&#39;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// ❌ WORSE: I2C transaction in ISR!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                update_display(display, <span style="color:#f92672">&amp;</span>rx_buffer);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Problems</strong>:</p>
+<ol>
+<li><strong>RTT logging</strong> (<code>defmt::debug!</code>) is synchronous and slow (~hundreds of µs)</li>
+<li><strong>Display updates</strong> involve I2C transactions (~milliseconds)</li>
+<li><strong>Resource locking</strong> adds overhead</li>
+</ol>
+<p>At 115,200 baud, these operations easily exceed the 87 µs budget. The result: <strong>missed bytes</strong>.</p>
+<h4 id="the-rtic-lesson">The RTIC Lesson<a hidden class="anchor" aria-hidden="true" href="#the-rtic-lesson">#</a></h4>
+<p>RTIC makes this lesson painfully clear:</p>
+<blockquote>
+<p><strong>Interrupt handlers must stay fast and boring.</strong></p>
+</blockquote>
+<p>The UART handler&rsquo;s job was reduced to the absolute minimum:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[task(binds = UART4, shared = [lora_uart], priority = 2)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">uart4_handler</span>(ctx: <span style="color:#a6e22e">uart4_handler</span>::Context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> uart <span style="color:#f92672">=</span> ctx.shared.lora_uart;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    uart.lock(<span style="color:#f92672">|</span>uart<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(byte) <span style="color:#f92672">=</span> uart.read() {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// ✅ GOOD: Fast operations only
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            rx_buffer.push(byte).ok();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Detect message boundary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> byte <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;\n&#39;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// ✅ GOOD: Spawn lower-priority task
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                process_message::spawn().ok();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[task(shared = [display], priority = 1)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">process_message</span>(ctx: <span style="color:#a6e22e">process_message</span>::Context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ✅ This runs at lower priority, won&#39;t block UART
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> display <span style="color:#f92672">=</span> ctx.shared.display;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    display.lock(<span style="color:#f92672">|</span>display<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Parse rx_buffer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Update display
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Log results
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Everything else</strong> — parsing, display updates, I2C traffic — was moved to slower, scheduled tasks at lower priority.</p>
+<h4 id="the-result">The Result<a hidden class="anchor" aria-hidden="true" href="#the-result">#</a></h4>
+<p>Once that separation was enforced:</p>
+<ul>
+<li>The data stream became <strong>clean and repeatable</strong></li>
+<li>No more missed bytes</li>
+<li>No more scrambled packets</li>
+</ul>
+<p><strong>The rule</strong>: Interrupt handlers do <strong>one thing</strong>: service the hardware. Everything else happens in background tasks.</p>
+<hr>
+<h3 id="lesson-3-sensor-fusion-by-selection-not-averaging">Lesson 3: Sensor Fusion by Selection, Not Averaging<a hidden class="anchor" aria-hidden="true" href="#lesson-3-sensor-fusion-by-selection-not-averaging">#</a></h3>
+<h4 id="the-design-question">The Design Question<a hidden class="anchor" aria-hidden="true" href="#the-design-question">#</a></h4>
+<p>With two sensors capable of measuring temperature and humidity (SHT31 and BME680), the obvious question is: <strong>How do we combine their readings?</strong></p>
+<p>Common approaches:</p>
+<ol>
+<li><strong>Average</strong> the two readings</li>
+<li><strong>Weight</strong> them based on stated accuracy</li>
+<li>Use <strong>Kalman filtering</strong> or sensor fusion algorithms</li>
+</ol>
+<h4 id="the-honest-answer">The Honest Answer<a hidden class="anchor" aria-hidden="true" href="#the-honest-answer">#</a></h4>
+<p>I chose <strong>none of the above</strong>.</p>
+<p>Instead, the system uses <strong>sensor selection</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Measurement</th>
+          <th>Sensor</th>
+          <th>Accuracy</th>
+          <th>Rationale</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Temperature</strong></td>
+          <td>SHT31</td>
+          <td>±0.3°C</td>
+          <td>Dedicated high-precision sensor</td>
+      </tr>
+      <tr>
+          <td><strong>Humidity</strong></td>
+          <td>SHT31</td>
+          <td>±2% RH</td>
+          <td>Superior to BME680 (±3% RH), no burn-in required</td>
+      </tr>
+      <tr>
+          <td><strong>Gas Resistance</strong></td>
+          <td>BME680</td>
+          <td>N/A</td>
+          <td>Unique capability (VOC detection)</td>
+      </tr>
+      <tr>
+          <td><strong>Pressure</strong></td>
+          <td>BME680*</td>
+          <td>±1 hPa</td>
+          <td>Available but not transmitted (Week 2)</td>
+      </tr>
+  </tbody>
+</table>
+<p>The BME680 <strong>contributes only gas resistance data</strong>. Other channels from the BME680 are available, but intentionally unused.</p>
+<h4 id="why-this-approach">Why This Approach?<a hidden class="anchor" aria-hidden="true" href="#why-this-approach">#</a></h4>
+<p><strong>Clarity beats cleverness</strong> at this stage of the learning plan.</p>
+<p>Reasons:</p>
+<ol>
+<li><strong>Clear provenance</strong>: Every value has a documented source</li>
+<li><strong>No hidden assumptions</strong>: No averaging hides sensor limitations</li>
+<li><strong>Explainable behavior</strong>: Easier to debug when something goes wrong</li>
+<li><strong>Honest about limitations</strong>: We&rsquo;re not pretending to have better data than we do</li>
+</ol>
+<p>Could I implement Kalman filtering? Yes. Would it improve the readings? Probably marginally. Would it <strong>obscure the underlying constraints</strong>? Absolutely.</p>
+<h4 id="the-lesson-1">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-1">#</a></h4>
+<p><strong>Sensor fusion isn&rsquo;t always about blending data. Sometimes it&rsquo;s about choosing the right tool for each job.</strong></p>
+<p>This keeps the system honest and maintainable. At Week 2, that matters more than squeezing out an extra 0.1°C of accuracy.</p>
+<hr>
+<h3 id="lesson-4-units-displays-and-small-lies-that-matter">Lesson 4: Units, Displays, and Small Lies That Matter<a hidden class="anchor" aria-hidden="true" href="#lesson-4-units-displays-and-small-lies-that-matter">#</a></h3>
+<h4 id="the-temperature-confusion">The Temperature Confusion<a hidden class="anchor" aria-hidden="true" href="#the-temperature-confusion">#</a></h4>
+<p>Early in Week 2, the OLED displayed alarming readings:</p>
+<pre tabindex="0"><code>T:2852C H:5520%
+</code></pre><p>A temperature of 2,852°C would vaporize the sensor. A humidity of 5,520% violates physics.</p>
+<p>The problem wasn&rsquo;t the sensor — it was <strong>data representation</strong>.</p>
+<h4 id="understanding-sensor-units">Understanding Sensor Units<a hidden class="anchor" aria-hidden="true" href="#understanding-sensor-units">#</a></h4>
+<p>The SHT31-D reports measurements in fixed-point format:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Measurement</th>
+          <th>Unit</th>
+          <th>Example Raw</th>
+          <th>Actual Value</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Temperature</td>
+          <td><strong>centidegrees Celsius</strong></td>
+          <td><code>2852</code></td>
+          <td>28.52°C</td>
+      </tr>
+      <tr>
+          <td>Humidity</td>
+          <td><strong>basis points</strong> (0.01%)</td>
+          <td><code>5520</code></td>
+          <td>55.20% RH</td>
+      </tr>
+  </tbody>
+</table>
+<p>A value like <code>2852</code> isn&rsquo;t an error — it&rsquo;s just <strong>28.52°C represented as an integer</strong>.</p>
+<p><strong>Why this format?</strong></p>
+<ul>
+<li>Avoids floating-point arithmetic on resource-constrained MCUs</li>
+<li>Preserves precision without IEEE-754 overhead</li>
+<li>Common in embedded sensor protocols</li>
+</ul>
+<h4 id="the-fix-1">The Fix<a hidden class="anchor" aria-hidden="true" href="#the-fix-1">#</a></h4>
+<p>Proper unit conversion before display:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Temperature: centidegrees → degrees Celsius
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> temp_c <span style="color:#f92672">=</span> raw_temp <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">f32</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Humidity: basis points → percentage
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> humidity_pct <span style="color:#f92672">=</span> raw_humidity <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">f32</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Display
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">write!</span>(line1, <span style="color:#e6db74">&#34;T:{:.1}C H:{:.0}%&#34;</span>, temp_c, humidity_pct)<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p>Result:</p>
+<pre tabindex="0"><code>T:28.5C H:55%
+</code></pre><h4 id="another-small-lie-oled-y-coordinate-clipping">Another Small Lie: OLED Y-Coordinate Clipping<a hidden class="anchor" aria-hidden="true" href="#another-small-lie-oled-y-coordinate-clipping">#</a></h4>
+<p>During display optimization, I noticed that text starting at <code>y = 0</code> had clipped ascenders:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// ❌ Clips ascenders (top of &#39;h&#39;, &#39;l&#39;, etc.)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Text::new(<span style="color:#e6db74">&#34;Hello&#34;</span>, Point::new(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>), style)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ✅ Proper baseline offset
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Text::new(<span style="color:#e6db74">&#34;Hello&#34;</span>, Point::new(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">8</span>), style)
+</span></span></code></pre></div><p>The <code>y</code> coordinate in embedded-graphics represents the <strong>baseline</strong>, not the top-left corner. Starting at <code>y = 0</code> places ascenders <strong>above</strong> the display area.</p>
+<h4 id="the-lesson-2">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-2">#</a></h4>
+<p><strong>Small misunderstandings propagate quickly in embedded systems if left unchecked.</strong></p>
+<p>Neither of these is a dramatic failure. But in a more complex system:</p>
+<ul>
+<li>A temperature off by 100× could trigger false alarms</li>
+<li>Clipped text could hide critical warnings</li>
+</ul>
+<p>This is why <strong>the OLED exists in this project: not as a UI, but as an always-on sanity check.</strong></p>
+<hr>
+<h3 id="lesson-5-shared-hardware-forces-honest-design">Lesson 5: Shared Hardware Forces Honest Design<a hidden class="anchor" aria-hidden="true" href="#lesson-5-shared-hardware-forces-honest-design">#</a></h3>
+<h4 id="the-i2c-bus-sharing-problem">The I2C Bus Sharing Problem<a hidden class="anchor" aria-hidden="true" href="#the-i2c-bus-sharing-problem">#</a></h4>
+<p>All sensors and the OLED share a single I2C bus:</p>
+<ul>
+<li>SHT31-D (address: <code>0x44</code>)</li>
+<li>BME680 (address: <code>0x77</code>)</li>
+<li>SSD1306 OLED (address: <code>0x3C</code>)</li>
+<li>BMP280 (Node 2 only, address: <code>0x76</code>)</li>
+</ul>
+<p>In C or C++, you might just access the bus whenever you need it. In <strong>Rust</strong>, this is not something you can &ldquo;just make work.&rdquo;</p>
+<h4 id="rusts-ownership-rules">Rust&rsquo;s Ownership Rules<a hidden class="anchor" aria-hidden="true" href="#rusts-ownership-rules">#</a></h4>
+<p>Rust enforces <strong>exclusive mutable access</strong> at compile time. The I2C peripheral can have <strong>only one owner</strong>.</p>
+<p>You must explicitly decide:</p>
+<ul>
+<li><strong>Who owns the bus?</strong></li>
+<li><strong>When can it be accessed?</strong></li>
+<li><strong>Under what guarantees?</strong></li>
+</ul>
+<p>Trying to share without proper synchronization results in compile errors:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// ❌ Doesn&#39;t compile
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> sht31 <span style="color:#f92672">=</span> <span style="color:#66d9ef">SHT31</span>::new(i2c);  <span style="color:#75715e">// Takes ownership
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> bme680 <span style="color:#f92672">=</span> <span style="color:#66d9ef">BME680</span>::new(i2c); <span style="color:#75715e">// Error: i2c already moved
+</span></span></span></code></pre></div><h4 id="the-solution-shared-bus-crate">The Solution: <code>shared-bus</code> Crate<a hidden class="anchor" aria-hidden="true" href="#the-solution-shared-bus-crate">#</a></h4>
+<p>The <code>shared-bus</code> crate provides <strong>mutex-based bus sharing</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> shared_bus::BusManagerSimple;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Create a bus manager
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> bus_manager <span style="color:#f92672">=</span> BusManagerSimple::new(i2c);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Create proxies for each device
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> sht31 <span style="color:#f92672">=</span> <span style="color:#66d9ef">SHT31</span>::new(bus_manager.acquire_i2c());
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> bme680 <span style="color:#f92672">=</span> <span style="color:#66d9ef">BME680</span>::new(bus_manager.acquire_i2c());
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> display <span style="color:#f92672">=</span> Ssd1306::new(bus_manager.acquire_i2c(), <span style="color:#f92672">..</span>.);
+</span></span></code></pre></div><p>Each <code>acquire_i2c()</code> returns a <strong>mutex-protected proxy</strong>. When a device accesses the bus, it:</p>
+<ol>
+<li>Acquires the mutex</li>
+<li>Performs the I2C transaction</li>
+<li>Releases the mutex</li>
+</ol>
+<p>This ensures <strong>safe, serialized access</strong> without runtime ambiguity or data races.</p>
+<h4 id="the-rtic-integration">The RTIC Integration<a hidden class="anchor" aria-hidden="true" href="#the-rtic-integration">#</a></h4>
+<p>In RTIC, shared resources are protected by <strong>priority-based preemption</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[shared]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Shared</span> {
+</span></span><span style="display:flex;"><span>    display: <span style="color:#a6e22e">Ssd1306</span><span style="color:#f92672">&lt;..</span>.<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>    sht31: <span style="color:#a6e22e">SHT31</span><span style="color:#f92672">&lt;..</span>.<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>    bme680: <span style="color:#a6e22e">BME680</span><span style="color:#f92672">&lt;..</span>.<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[task(shared = [display, sht31], priority = 1)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">update_sensors</span>(ctx: <span style="color:#a6e22e">update_sensors</span>::Context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> sht31 <span style="color:#f92672">=</span> ctx.shared.sht31;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> display <span style="color:#f92672">=</span> ctx.shared.display;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    (sht31, display).lock(<span style="color:#f92672">|</span>sht31, display<span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Critical section: I2C transactions are atomic
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> reading <span style="color:#f92672">=</span> sht31.measure()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>        display.show(reading)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>RTIC guarantees that <strong>higher-priority tasks can preempt</strong>, but shared resources are protected by <strong>software-based critical sections</strong>.</p>
+<h4 id="the-lesson-3">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-3">#</a></h4>
+<p><strong>Rust doesn&rsquo;t let you defer architectural decisions.</strong></p>
+<p>It makes you confront them <strong>early</strong>, when the system is still small enough to reason about.</p>
+<p>This is a recurring theme in the Plan: constraints that seem restrictive in Week 2 become <strong>guardrails</strong> in Week 10 when the system has 10× more components.</p>
+<hr>
+<h2 id="results-at-the-end-of-week-2">Results at the End of Week 2<a hidden class="anchor" aria-hidden="true" href="#results-at-the-end-of-week-2">#</a></h2>
+<p>By the end of the week, the system worked <strong>predictably and reliably</strong>:</p>
+<h3 id="communication-metrics">Communication Metrics<a hidden class="anchor" aria-hidden="true" href="#communication-metrics">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>LoRa Range</strong></td>
+          <td>~5 meters (indoor)</td>
+          <td>Limited by test environment</td>
+      </tr>
+      <tr>
+          <td><strong>RSSI</strong></td>
+          <td>-20 to -22 dBm</td>
+          <td>Excellent signal strength</td>
+      </tr>
+      <tr>
+          <td><strong>SNR</strong></td>
+          <td>~13 dB</td>
+          <td>Clean reception, no interference</td>
+      </tr>
+      <tr>
+          <td><strong>Packet Loss</strong></td>
+          <td>0%</td>
+          <td>After buffer/timing fixes</td>
+      </tr>
+      <tr>
+          <td><strong>Update Rate</strong></td>
+          <td>1 Hz</td>
+          <td>Stable, deterministic</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="data-quality">Data Quality<a hidden class="anchor" aria-hidden="true" href="#data-quality">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Sensor</th>
+          <th>Measurement</th>
+          <th>Range Observed</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>SHT31</strong></td>
+          <td>Temperature</td>
+          <td>22–30°C</td>
+          <td>Indoor ambient</td>
+      </tr>
+      <tr>
+          <td><strong>SHT31</strong></td>
+          <td>Humidity</td>
+          <td>40–65% RH</td>
+          <td>Varied with weather</td>
+      </tr>
+      <tr>
+          <td><strong>BME680</strong></td>
+          <td>Gas Resistance</td>
+          <td>50–200 kΩ</td>
+          <td>VOC baseline established</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="system-behavior">System Behavior<a hidden class="anchor" aria-hidden="true" href="#system-behavior">#</a></h3>
+<p><strong>Most importantly, the system&rsquo;s behavior was explainable.</strong></p>
+<ul>
+<li>Data had clear provenance (SHT31 for temp/humidity, BME680 for gas)</li>
+<li>Timing was deterministic (1 Hz sampling, &lt;87 µs ISR)</li>
+<li>Buffers were sized correctly (255 bytes, not 32)</li>
+<li>Display showed real-time sanity checks</li>
+<li>LoRa transmission worked end-to-end</li>
+</ul>
+<p><strong>Nothing surprised me.</strong></p>
+<p>When I changed the sensor sampling rate, the display updated at the new rate.<br>
+When I moved the nodes farther apart, RSSI decreased predictably.<br>
+When I added debug logging to a low-priority task, it didn&rsquo;t break anything.</p>
+<p><strong>This is what &ldquo;reliable&rdquo; looks like at Week 2</strong>: not perfect, but <strong>understandable</strong>.</p>
+<hr>
+<h2 id="why-this-matters-in-the-plan">Why This Matters in the Plan<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-in-the-plan">#</a></h2>
+<p>Week 2 is <strong>not</strong> about performance or optimization.</p>
+<p>It&rsquo;s about reaching a point where:</p>
+<ul>
+<li>✅ <strong>Data has a clear origin</strong> (sensor selection, not blending)</li>
+<li>✅ <strong>Timing is intentional</strong> (ISRs stay fast, tasks run at appropriate priorities)</li>
+<li>✅ <strong>Constraints are understood</strong> (buffer sizes, UART byte timing, I2C bus sharing)</li>
+<li>✅ <strong>Failures are diagnosable</strong> (OLED sanity checks, explainable behavior)</li>
+</ul>
+<p><strong>Only then does it make sense to move on</strong> to binary serialization, framing, CRCs, and retries.</p>
+<h3 id="the-philosophical-point">The Philosophical Point<a hidden class="anchor" aria-hidden="true" href="#the-philosophical-point">#</a></h3>
+<blockquote>
+<p><strong>Reliability is not added later.</strong><br>
+<strong>It is built up, one unglamorous layer at a time.</strong></p>
+</blockquote>
+<p>Consider the alternative approach:</p>
+<ol>
+<li>Build a complex system with binary protocols, encryption, and cloud integration</li>
+<li>Debug mysterious failures for weeks</li>
+<li>Add more logging, more retries, more complexity</li>
+<li>Still can&rsquo;t explain why packets occasionally drop</li>
+</ol>
+<p><strong>That&rsquo;s backwards.</strong></p>
+<p>The right sequence:</p>
+<ol>
+<li><strong>Week 2</strong>: Make simple things work <strong>predictably</strong></li>
+<li><strong>Week 3</strong>: Add binary serialization <strong>while preserving predictability</strong></li>
+<li><strong>Week 4</strong>: Add CRC validation <strong>while preserving predictability</strong></li>
+<li><strong>Week 5</strong>: Add retransmission <strong>while preserving predictability</strong></li>
+</ol>
+<p>Each layer builds on a <strong>solid, understood foundation</strong>.</p>
+<h3 id="what-week-2-enables">What Week 2 Enables<a hidden class="anchor" aria-hidden="true" href="#what-week-2-enables">#</a></h3>
+<p>By the end of this week, I can:</p>
+<ul>
+<li><strong>Explain every byte</strong> in the LoRa transmission</li>
+<li><strong>Predict timing behavior</strong> of UART and I2C operations</li>
+<li><strong>Diagnose failures</strong> by looking at the OLED display</li>
+<li><strong>Modify the system</strong> without introducing mysterious bugs</li>
+</ul>
+<p>That foundation is what makes Week 3&rsquo;s binary protocol work possible.</p>
+<p><strong>Week 2 laid that layer.</strong></p>
+<hr>
+<h2 id="next-steps-week-3-preview">Next Steps: Week 3 Preview<a hidden class="anchor" aria-hidden="true" href="#next-steps-week-3-preview">#</a></h2>
+<p>With a reliable ASCII-based system in place, Week 3 will focus on:</p>
+<h3 id="binary-serialization">Binary Serialization<a hidden class="anchor" aria-hidden="true" href="#binary-serialization">#</a></h3>
+<p>Replace human-readable AT commands:</p>
+<pre tabindex="0"><code>T:28.5H:55.2G:142\r\n
+</code></pre><p>With compact binary frames:</p>
+<pre tabindex="0"><code>[Header][Length][Temp][Humidity][Gas][CRC16]
+</code></pre><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Reduced payload size (20 bytes → 12 bytes)</li>
+<li>Deterministic parsing (no string operations)</li>
+<li>CRC validation for data integrity -準備 for multi-packet messages</li>
+</ul>
+<h3 id="crc-data-integrity">CRC Data Integrity<a hidden class="anchor" aria-hidden="true" href="#crc-data-integrity">#</a></h3>
+<p>Implement CRC-16-CCITT for error detection:</p>
+<ul>
+<li>Detect bit flips from RF interference</li>
+<li>Validate packet integrity before processing</li>
+<li>Foundation for ACK/NACK protocol</li>
+</ul>
+<h3 id="protocol-framing">Protocol Framing<a hidden class="anchor" aria-hidden="true" href="#protocol-framing">#</a></h3>
+<p>Add packet structure:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">TelemetryPacket</span> {
+</span></span><span style="display:flex;"><span>    header: <span style="color:#66d9ef">u8</span>,        <span style="color:#75715e">// 0xAA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    packet_id: <span style="color:#66d9ef">u16</span>,    <span style="color:#75715e">// Incremental counter
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    temp: <span style="color:#66d9ef">i16</span>,         <span style="color:#75715e">// Centidegrees
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    humidity: <span style="color:#66d9ef">u16</span>,     <span style="color:#75715e">// Basis points
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    gas: <span style="color:#66d9ef">u32</span>,          <span style="color:#75715e">// Ohms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    crc: <span style="color:#66d9ef">u16</span>,          <span style="color:#75715e">// CRC-16-CCITT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><h3 id="lessons-to-carry-forward">Lessons to Carry Forward<a hidden class="anchor" aria-hidden="true" href="#lessons-to-carry-forward">#</a></h3>
+<p>Week 3 will build on Week 2&rsquo;s constraints:</p>
+<ul>
+<li><strong>Timing</strong>: Binary parsing must stay fast (still &lt;87 µs per byte)</li>
+<li><strong>Buffers</strong>: Size for binary frames, not ASCII</li>
+<li><strong>Sanity checks</strong>: OLED displays binary fields in human-readable format</li>
+<li><strong>Explainability</strong>: CRC failures logged and displayed</li>
+</ul>
+<p>The goal remains the same: <strong>make complexity understandable</strong>.</p>
+<hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 2 taught that <strong>constraints aren&rsquo;t limitations — they&rsquo;re guardrails</strong>.</p>
+<ul>
+<li>Buffer sizes force you to understand payload limits</li>
+<li>UART timing forces you to write fast interrupt handlers</li>
+<li>Rust&rsquo;s ownership rules force you to design I2C access carefully</li>
+<li>Data representation forces you to document units</li>
+</ul>
+<p>Each constraint revealed an assumption. Each lesson made the system more honest.</p>
+<p><strong>This is the path to reliability</strong>: not through cleverness, but through <strong>understanding and respecting constraints</strong>.</p>
+<p>Next week, those constraints won&rsquo;t go away. They&rsquo;ll just become more explicit as we add binary protocols.</p>
+<p><strong>And that&rsquo;s exactly how it should be.</strong></p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code-repository">Code Repository<a hidden class="anchor" aria-hidden="true" href="#code-repository">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk2-lora-sensor-fusion">Week 2 Source Code</a></li>
+<li><a href="https://github.com/mapfumo/wk1_rtic_lora">Week 1: RTIC LoRa Basics</a></li>
+</ul>
+<h3 id="related-posts">Related Posts<a hidden class="anchor" aria-hidden="true" href="#related-posts">#</a></h3>
+<ul>
+<li><a href="https://www.mapfumo.net/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/">Week 1: Building Deterministic IIoT Systems with Embedded Rust and RTIC</a></li>
+</ul>
+<h3 id="technical-references">Technical References<a hidden class="anchor" aria-hidden="true" href="#technical-references">#</a></h3>
+<ul>
+<li><a href="https://rtic.rs/">RTIC Book</a></li>
+<li><a href="https://docs.rs/stm32f4xx-hal/">STM32F4 HAL Documentation</a></li>
+<li><a href="https://www.sensirion.com/sht31">SHT31-D Datasheet</a></li>
+<li><a href="https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/">BME680 Datasheet</a></li>
+<li><a href="https://reyax.com/products/rylr998">RYLR998 Datasheet</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo<br>
+<strong>Part of</strong>: 4-Month Embedded Rust Learning Roadmap<br>
+<strong>Week</strong>: 2 of 16<br>
+<strong>Tags</strong>: <code>#embedded-rust</code> <code>#rtic</code> <code>#lora</code> <code>#stm32</code> <code>#sensor-fusion</code> <code>#iot</code> <code>#learning-in-public</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/rust/">Rust</a></li>
+      <li><a href="http://localhost:1313/tags/embedded-rust/">Embedded Rust</a></li>
+      <li><a href="http://localhost:1313/tags/mcu/">MCU</a></li>
+      <li><a href="http://localhost:1313/tags/stm32/">STM32</a></li>
+      <li><a href="http://localhost:1313/tags/rtic/">RTIC</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/binary-protocols-and-reliable-lora-communication/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Binary Protocols and Reliable LoRa Communication</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Building Deterministic IIoT Systems With Embedded Rust and RTIC</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 on twitter"
+        href="https://twitter.com/intent/tweet/?text=LoRa%20Sensor%20Fusion%3a%20When%20%22Simple%22%20Becomes%20Reliable%20-%20Wk2&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f&amp;hashtags=Rust%2cEmbeddedRust%2cMCU%2cRTIC%2cSTM32%2cRTIC">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f&amp;title=LoRa%20Sensor%20Fusion%3a%20When%20%22Simple%22%20Becomes%20Reliable%20-%20Wk2&amp;summary=LoRa%20Sensor%20Fusion%3a%20When%20%22Simple%22%20Becomes%20Reliable%20-%20Wk2&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f&title=LoRa%20Sensor%20Fusion%3a%20When%20%22Simple%22%20Becomes%20Reliable%20-%20Wk2">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share LoRa Sensor Fusion: When &#34;Simple&#34; Becomes Reliable - Wk2 on whatsapp"
+        href="https://api.whatsapp.com/send?text=LoRa%20Sensor%20Fusion%3a%20When%20%22Simple%22%20Becomes%20Reliable%20-%20Wk2%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2flora-sensor-fusion-when-simple-becomes-reliable%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

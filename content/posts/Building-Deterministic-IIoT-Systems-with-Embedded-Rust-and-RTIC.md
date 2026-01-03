@@ -1,6 +1,6 @@
 ---
 title: "Building Deterministic IIoT Systems With Embedded Rust and RTIC"
-date: 2025-12-24T17:53:41+10:00
+date: 2025-12-02T17:53:41+10:00
 draft: false
 cover:
   image: /img/rtic_img.png
