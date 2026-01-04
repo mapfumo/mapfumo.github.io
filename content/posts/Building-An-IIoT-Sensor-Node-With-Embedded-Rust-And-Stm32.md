@@ -6,7 +6,7 @@ cover:
   image: /img/nucleo.jpg
   alt: "STM32F446RE NUCLEO board with SHT31-D temperature & humidity sensor and SSD1306 OLED display"
   caption: "Nucleo Board"
-tags: ["Rust", "Embedded Rust", "MCU"]
+tags: ["Rust", "Embedded Rust", "MCU", "STM32"]
 categories: ["IIoT", "Tech"]
 ---
 
