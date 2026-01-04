@@ -5,7 +5,7 @@ draft: false
 cover:
     image: /img/wk9_image.png
     alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
-    caption: "LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards"
+    caption: "MODBUS OPC UA"
     tags:
     [
         "embassy",
