@@ -6,20 +6,11 @@
     <description>Recent content in Tags on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 10:34:48 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Async-Rust</title>
-      <link>http://localhost:1313/tags/async-rust/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
-      
-      <guid>http://localhost:1313/tags/async-rust/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Sat, 13 Dec 2025 09:42:11 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Defmt</title>
       <link>http://localhost:1313/tags/defmt/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/defmt/</guid>
       <description></description>
@@ -28,25 +19,16 @@
     <item>
       <title>Embedded Rust</title>
       <link>http://localhost:1313/tags/embedded-rust/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/embedded-rust/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>IIoT</title>
-      <link>http://localhost:1313/tags/iiot/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
-      
-      <guid>http://localhost:1313/tags/iiot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Json</title>
       <link>http://localhost:1313/tags/json/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/json/</guid>
       <description></description>
@@ -55,7 +37,7 @@
     <item>
       <title>Lora</title>
       <link>http://localhost:1313/tags/lora/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/lora/</guid>
       <description></description>
@@ -64,7 +46,7 @@
     <item>
       <title>MCU</title>
       <link>http://localhost:1313/tags/mcu/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/mcu/</guid>
       <description></description>
@@ -73,7 +55,7 @@
     <item>
       <title>RTIC</title>
       <link>http://localhost:1313/tags/rtic/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/rtic/</guid>
       <description></description>
@@ -82,7 +64,7 @@
     <item>
       <title>Rust</title>
       <link>http://localhost:1313/tags/rust/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/rust/</guid>
       <description></description>
@@ -91,18 +73,9 @@
     <item>
       <title>STM32</title>
       <link>http://localhost:1313/tags/stm32/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/stm32/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tokio</title>
-      <link>http://localhost:1313/tags/tokio/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
-      
-      <guid>http://localhost:1313/tags/tokio/</guid>
       <description></description>
     </item>
     

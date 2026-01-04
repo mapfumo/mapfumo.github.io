@@ -6,11 +6,29 @@
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 10:34:48 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Jan 2026 11:42:16 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8)</title>
+      <link>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</link>
+      <pubDate>Sun, 04 Jan 2026 11:42:16 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</guid>
+      <description>&lt;p&gt;Week 7+8 represents &lt;strong&gt;project completion&lt;/strong&gt; at the infrastructure level. This isn&amp;rsquo;t about adding one more feature - it&amp;rsquo;s about building the &lt;strong&gt;complete path from sensor to insight&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;After seven weeks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Week 1-3: Sensors talk via LoRa ✅&lt;/li&gt;
+&lt;li&gt;Week 5: Gateway firmware outputs JSON ✅&lt;/li&gt;
+&lt;li&gt;Week 6: Async service processes data ✅&lt;/li&gt;
+&lt;li&gt;Week 7: Data goes to MQTT and InfluxDB ✅&lt;/li&gt;
+&lt;li&gt;Week 8: &lt;strong&gt;Professional dashboards visualize everything&lt;/strong&gt; ✅&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;This is a complete IoT monitoring system.&lt;/strong&gt; From a temperature sensor on a breadboard to a Grafana dashboard refreshing every 10 seconds. All in Rust. All running on real hardware.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6</title>
       <link>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sun, 21 Dec 2025 10:34:48 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</guid>
       <description>&lt;p&gt;Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.&lt;/p&gt;

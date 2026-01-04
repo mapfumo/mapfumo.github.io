@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) | Antony Mapfumo</title>
+<meta name="keywords" content="">
+<meta name="description" content="Week 7&#43;8 represents project completion at the infrastructure level. This isn&rsquo;t about adding one more feature - it&rsquo;s about building the complete path from sensor to insight.
+After seven weeks:
+
+Week 1-3: Sensors talk via LoRa ✅
+Week 5: Gateway firmware outputs JSON ✅
+Week 6: Async service processes data ✅
+Week 7: Data goes to MQTT and InfluxDB ✅
+Week 8: Professional dashboards visualize everything ✅
+
+This is a complete IoT monitoring system. From a temperature sensor on a breadboard to a Grafana dashboard refreshing every 10 seconds. All in Rust. All running on real hardware.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8)
+    </h1>
+    <div class="post-meta">Jan 4, 2026 · 20 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk7_image.png" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk7_image.png" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards</p>
+</figure>
+  <div class="post-content"><p>Week 7+8 represents <strong>project completion</strong> at the infrastructure level. This isn&rsquo;t about adding one more feature - it&rsquo;s about building the <strong>complete path from sensor to insight</strong>.</p>
+<p>After seven weeks:</p>
+<ul>
+<li>Week 1-3: Sensors talk via LoRa ✅</li>
+<li>Week 5: Gateway firmware outputs JSON ✅</li>
+<li>Week 6: Async service processes data ✅</li>
+<li>Week 7: Data goes to MQTT and InfluxDB ✅</li>
+<li>Week 8: <strong>Professional dashboards visualize everything</strong> ✅</li>
+</ul>
+<p><strong>This is a complete IoT monitoring system.</strong> From a temperature sensor on a breadboard to a Grafana dashboard refreshing every 10 seconds. All in Rust. All running on real hardware.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ol>
+<li><a href="#the-objective">The Objective</a></li>
+<li><a href="#architecture-decisions">Architecture Decisions</a></li>
+<li><a href="#five-critical-lessons">Five Critical Lessons</a>
+<ul>
+<li><a href="#lesson-1-mqtt-topic-design---one-metric-one-topic">Lesson 1: MQTT Topic Design - One Metric, One Topic</a></li>
+<li><a href="#lesson-2-the-event-loop-handle-must-never-die">Lesson 2: The Event Loop Handle Must Never Die</a></li>
+<li><a href="#lesson-3-influxdb-tags-vs-fields">Lesson 3: InfluxDB Tags vs Fields</a></li>
+<li><a href="#lesson-4-docker-networks-enable-baby-steps-testing">Lesson 4: Docker Networks Enable Baby Steps Testing</a></li>
+<li><a href="#lesson-5-non-fatal-error-handling-for-resilience">Lesson 5: Non-Fatal Error Handling for Resilience</a></li>
+</ul>
+</li>
+<li><a href="#grafana-dashboard-creation">Grafana Dashboard Creation</a></li>
+<li><a href="#results-at-the-end-of-week-78">Results</a></li>
+<li><a href="#why-this-matters-in-the-plan">Why This Matters</a></li>
+<li><a href="#next-steps-production-hardening">Next Steps</a></li>
+</ol>
+<hr>
+<h2 id="the-objective">The Objective<a hidden class="anchor" aria-hidden="true" href="#the-objective">#</a></h2>
+<p>Week 7+8 had one overarching goal: <strong>Build production-grade infrastructure for IoT telemetry</strong>.</p>
+<h3 id="the-gap">The Gap<a hidden class="anchor" aria-hidden="true" href="#the-gap">#</a></h3>
+<p>At the end of Week 6, telemetry flowed through the async gateway service but only ended up in structured logs. Beautiful <code>tracing</code> output, but fundamentally ephemeral.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">INFO</span> Processing telemetry packet temp<span style="color:#f92672">=</span><span style="color:#ae81ff">27.6</span> humidity<span style="color:#f92672">=</span><span style="color:#ae81ff">54.1</span> rssi<span style="color:#f92672">=-</span><span style="color:#ae81ff">39</span>
+</span></span></code></pre></div><p><strong>Questions we couldn&rsquo;t answer</strong>:</p>
+<ul>
+<li>What was the temperature an hour ago?</li>
+<li>How has humidity changed over the day?</li>
+<li>Is signal quality degrading over time?</li>
+<li>Can we alert when sensors go offline?</li>
+</ul>
+<h3 id="the-requirements">The Requirements<a hidden class="anchor" aria-hidden="true" href="#the-requirements">#</a></h3>
+<ol>
+<li><strong>Real-time messaging</strong> (MQTT) for dashboards and edge applications</li>
+<li><strong>Time-series storage</strong> (InfluxDB) for historical queries</li>
+<li><strong>Visualization</strong> (Grafana) for insights and alerting</li>
+<li><strong>Docker infrastructure</strong> (reproducible, version-controlled)</li>
+<li><strong>Do it properly</strong>: QoS levels, data modeling, dashboard design</li>
+</ol>
+<h3 id="the-vision">The Vision<a hidden class="anchor" aria-hidden="true" href="#the-vision">#</a></h3>
+<pre tabindex="0"><code>STM32 Sensors
+    ↓ LoRa
+Gateway Service
+    ├─&gt; MQTT → Real-time subscribers
+    └─&gt; InfluxDB → Grafana dashboards
+</code></pre><p><strong>This is industry-standard IoT architecture.</strong></p>
+<hr>
+<h2 id="architecture-decisions">Architecture Decisions<a hidden class="anchor" aria-hidden="true" href="#architecture-decisions">#</a></h2>
+<h3 id="decision-1-docker-infrastructure">Decision 1: Docker Infrastructure<a hidden class="anchor" aria-hidden="true" href="#decision-1-docker-infrastructure">#</a></h3>
+<p><strong>Why not install Mosquitto and InfluxDB natively?</strong></p>
+<p><strong>Docker wins</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">mosquitto</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">eclipse-mosquitto:2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>: [<span style="color:#e6db74">&#34;1883:1883&#34;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>: [<span style="color:#e6db74">&#34;./mosquitto/config:/mosquitto/config&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">influxdb</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">influxdb:2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>: [<span style="color:#e6db74">&#34;8086:8086&#34;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">DOCKER_INFLUXDB_INIT_MODE</span>: <span style="color:#ae81ff">setup</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">DOCKER_INFLUXDB_INIT_ORG</span>: <span style="color:#ae81ff">my-org</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">DOCKER_INFLUXDB_INIT_BUCKET</span>: <span style="color:#ae81ff">telemetry</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">grafana</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">grafana/grafana:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>: [<span style="color:#e6db74">&#34;3000:3000&#34;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">depends_on</span>: [<span style="color:#ae81ff">influxdb]</span>
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ <strong>Reproducible</strong>: Same setup on any machine</li>
+<li>✅ <strong>Version-controlled</strong>: <code>docker-compose.yml</code> in git</li>
+<li>✅ <strong>Isolated</strong>: Services don&rsquo;t pollute host system</li>
+<li>✅ <strong>Testable</strong>: <code>docker compose down -v</code> = clean slate</li>
+<li>✅ <strong>Production-like</strong>: Same patterns as deployment</li>
+</ul>
+<p><strong>Compared to native installation</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Native (painful)</span>
+</span></span><span style="display:flex;"><span>sudo apt install mosquitto mosquitto-clients influxdb
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Config scattered across /etc/mosquitto, /etc/influxdb</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Hard to reset, hard to version control, system pollution</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Docker (easy)</span>
+</span></span><span style="display:flex;"><span>docker compose up -d
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Everything in project directory</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># One command to start, one to stop, one to reset</span>
+</span></span></code></pre></div><h3 id="decision-2-mqtt-vs-http">Decision 2: MQTT vs HTTP<a hidden class="anchor" aria-hidden="true" href="#decision-2-mqtt-vs-http">#</a></h3>
+<p><strong>Why MQTT instead of HTTP POST?</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Requirement</th>
+          <th>HTTP</th>
+          <th>MQTT</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Pub/Sub</strong></td>
+          <td>No (point-to-point)</td>
+          <td>Yes (one-to-many)</td>
+      </tr>
+      <tr>
+          <td><strong>Offline buffering</strong></td>
+          <td>Client must implement</td>
+          <td>Broker handles</td>
+      </tr>
+      <tr>
+          <td><strong>QoS guarantees</strong></td>
+          <td>No</td>
+          <td>Yes (0, 1, 2)</td>
+      </tr>
+      <tr>
+          <td><strong>Last value retention</strong></td>
+          <td>No</td>
+          <td>Yes (retain flag)</td>
+      </tr>
+      <tr>
+          <td><strong>Bandwidth</strong></td>
+          <td>Higher (HTTP headers)</td>
+          <td>Lower (binary protocol)</td>
+      </tr>
+      <tr>
+          <td><strong>Real-time</strong></td>
+          <td>Polling required</td>
+          <td>Push notifications</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>MQTT is designed for this use case.</strong> HTTP would work, but we&rsquo;d be reimplementing MQTT features.</p>
+<h3 id="decision-3-topic-hierarchy">Decision 3: Topic Hierarchy<a hidden class="anchor" aria-hidden="true" href="#decision-3-topic-hierarchy">#</a></h3>
+<p><strong>One topic per metric</strong> (not single topic with JSON):</p>
+<p>✅ <strong>Our design</strong>:</p>
+<pre tabindex="0"><code>iiot/node1/temperature    → &#34;27.6&#34;
+iiot/node1/humidity       → &#34;54.1&#34;
+iiot/node1/gas_resistance → &#34;101169&#34;
+iiot/node2/temperature    → &#34;26.8&#34;
+iiot/signal/rssi          → &#34;-33&#34;
+</code></pre><p>❌ <strong>Alternative</strong> (single topic with JSON):</p>
+<pre tabindex="0"><code>iiot/telemetry → {&#34;node1&#34;: {&#34;temp&#34;: 27.6, &#34;humidity&#34;: 54.1, ...}}
+</code></pre><p><strong>Why individual topics?</strong>:</p>
+<ol>
+<li><strong>MQTT wildcards work</strong>: <code>iiot/+/temperature</code> subscribes to all temps</li>
+<li><strong>Simple values</strong>: No JSON parsing by subscribers</li>
+<li><strong>Better for time-series DBs</strong>: Direct mapping to measurements</li>
+<li><strong>Selective subscriptions</strong>: Mobile app only needs <code>iiot/#</code> but can filter</li>
+<li><strong>Easier debugging</strong>: <code>mosquitto_sub -t iiot/node1/temperature</code></li>
+</ol>
+<h3 id="decision-4-influxdb-2x-schema">Decision 4: InfluxDB 2.x Schema<a hidden class="anchor" aria-hidden="true" href="#decision-4-influxdb-2x-schema">#</a></h3>
+<p><strong>Measurement per metric type</strong> with tags:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Temperature from both nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>temperature,node<span style="color:#f92672">=</span>node1,unit<span style="color:#f92672">=</span>celsius value<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>temperature,node<span style="color:#f92672">=</span>node2,unit<span style="color:#f92672">=</span>celsius value<span style="color:#f92672">=</span><span style="color:#ae81ff">26</span>.<span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Humidity from both nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>humidity,node<span style="color:#f92672">=</span>node1,unit<span style="color:#f92672">=</span>percent value<span style="color:#f92672">=</span><span style="color:#ae81ff">54</span>.<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>humidity,node<span style="color:#f92672">=</span>node2,unit<span style="color:#f92672">=</span>percent value<span style="color:#f92672">=</span><span style="color:#ae81ff">48</span>.<span style="color:#ae81ff">8</span>
+</span></span></code></pre></div><p><strong>Schema design</strong>:</p>
+<ul>
+<li><strong>Measurement</strong>: Metric type (<code>temperature</code>, <code>humidity</code>, etc.)</li>
+<li><strong>Tags</strong>: Indexed fields for filtering (<code>node</code>, <code>unit</code>)</li>
+<li><strong>Field</strong>: Actual value (<code>value</code>)</li>
+<li><strong>Timestamp</strong>: Automatic</li>
+</ul>
+<p><strong>Why not one measurement per node?</strong></p>
+<p>❌ <strong>Per-node measurements</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>node1_data temperature<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span>,humidity<span style="color:#f92672">=</span><span style="color:#ae81ff">54</span>.<span style="color:#ae81ff">1</span>,gas<span style="color:#f92672">=</span><span style="color:#ae81ff">101169</span>
+</span></span><span style="display:flex;"><span>node2_data temperature<span style="color:#f92672">=</span><span style="color:#ae81ff">26</span>.<span style="color:#ae81ff">8</span>,humidity<span style="color:#f92672">=</span><span style="color:#ae81ff">48</span>.<span style="color:#ae81ff">8</span>
+</span></span></code></pre></div><p><strong>Problems</strong>:</p>
+<ul>
+<li>Hard to query &ldquo;all temperatures&rdquo;</li>
+<li>Schema changes when adding nodes</li>
+<li>Can&rsquo;t easily compare metrics across nodes</li>
+</ul>
+<p>✅ <strong>Per-metric measurements</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>temperature,node<span style="color:#f92672">=</span>node1 value<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>temperature,node<span style="color:#f92672">=</span>node2 value<span style="color:#f92672">=</span><span style="color:#ae81ff">26</span>.<span style="color:#ae81ff">8</span>
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Query all temperatures: <code>from(bucket) |&gt; filter(fn: (r) =&gt; r._measurement == &quot;temperature&quot;)</code></li>
+<li>Add nodes without schema changes</li>
+<li>Natural comparisons: <code>filter(fn: (r) =&gt; r.node == &quot;node1&quot; or r.node == &quot;node2&quot;)</code></li>
+</ul>
+<hr>
+<h2 id="five-critical-lessons">Five Critical Lessons<a hidden class="anchor" aria-hidden="true" href="#five-critical-lessons">#</a></h2>
+<h3 id="lesson-1-mqtt-topic-design---one-metric-one-topic">Lesson 1: MQTT Topic Design - One Metric, One Topic<a hidden class="anchor" aria-hidden="true" href="#lesson-1-mqtt-topic-design---one-metric-one-topic">#</a></h3>
+<h4 id="the-challenge">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h4>
+<p>MQTT topic design seems simple until you think about subscribers. What if:</p>
+<ul>
+<li>Mobile app only wants temperature?</li>
+<li>Edge device needs all Node 1 metrics?</li>
+<li>Dashboard shows temperature comparison across nodes?</li>
+<li>Alerting system monitors gas resistance?</li>
+</ul>
+<h4 id="the-options">The Options<a hidden class="anchor" aria-hidden="true" href="#the-options">#</a></h4>
+<p><strong>Option A: Single topic with JSON</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Publish everything to one topic
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt.publish(<span style="color:#e6db74">&#34;iiot/telemetry&#34;</span>, json_packet).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p>Topic: <code>iiot/telemetry</code><br>
+Payload: <code>{&quot;n1&quot;:{&quot;t&quot;:27.6,&quot;h&quot;:54.1,&quot;g&quot;:101169},&quot;n2&quot;:{...},&quot;sig&quot;:{...}}</code></p>
+<p><strong>Subscriber perspective</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Python subscriber</span>
+</span></span><span style="display:flex;"><span>mqtt<span style="color:#f92672">.</span>subscribe(<span style="color:#e6db74">&#34;iiot/telemetry&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_message</span>(msg):
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(msg<span style="color:#f92672">.</span>payload)
+</span></span><span style="display:flex;"><span>    temp <span style="color:#f92672">=</span> data[<span style="color:#e6db74">&#34;n1&#34;</span>][<span style="color:#e6db74">&#34;t&#34;</span>]  <span style="color:#75715e"># Parse JSON every time</span>
+</span></span></code></pre></div><p><strong>Problems</strong>:</p>
+<ul>
+<li>❌ Can&rsquo;t subscribe to just temperature</li>
+<li>❌ Every subscriber parses full JSON</li>
+<li>❌ Bandwidth wasted (sending all metrics to everyone)</li>
+<li>❌ MQTT wildcards useless</li>
+</ul>
+<p><strong>Option B: Hierarchical topics (chosen)</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Publish to individual topics
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt.publish(<span style="color:#e6db74">&#34;iiot/node1/temperature&#34;</span>, <span style="color:#e6db74">&#34;27.6&#34;</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt.publish(<span style="color:#e6db74">&#34;iiot/node1/humidity&#34;</span>, <span style="color:#e6db74">&#34;54.1&#34;</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt.publish(<span style="color:#e6db74">&#34;iiot/node1/gas_resistance&#34;</span>, <span style="color:#e6db74">&#34;101169&#34;</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p><strong>Subscriber perspective</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Python subscriber</span>
+</span></span><span style="display:flex;"><span>mqtt<span style="color:#f92672">.</span>subscribe(<span style="color:#e6db74">&#34;iiot/node1/temperature&#34;</span>)  <span style="color:#75715e"># Just what I need</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_message</span>(msg):
+</span></span><span style="display:flex;"><span>    temp <span style="color:#f92672">=</span> float(msg<span style="color:#f92672">.</span>payload)  <span style="color:#75715e"># No JSON parsing</span>
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Selective subscriptions: <code>iiot/node1/temperature</code></li>
+<li>✅ MQTT wildcards: <code>iiot/+/temperature</code> (all nodes)</li>
+<li>✅ Simple string values (no parsing)</li>
+<li>✅ Bandwidth efficient (subscribers get only what they need)</li>
+<li>✅ Direct InfluxDB integration</li>
+</ul>
+<h4 id="the-implementation">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">publish_sensor</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>self,
+</span></span><span style="display:flex;"><span>    prefix: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,
+</span></span><span style="display:flex;"><span>    node: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,
+</span></span><span style="display:flex;"><span>    metric: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,
+</span></span><span style="display:flex;"><span>    value: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,
+</span></span><span style="display:flex;"><span>    retain: <span style="color:#66d9ef">bool</span>,
+</span></span><span style="display:flex;"><span>) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> topic <span style="color:#f92672">=</span> <span style="color:#a6e22e">format!</span>(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, prefix, node, metric);
+</span></span><span style="display:flex;"><span>    self.publish(<span style="color:#f92672">&amp;</span>topic, value, QoS::AtLeastOnce, retain).<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Publishing one packet</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Node 1 sensors (3 topics)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;node1&#34;</span>, <span style="color:#e6db74">&#34;temperature&#34;</span>, <span style="color:#e6db74">&#34;27.6&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;node1&#34;</span>, <span style="color:#e6db74">&#34;humidity&#34;</span>, <span style="color:#e6db74">&#34;54.1&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;node1&#34;</span>, <span style="color:#e6db74">&#34;gas_resistance&#34;</span>, <span style="color:#e6db74">&#34;101169&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Node 2 sensors (2 topics)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;node2&#34;</span>, <span style="color:#e6db74">&#34;temperature&#34;</span>, <span style="color:#e6db74">&#34;26.8&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;node2&#34;</span>, <span style="color:#e6db74">&#34;humidity&#34;</span>, <span style="color:#e6db74">&#34;48.8&#34;</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Signal quality (2 topics)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;signal&#34;</span>, <span style="color:#e6db74">&#34;rssi&#34;</span>, <span style="color:#e6db74">&#34;-33&#34;</span>, <span style="color:#66d9ef">false</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;signal&#34;</span>, <span style="color:#e6db74">&#34;snr&#34;</span>, <span style="color:#e6db74">&#34;13&#34;</span>, <span style="color:#66d9ef">false</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Statistics (2 topics)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;stats&#34;</span>, <span style="color:#e6db74">&#34;packets_received&#34;</span>, <span style="color:#e6db74">&#34;42&#34;</span>, <span style="color:#66d9ef">false</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>mqtt_client.publish_sensor(<span style="color:#e6db74">&#34;iiot&#34;</span>, <span style="color:#e6db74">&#34;stats&#34;</span>, <span style="color:#e6db74">&#34;crc_errors&#34;</span>, <span style="color:#e6db74">&#34;0&#34;</span>, <span style="color:#66d9ef">false</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p><strong>Total</strong>: 9 MQTT publishes per telemetry packet</p>
+<h4 id="the-lesson">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson">#</a></h4>
+<blockquote>
+<p><strong>MQTT topic hierarchy is a user interface. Design for your subscribers, not your convenience.</strong></p>
+</blockquote>
+<p><strong>Good topics</strong>:</p>
+<ul>
+<li>Simple string values</li>
+<li>Hierarchical (wildcards work)</li>
+<li>Semantic (<code>iiot/node1/temperature</code> tells you everything)</li>
+</ul>
+<p><strong>Bad topics</strong>:</p>
+<ul>
+<li>Require JSON parsing</li>
+<li>Can&rsquo;t use wildcards</li>
+<li>Generic (<code>iiot/data</code> tells you nothing)</li>
+</ul>
+<hr>
+<h3 id="lesson-2-the-event-loop-handle-must-never-die">Lesson 2: The Event Loop Handle Must Never Die<a hidden class="anchor" aria-hidden="true" href="#lesson-2-the-event-loop-handle-must-never-die">#</a></h3>
+<h4 id="the-bug">The Bug<a hidden class="anchor" aria-hidden="true" href="#the-bug">#</a></h4>
+<p>Initial MQTT client implementation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MqttClient</span> {
+</span></span><span style="display:flex;"><span>    client: <span style="color:#a6e22e">AsyncClient</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> MqttClient {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(broker_url: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>, client_id: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>) -&gt; Result<span style="color:#f92672">&lt;</span>Self<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> (client, <span style="color:#66d9ef">mut</span> event_loop) <span style="color:#f92672">=</span> AsyncClient::new(mqttoptions, <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Spawn event loop
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>                event_loop.poll().<span style="color:#66d9ef">await</span>.ok();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Ok(Self { client })
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Symptoms</strong>:</p>
+<ul>
+<li>MQTT publishes work initially</li>
+<li>After ~30 seconds, publishes silently fail</li>
+<li>No errors logged</li>
+<li>Client appears healthy but nothing gets published</li>
+</ul>
+<h4 id="the-root-cause">The Root Cause<a hidden class="anchor" aria-hidden="true" href="#the-root-cause">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">loop</span> { event_loop.poll().<span style="color:#66d9ef">await</span>.ok(); }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// JoinHandle returned by spawn() is dropped immediately!
+</span></span></span></code></pre></div><p><strong>What&rsquo;s happening</strong>:</p>
+<ol>
+<li><code>tokio::spawn</code> returns <code>JoinHandle&lt;()&gt;</code></li>
+<li>We don&rsquo;t store it in the struct</li>
+<li><code>JoinHandle</code> is dropped at end of <code>new()</code></li>
+<li>When <code>JoinHandle</code> is dropped, <strong>task is cancelled</strong></li>
+<li>Event loop stops running</li>
+<li>MQTT client breaks</li>
+</ol>
+<p><strong>The event loop</strong>:</p>
+<ul>
+<li>Handles network I/O</li>
+<li>Sends publish messages</li>
+<li>Receives acknowledgments</li>
+<li>Processes keep-alive pings</li>
+</ul>
+<p><strong>Without it</strong>, <code>client.publish()</code> queues messages but nothing sends them.</p>
+<h4 id="the-fix">The Fix<a hidden class="anchor" aria-hidden="true" href="#the-fix">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MqttClient</span> {
+</span></span><span style="display:flex;"><span>    client: <span style="color:#a6e22e">AsyncClient</span>,
+</span></span><span style="display:flex;"><span>    _event_loop_handle: <span style="color:#a6e22e">JoinHandle</span><span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span>,  <span style="color:#75715e">// ← MUST STORE THIS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> MqttClient {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(broker_url: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>, client_id: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>) -&gt; Result<span style="color:#f92672">&lt;</span>Self<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> (client, <span style="color:#66d9ef">mut</span> event_loop) <span style="color:#f92672">=</span> AsyncClient::new(mqttoptions, <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> event_loop_handle <span style="color:#f92672">=</span> tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">match</span> event_loop.poll().<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>                    Ok(notification) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">debug!</span>(<span style="color:#e6db74">&#34;MQTT notification: {:?}&#34;</span>, notification);
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">error!</span>(<span style="color:#e6db74">&#34;MQTT connection error: {}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>                        tokio::time::sleep(Duration::from_secs(<span style="color:#ae81ff">1</span>)).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Ok(Self {
+</span></span><span style="display:flex;"><span>            client,
+</span></span><span style="display:flex;"><span>            _event_loop_handle: <span style="color:#a6e22e">event_loop_handle</span>,  <span style="color:#75715e">// ← STORED IN STRUCT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        })
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>The underscore prefix</strong> (<code>_event_loop_handle</code>) tells Rust: &ldquo;I&rsquo;m intentionally not using this value, but don&rsquo;t drop it.&rdquo;</p>
+<h4 id="why-this-works">Why This Works<a hidden class="anchor" aria-hidden="true" href="#why-this-works">#</a></h4>
+<p><strong>Ownership semantics</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MqttClient</span> {
+</span></span><span style="display:flex;"><span>    _event_loop_handle: <span style="color:#a6e22e">JoinHandle</span><span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> client <span style="color:#f92672">=</span> MqttClient::new(<span style="color:#f92672">..</span>.).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// client owns the JoinHandle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// JoinHandle stays alive as long as client is alive
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Event loop keeps running
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>drop(client);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// JoinHandle is dropped
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Event loop task is cancelled
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Clean shutdown!
+</span></span></span></code></pre></div><p><strong>This is Rust ownership solving a hard problem elegantly.</strong></p>
+<h4 id="the-lesson-1">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-1">#</a></h4>
+<blockquote>
+<p><strong>In async Rust, task lifetime = handle lifetime. If you want a background task to live as long as a struct, store its JoinHandle in the struct.</strong></p>
+</blockquote>
+<p><strong>Pattern</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ServiceWithBackgroundTask</span> {
+</span></span><span style="display:flex;"><span>    client: <span style="color:#a6e22e">SomeClient</span>,
+</span></span><span style="display:flex;"><span>    _background_task_handle: <span style="color:#a6e22e">JoinHandle</span><span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span>,  <span style="color:#75715e">// Underscore = unused but critical
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><strong>Common mistake</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>tokio::spawn(<span style="color:#66d9ef">async</span> { <span style="color:#75715e">/* important work */</span> });
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Handle dropped = task cancelled!
+</span></span></span></code></pre></div><hr>
+<h3 id="lesson-3-influxdb-tags-vs-fields">Lesson 3: InfluxDB Tags vs Fields<a hidden class="anchor" aria-hidden="true" href="#lesson-3-influxdb-tags-vs-fields">#</a></h3>
+<h4 id="the-schema-question">The Schema Question<a hidden class="anchor" aria-hidden="true" href="#the-schema-question">#</a></h4>
+<p>When writing sensor data to InfluxDB, you need to decide: <strong>What&rsquo;s a tag? What&rsquo;s a field?</strong></p>
+<p>Example: Temperature reading from Node 1</p>
+<p><strong>Option A: Everything as fields</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>sensor_data node<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;node1&#34;</span>,metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;temperature&#34;</span>,unit<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;celsius&#34;</span>,value<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span>
+</span></span></code></pre></div><p><strong>Option B: Tags + field (chosen)</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>temperature,node<span style="color:#f92672">=</span>node1,unit<span style="color:#f92672">=</span>celsius value<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span>
+</span></span></code></pre></div><p><strong>What&rsquo;s the difference?</strong></p>
+<h4 id="tags-vs-fields">Tags vs Fields<a hidden class="anchor" aria-hidden="true" href="#tags-vs-fields">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Aspect</th>
+          <th>Tags</th>
+          <th>Fields</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Indexed</strong></td>
+          <td>Yes (fast queries)</td>
+          <td>No</td>
+      </tr>
+      <tr>
+          <td><strong>Data type</strong></td>
+          <td>String only</td>
+          <td>Numeric, string, boolean</td>
+      </tr>
+      <tr>
+          <td><strong>Cardinality</strong></td>
+          <td>Low (few unique values)</td>
+          <td>High (many unique values)</td>
+      </tr>
+      <tr>
+          <td><strong>Queryable</strong></td>
+          <td>Filter with <code>r.tag == &quot;value&quot;</code></td>
+          <td>Math operations, aggregations</td>
+      </tr>
+      <tr>
+          <td><strong>Use case</strong></td>
+          <td>Categories, identifiers</td>
+          <td>Measurements, readings</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="the-design">The Design<a hidden class="anchor" aria-hidden="true" href="#the-design">#</a></h4>
+<p><strong>Chosen schema</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">write_sensor</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&amp;</span>self,
+</span></span><span style="display:flex;"><span>    sensor_type: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,      <span style="color:#75715e">// ← Measurement name
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    value: <span style="color:#66d9ef">f64</span>,             <span style="color:#75715e">// ← Field
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    node_id: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>,          <span style="color:#75715e">// ← Tag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    unit: Option<span style="color:#f92672">&lt;&amp;</span><span style="color:#66d9ef">str</span><span style="color:#f92672">&gt;</span>,     <span style="color:#75715e">// ← Tag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> tags <span style="color:#f92672">=</span> <span style="color:#a6e22e">vec!</span>[(<span style="color:#e6db74">&#34;node&#34;</span>, node_id)];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(u) <span style="color:#f92672">=</span> unit {
+</span></span><span style="display:flex;"><span>        tags.push((<span style="color:#e6db74">&#34;unit&#34;</span>, u));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    self.write_point(sensor_type, <span style="color:#e6db74">&#34;value&#34;</span>, value, tags).<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>What gets written</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Measurement: temperature
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Tags: node=node1, unit=celsius (indexed!)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Field: value=27.6
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>temperature,node<span style="color:#f92672">=</span>node1,unit<span style="color:#f92672">=</span>celsius value<span style="color:#f92672">=</span><span style="color:#ae81ff">27</span>.<span style="color:#ae81ff">6</span> <span style="color:#ae81ff">1703764800000000000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Measurement: humidity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Tags: node=node1, unit=percent (indexed!)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Field: value=54.1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>humidity,node<span style="color:#f92672">=</span>node1,unit<span style="color:#f92672">=</span>percent value<span style="color:#f92672">=</span><span style="color:#ae81ff">54</span>.<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1703764800000000000</span>
+</span></span></code></pre></div><h4 id="why-this-works-1">Why This Works<a hidden class="anchor" aria-hidden="true" href="#why-this-works-1">#</a></h4>
+<p><strong>Fast queries</strong> (tags are indexed):</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">// Get all temperatures from node1
+from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;temperature&#34;)
+  |&gt; filter(fn: (r) =&gt; r.node == &#34;node1&#34;)  // ← Fast tag filter
+
+// Compare temperatures across nodes
+from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;temperature&#34;)
+  |&gt; filter(fn: (r) =&gt; r.node == &#34;node1&#34; or r.node == &#34;node2&#34;)  // ← Both indexed
+</code></pre><p><strong>Schema stability</strong> (adding nodes doesn&rsquo;t change schema):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Add Node 3 - just insert with new tag value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>temperature,node<span style="color:#f92672">=</span>node3,unit<span style="color:#f92672">=</span>celsius value<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>.<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- No schema migration needed!
+</span></span></span></code></pre></div><p><strong>Natural grouping</strong>:</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">// Average temperature per node
+from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;temperature&#34;)
+  |&gt; group(key: [&#34;node&#34;])  // ← Group by tag
+  |&gt; mean()
+</code></pre><h4 id="the-lesson-2">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-2">#</a></h4>
+<blockquote>
+<p><strong>Tags are for categorization (few unique values), fields are for measurements (many unique values). Get this wrong and queries will be slow.</strong></p>
+</blockquote>
+<p><strong>Good tags</strong>:</p>
+<ul>
+<li><code>node</code> (node1, node2, node3 - low cardinality)</li>
+<li><code>unit</code> (celsius, percent, ohms - low cardinality)</li>
+<li><code>location</code> (lab, field, warehouse - low cardinality)</li>
+</ul>
+<p><strong>Bad tags</strong>:</p>
+<ul>
+<li><code>timestamp</code> (unique every time - high cardinality)</li>
+<li><code>value</code> (continuous measurement - high cardinality)</li>
+<li><code>packet_id</code> (unique identifier - high cardinality)</li>
+</ul>
+<p><strong>If a field has millions of unique values, it shouldn&rsquo;t be a tag.</strong></p>
+<hr>
+<h3 id="lesson-4-docker-networks-enable-baby-steps-testing">Lesson 4: Docker Networks Enable Baby Steps Testing<a hidden class="anchor" aria-hidden="true" href="#lesson-4-docker-networks-enable-baby-steps-testing">#</a></h3>
+<h4 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h4>
+<p>When building MQTT integration, how do you test <strong>without</strong> installing <code>mosquitto-clients</code> on your host machine?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Traditional approach</span>
+</span></span><span style="display:flex;"><span>sudo apt install mosquitto-clients
+</span></span><span style="display:flex;"><span>mosquitto_sub -t <span style="color:#e6db74">&#34;iiot/#&#34;</span> -v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># But this pollutes the host system</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># And what if you&#39;re on macOS? Windows?</span>
+</span></span></code></pre></div><h4 id="the-docker-solution">The Docker Solution<a hidden class="anchor" aria-hidden="true" href="#the-docker-solution">#</a></h4>
+<p>Docker Compose creates a <strong>custom network</strong> for all services:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">mosquitto</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">wk7-mosquitto</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">iiot-network</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">influxdb</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">wk7-influxdb</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">iiot-network</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">iiot-network</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">driver</span>: <span style="color:#ae81ff">bridge</span>
+</span></span></code></pre></div><p><strong>Every container on <code>iiot-network</code> can reach each other by container name.</strong></p>
+<h4 id="testing-mqtt-without-installing-anything">Testing MQTT Without Installing Anything<a hidden class="anchor" aria-hidden="true" href="#testing-mqtt-without-installing-anything">#</a></h4>
+<p><strong>Publish test message</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --rm --network wk7-mqtt-influx_iiot-network <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    eclipse-mosquitto:2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    mosquitto_pub -h wk7-mosquitto -t <span style="color:#e6db74">&#34;iiot/test&#34;</span> -m <span style="color:#e6db74">&#34;hello&#34;</span>
+</span></span></code></pre></div><p><strong>Subscribe to topics</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --rm -it --network wk7-mqtt-influx_iiot-network <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    eclipse-mosquitto:2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    mosquitto_sub -h wk7-mosquitto -t <span style="color:#e6db74">&#34;iiot/#&#34;</span> -v
+</span></span></code></pre></div><p><strong>What&rsquo;s happening</strong>:</p>
+<ol>
+<li><code>docker run --rm</code> - Run container, delete when done</li>
+<li><code>--network wk7-mqtt-influx_iiot-network</code> - Join the same network as Mosquitto</li>
+<li><code>eclipse-mosquitto:2</code> - Use official Mosquitto image</li>
+<li><code>-h wk7-mosquitto</code> - Connect to broker by container name</li>
+<li><code>-t &quot;iiot/#&quot;</code> - Subscribe to all topics under <code>iiot/</code></li>
+</ol>
+<p><strong>No host installation needed!</strong></p>
+<h4 id="the-baby-steps-pattern">The Baby Steps Pattern<a hidden class="anchor" aria-hidden="true" href="#the-baby-steps-pattern">#</a></h4>
+<p><strong>Phase 2.2: Verify MQTT broker is working</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Step 1: Start services</span>
+</span></span><span style="display:flex;"><span>docker compose up -d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Step 2: Check broker is running</span>
+</span></span><span style="display:flex;"><span>docker compose ps | grep mosquitto
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✓ wk7-mosquitto is Up</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Step 3: Publish test message</span>
+</span></span><span style="display:flex;"><span>docker run --rm --network wk7-mqtt-influx_iiot-network <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    eclipse-mosquitto:2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    mosquitto_pub -h wk7-mosquitto -t <span style="color:#e6db74">&#34;test&#34;</span> -m <span style="color:#e6db74">&#34;hello&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Step 4: Subscribe and verify</span>
+</span></span><span style="display:flex;"><span>docker run --rm -it --network wk7-mqtt-influx_iiot-network <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    eclipse-mosquitto:2 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    mosquitto_sub -h wk7-mosquitto -t <span style="color:#e6db74">&#34;#&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✓ test hello</span>
+</span></span></code></pre></div><p><strong>Each step verifies one thing.</strong> If Step 3 fails, broker isn&rsquo;t working. If Step 4 doesn&rsquo;t show the message, network is broken.</p>
+<h4 id="the-lesson-3">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-3">#</a></h4>
+<blockquote>
+<p><strong>Docker networks turn &ldquo;install dependencies&rdquo; into &ldquo;use ephemeral containers&rdquo;. Perfect for baby steps testing.</strong></p>
+</blockquote>
+<p><strong>Traditional testing</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Install tools</span>
+</span></span><span style="display:flex;"><span>sudo apt install mosquitto-clients postgresql-client redis-tools
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Test</span>
+</span></span><span style="display:flex;"><span>mosquitto_sub -t test
+</span></span><span style="display:flex;"><span>psql -h localhost
+</span></span><span style="display:flex;"><span>redis-cli ping
+</span></span></code></pre></div><p><strong>Docker testing</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># No installation, use containers</span>
+</span></span><span style="display:flex;"><span>docker run --rm --network my-network eclipse-mosquitto mosquitto_sub -t test
+</span></span><span style="display:flex;"><span>docker run --rm --network my-network postgres psql -h postgres
+</span></span><span style="display:flex;"><span>docker run --rm --network my-network redis redis-cli -h redis ping
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ No host pollution</li>
+<li>✅ Consistent across OS (works on Linux, macOS, Windows)</li>
+<li>✅ Version-controlled (exact image tags)</li>
+<li>✅ Disposable (containers deleted after use)</li>
+</ul>
+<hr>
+<h3 id="lesson-5-non-fatal-error-handling-for-resilience">Lesson 5: Non-Fatal Error Handling for Resilience<a hidden class="anchor" aria-hidden="true" href="#lesson-5-non-fatal-error-handling-for-resilience">#</a></h3>
+<h4 id="the-challenge-1">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge-1">#</a></h4>
+<p>The gateway service publishes to both MQTT and InfluxDB. What happens if one fails?</p>
+<p><strong>Option A: Fatal errors</strong> (crash on any failure):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>publish_telemetry_to_mqtt(<span style="color:#f92672">&amp;</span>mqtt_client, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;  <span style="color:#75715e">// Crashes if MQTT down
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>write_telemetry_to_influxdb(<span style="color:#f92672">&amp;</span>influxdb_client, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;  <span style="color:#75715e">// Never reached
+</span></span></span></code></pre></div><p><strong>Problem</strong>: If MQTT is temporarily unavailable, the entire service stops. No data gets to InfluxDB either.</p>
+<p><strong>Option B: Non-fatal errors</strong> (log and continue):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> publish_telemetry_to_mqtt(<span style="color:#f92672">&amp;</span>mqtt_client, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">error!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, <span style="color:#e6db74">&#34;Failed to publish to MQTT&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Continue to InfluxDB
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> write_telemetry_to_influxdb(<span style="color:#f92672">&amp;</span>influxdb_client, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">error!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, <span style="color:#e6db74">&#34;Failed to write to InfluxDB&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Continue processing next packet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><strong>Benefit</strong>: Service keeps running even if external systems fail.</p>
+<h4 id="the-implementation-1">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation-1">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">process_telemetry</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">mut</span> rx: <span style="color:#a6e22e">mpsc</span>::Receiver<span style="color:#f92672">&lt;</span>TelemetryPacket<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>    mqtt_client: <span style="color:#a6e22e">mqtt</span>::MqttClient,
+</span></span><span style="display:flex;"><span>    influxdb_client: <span style="color:#a6e22e">influxdb</span>::InfluxDbClient,
+</span></span><span style="display:flex;"><span>    topic_prefix: String,
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Starting telemetry processor&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(packet) <span style="color:#f92672">=</span> rx.recv().<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Log the packet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">info!</span>(
+</span></span><span style="display:flex;"><span>            timestamp_ms <span style="color:#f92672">=</span> packet.ts,
+</span></span><span style="display:flex;"><span>            node_id <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>packet.id,
+</span></span><span style="display:flex;"><span>            temperature <span style="color:#f92672">=</span> packet.n1.t,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Processing telemetry packet&#34;</span>
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Publish to MQTT (non-fatal)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> publish_telemetry_to_mqtt(<span style="color:#f92672">&amp;</span>mqtt_client, <span style="color:#f92672">&amp;</span>topic_prefix, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">error!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, <span style="color:#e6db74">&#34;Failed to publish telemetry to MQTT&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Don&#39;t crash - continue to InfluxDB
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Write to InfluxDB (non-fatal)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> write_telemetry_to_influxdb(<span style="color:#f92672">&amp;</span>influxdb_client, <span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">error!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, <span style="color:#e6db74">&#34;Failed to write telemetry to InfluxDB&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Don&#39;t crash - continue to next packet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Telemetry processor stopped&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="the-behavior">The Behavior<a hidden class="anchor" aria-hidden="true" href="#the-behavior">#</a></h4>
+<p><strong>Scenario 1: MQTT broker is down</strong></p>
+<pre tabindex="0"><code>ERROR Failed to publish telemetry to MQTT error=&#34;Connection refused (os error 111)&#34;
+INFO Wrote telemetry to InfluxDB
+INFO Processing telemetry packet timestamp_ms=18000 ...
+</code></pre><p><strong>InfluxDB keeps working!</strong></p>
+<p><strong>Scenario 2: InfluxDB is down</strong></p>
+<pre tabindex="0"><code>INFO Published telemetry to MQTT topics
+ERROR Failed to write telemetry to InfluxDB error=&#34;unauthorized access&#34;
+INFO Processing telemetry packet timestamp_ms=18000 ...
+</code></pre><p><strong>MQTT keeps working!</strong></p>
+<p><strong>Scenario 3: Both down</strong></p>
+<pre tabindex="0"><code>ERROR Failed to publish telemetry to MQTT error=&#34;Connection refused&#34;
+ERROR Failed to write telemetry to InfluxDB error=&#34;Connection refused&#34;
+INFO Processing telemetry packet timestamp_ms=18000 ...
+</code></pre><p><strong>Service keeps running!</strong> (Data is lost, but service doesn&rsquo;t crash)</p>
+<h4 id="when-to-use-non-fatal-errors">When to Use Non-Fatal Errors<a hidden class="anchor" aria-hidden="true" href="#when-to-use-non-fatal-errors">#</a></h4>
+<p><strong>Use non-fatal errors when</strong>:</p>
+<ul>
+<li>✅ External systems are &ldquo;nice to have&rdquo; not critical</li>
+<li>✅ Partial success is better than total failure</li>
+<li>✅ You can recover later (Week 7 Phase 4: offline buffering)</li>
+</ul>
+<p><strong>Use fatal errors when</strong>:</p>
+<ul>
+<li>❌ Data loss is unacceptable</li>
+<li>❌ Continuing would corrupt state</li>
+<li>❌ No recovery is possible</li>
+</ul>
+<h4 id="the-lesson-4">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-4">#</a></h4>
+<blockquote>
+<p><strong>Graceful degradation beats brittle perfection. Services should keep working even when dependencies fail.</strong></p>
+</blockquote>
+<p><strong>Production pattern</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Critical path (must succeed)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> packet <span style="color:#f92672">=</span> parse_json(stdout)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Nice-to-have path (log and continue)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> publish_mqtt(<span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">error!</span>(<span style="color:#e6db74">&#34;MQTT failed: {}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>    metrics::increment_mqtt_errors();  <span style="color:#75715e">// Track failures
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> write_influxdb(<span style="color:#f92672">&amp;</span>packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">error!</span>(<span style="color:#e6db74">&#34;InfluxDB failed: {}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>    buffer_for_retry(<span style="color:#f92672">&amp;</span>packet);  <span style="color:#75715e">// Queue for later
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><strong>Week 7 Phase 4</strong> will add offline buffering, making this pattern even more robust.</p>
+<hr>
+<h2 id="grafana-dashboard-creation">Grafana Dashboard Creation<a hidden class="anchor" aria-hidden="true" href="#grafana-dashboard-creation">#</a></h2>
+<h3 id="dashboard-1-environmental-sensors-7-panels">Dashboard 1: Environmental Sensors (7 panels)<a hidden class="anchor" aria-hidden="true" href="#dashboard-1-environmental-sensors-7-panels">#</a></h3>
+<p><strong>Created manually through Grafana UI</strong>, following the &ldquo;baby steps&rdquo; philosophy:</p>
+<ol>
+<li>
+<p><strong>Panel 1: Current Temperature - Node 1</strong></p>
+<ul>
+<li>Type: Stat panel</li>
+<li>Query: Latest temperature from node1</li>
+<li>Threshold: Green &lt; 30°C, Yellow &lt; 35°C, Red ≥ 35°C</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 2: Current Humidity - Node 1</strong></p>
+<ul>
+<li>Type: Stat panel</li>
+<li>Query: Latest humidity from node1</li>
+<li>Unit: Percent (0-100)</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 3: Current Temperature - Node 2</strong></p>
+<ul>
+<li>Type: Stat panel</li>
+<li>Query: Latest temperature from node2</li>
+<li>Same thresholds as Node 1</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 4: Current Humidity - Node 2</strong></p>
+<ul>
+<li>Type: Stat panel</li>
+<li>Query: Latest humidity from node2</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 5: Temperature Comparison</strong></p>
+<ul>
+<li>Type: Time series graph</li>
+<li>Query: Both node1 and node2 temperatures</li>
+<li><strong>Flux query</strong>:</li>
+</ul>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;temperature&#34;)
+  |&gt; filter(fn: (r) =&gt; r.node == &#34;node1&#34; or r.node == &#34;node2&#34;)
+</code></pre></li>
+<li>
+<p><strong>Panel 6: Humidity Comparison</strong></p>
+<ul>
+<li>Type: Time series graph</li>
+<li>Shows humidity trends for both nodes</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 7: Gas Resistance (Air Quality)</strong></p>
+<ul>
+<li>Type: Time series graph</li>
+<li>BME680 gas sensor data from Node 1</li>
+</ul>
+</li>
+</ol>
+<h3 id="dashboard-2-signal-quality--statistics-4-panels">Dashboard 2: Signal Quality &amp; Statistics (4 panels)<a hidden class="anchor" aria-hidden="true" href="#dashboard-2-signal-quality--statistics-4-panels">#</a></h3>
+<ol>
+<li>
+<p><strong>Panel 1: RSSI (Signal Strength)</strong></p>
+<ul>
+<li>Type: Gauge</li>
+<li>Thresholds: Red &lt; -80 dBm, Yellow &lt; -60 dBm, Green ≥ -60 dBm</li>
+<li>Shows LoRa signal quality</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 2: SNR (Signal-to-Noise Ratio)</strong></p>
+<ul>
+<li>Type: Time series</li>
+<li>Higher is better (&gt;10 dB is excellent)</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 3: Packets Received</strong></p>
+<ul>
+<li>Type: Stat panel</li>
+<li>Counter showing total packets received</li>
+</ul>
+</li>
+<li>
+<p><strong>Panel 4: Error Rate</strong></p>
+<ul>
+<li>Type: Gauge</li>
+<li><strong>Advanced Flux query</strong>:</li>
+</ul>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;crc_errors&#34; or r._measurement == &#34;packets_received&#34;)
+  |&gt; pivot(rowKey:[&#34;_time&#34;], columnKey: [&#34;_measurement&#34;], valueColumn: &#34;_value&#34;)
+  |&gt; map(fn: (r) =&gt; ({ r with error_rate: r.crc_errors / r.packets_received * 100.0 }))
+</code></pre></li>
+</ol>
+<h3 id="the-experience">The Experience<a hidden class="anchor" aria-hidden="true" href="#the-experience">#</a></h3>
+<p><strong>Creating these dashboards taught</strong>:</p>
+<ul>
+<li>Flux query language basics</li>
+<li>Panel types and when to use them</li>
+<li>Threshold configuration for color-coding</li>
+<li>Time range selection (last 1h, 6h, 24h)</li>
+<li>Auto-refresh intervals (5s, 10s, 30s)</li>
+</ul>
+<p><strong>Dashboard design principles</strong>:</p>
+<ul>
+<li><strong>Current values</strong> (stat panels) for at-a-glance status</li>
+<li><strong>Time series</strong> for trends and patterns</li>
+<li><strong>Color thresholds</strong> for instant problem identification</li>
+<li><strong>Comparison graphs</strong> to spot anomalies</li>
+</ul>
+<hr>
+<h2 id="results-at-the-end-of-week-78">Results at the End of Week 7+8<a hidden class="anchor" aria-hidden="true" href="#results-at-the-end-of-week-78">#</a></h2>
+<h3 id="complete-data-pipeline">Complete Data Pipeline<a hidden class="anchor" aria-hidden="true" href="#complete-data-pipeline">#</a></h3>
+<pre tabindex="0"><code>Node 1 (STM32 + BME680 + SHT3x)
+    ↓ LoRa 868MHz (~300ms)
+Node 2 (STM32 + SHT3x + LoRa RX)
+    ↓ USB/RTT (immediate)
+probe-rs (RTT host)
+    ↓ JSON stdout (&lt;1ms)
+Gateway Service (Rust async)
+    ├─ MQTT publish (~5ms, 9 topics)
+    └─ InfluxDB write (~30ms, 8-9 points)
+        ↓
+    Grafana dashboards (refresh 10s)
+</code></pre><p><strong>Total latency</strong>: ~385 ms sensor → dashboard</p>
+<h3 id="performance-metrics">Performance Metrics<a hidden class="anchor" aria-hidden="true" href="#performance-metrics">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>End-to-end latency</strong></td>
+          <td>~385 ms</td>
+          <td>LoRa + processing + MQTT + InfluxDB</td>
+      </tr>
+      <tr>
+          <td><strong>MQTT publishes/packet</strong></td>
+          <td>9</td>
+          <td>All sensor values + signal + stats</td>
+      </tr>
+      <tr>
+          <td><strong>InfluxDB writes/packet</strong></td>
+          <td>8-9</td>
+          <td>Depends on Node 2 sensors available</td>
+      </tr>
+      <tr>
+          <td><strong>Packet interval</strong></td>
+          <td>~10 seconds</td>
+          <td>Node 1 transmission rate</td>
+      </tr>
+      <tr>
+          <td><strong>Memory (service)</strong></td>
+          <td>18 MB RSS</td>
+          <td>MQTT + InfluxDB clients loaded</td>
+      </tr>
+      <tr>
+          <td><strong>CPU (average)</strong></td>
+          <td>&lt;5%</td>
+          <td>Parallel async writes</td>
+      </tr>
+      <tr>
+          <td><strong>Uptime tested</strong></td>
+          <td>6+ hours</td>
+          <td>Zero crashes, zero packet loss</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="infrastructure-validation">Infrastructure Validation<a hidden class="anchor" aria-hidden="true" href="#infrastructure-validation">#</a></h3>
+<p><strong>Docker services</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker compose ps
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># wk7-mosquitto   Up   0.0.0.0:1883-&gt;1883/tcp</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># wk7-influxdb    Up   0.0.0.0:8086-&gt;8086/tcp</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># wk7-grafana     Up   0.0.0.0:3000-&gt;3000/tcp</span>
+</span></span></code></pre></div><p><strong>MQTT topics</strong> (live subscription):</p>
+<pre tabindex="0"><code>iiot/node1/temperature 27.6
+iiot/node1/humidity 54.1
+iiot/node1/gas_resistance 101169
+iiot/node2/temperature 26.8
+iiot/node2/humidity 48.8
+iiot/signal/rssi -33
+iiot/signal/snr 13
+iiot/stats/packets_received 42
+iiot/stats/crc_errors 0
+</code></pre><p><strong>InfluxDB measurements</strong> (8 total):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> temperature <span style="color:#66d9ef">WHERE</span> time <span style="color:#f92672">&gt;</span> now() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>h
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- node1: 27.6°C, node2: 26.8°C
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> humidity <span style="color:#66d9ef">WHERE</span> time <span style="color:#f92672">&gt;</span> now() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>h
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- node1: 54.1%, node2: 48.8%
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> gas_resistance <span style="color:#66d9ef">WHERE</span> time <span style="color:#f92672">&gt;</span> now() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>h
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- node1: 101.169 kΩ (good air quality)
+</span></span></span></code></pre></div><p><strong>Grafana dashboards</strong> (2 dashboards, 11 panels):</p>
+<ul>
+<li>Dashboard 1: Environmental Sensors (7 panels, auto-refresh 10s)</li>
+<li>Dashboard 2: Signal Quality &amp; Stats (4 panels, auto-refresh 10s)</li>
+</ul>
+<h3 id="hardware-validation">Hardware Validation<a hidden class="anchor" aria-hidden="true" href="#hardware-validation">#</a></h3>
+<p><strong>Live test environment</strong> (December 2024):</p>
+<table>
+  <thead>
+      <tr>
+          <th>Sensor</th>
+          <th>Node</th>
+          <th>Reading</th>
+          <th>Expected</th>
+          <th>Status</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Temperature (SHT3x)</td>
+          <td>Node 1</td>
+          <td>27.6°C</td>
+          <td>20-30°C</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>Humidity (SHT3x)</td>
+          <td>Node 1</td>
+          <td>54.1%</td>
+          <td>40-60%</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>Gas Resistance (BME680)</td>
+          <td>Node 1</td>
+          <td>101 kΩ</td>
+          <td>50-200 kΩ</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>Temperature (SHT3x)</td>
+          <td>Node 2</td>
+          <td>26.8°C</td>
+          <td>20-30°C</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>Humidity (SHT3x)</td>
+          <td>Node 2</td>
+          <td>48.8%</td>
+          <td>40-60%</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>RSSI</td>
+          <td>Signal</td>
+          <td>-33 dBm</td>
+          <td>&gt;-80 dBm</td>
+          <td>✅ Excellent</td>
+      </tr>
+      <tr>
+          <td>SNR</td>
+          <td>Signal</td>
+          <td>13 dB</td>
+          <td>&gt;10 dB</td>
+          <td>✅ Clean</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Environment</strong>: Indoor, ~5m range, 868 MHz LoRa, zero packet loss</p>
+<hr>
+<h2 id="why-this-matters-in-the-plan">Why This Matters in the Plan<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-in-the-plan">#</a></h2>
+<h3 id="the-architectural-achievement">The Architectural Achievement<a hidden class="anchor" aria-hidden="true" href="#the-architectural-achievement">#</a></h3>
+<p>Week 7+8 demonstrates <strong>complete IoT stack knowledge</strong>:</p>
+<ol>
+<li><strong>Edge layer</strong>: STM32 firmware (Rust, RTIC, no_std)</li>
+<li><strong>Communication</strong>: LoRa wireless (binary protocol, CRC, ACK)</li>
+<li><strong>Gateway</strong>: Async Rust service (Tokio, subprocess management)</li>
+<li><strong>Messaging</strong>: MQTT broker (pub/sub, QoS, retain flags)</li>
+<li><strong>Storage</strong>: InfluxDB (time-series, tags, fields, Flux queries)</li>
+<li><strong>Visualization</strong>: Grafana (dashboards, alerts, auto-refresh)</li>
+<li><strong>Infrastructure</strong>: Docker Compose (reproducible, version-controlled)</li>
+</ol>
+<p><strong>This is production IoT architecture</strong>, not a hobby project.</p>
+<h3 id="industry-standard-patterns">Industry-Standard Patterns<a hidden class="anchor" aria-hidden="true" href="#industry-standard-patterns">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Pattern</th>
+          <th>Implementation</th>
+          <th>Industry Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Pub/Sub messaging</strong></td>
+          <td>MQTT with hierarchical topics</td>
+          <td>Tesla (vehicle telemetry), AWS IoT Core</td>
+      </tr>
+      <tr>
+          <td><strong>Time-series storage</strong></td>
+          <td>InfluxDB with tags</td>
+          <td>Uber (metrics), PayPal (monitoring)</td>
+      </tr>
+      <tr>
+          <td><strong>Container orchestration</strong></td>
+          <td>Docker Compose</td>
+          <td>Every cloud platform</td>
+      </tr>
+      <tr>
+          <td><strong>Async Rust</strong></td>
+          <td>Tokio runtime</td>
+          <td>Discord, Cloudflare, Figma</td>
+      </tr>
+      <tr>
+          <td><strong>Structured logging</strong></td>
+          <td>tracing with key-value pairs</td>
+          <td>Datadog, Splunk integration</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>These aren&rsquo;t &ldquo;learning exercises&rdquo; - they&rsquo;re production patterns.</strong></p>
+<h3 id="the-resume-impact">The Resume Impact<a hidden class="anchor" aria-hidden="true" href="#the-resume-impact">#</a></h3>
+<p>After Week 7+8, you can confidently claim:</p>
+<ul>
+<li>✅ Built production IoT telemetry pipeline (sensors → dashboards)</li>
+<li>✅ Designed MQTT topic hierarchies for scalable pub/sub systems</li>
+<li>✅ Implemented async Rust services with Tokio runtime</li>
+<li>✅ Integrated time-series databases (InfluxDB) with proper schema design</li>
+<li>✅ Created Grafana dashboards with Flux queries and alerting</li>
+<li>✅ Deployed multi-container applications with Docker Compose</li>
+<li>✅ Handled graceful degradation and non-fatal error scenarios</li>
+<li>✅ Worked with real hardware (STM32, LoRa, environmental sensors)</li>
+</ul>
+<p><strong>This is systems engineering experience.</strong></p>
+<h3 id="the-learning-progression">The Learning Progression<a hidden class="anchor" aria-hidden="true" href="#the-learning-progression">#</a></h3>
+<pre tabindex="0"><code>Week 1-3: Can I make sensors talk?
+    ↓
+Week 5: Can I bridge LoRa to USB?
+    ↓
+Week 6: Can I parse this in Rust?
+    ↓
+Week 7: Can I publish to MQTT and InfluxDB?
+    ↓
+Week 8: Can I visualize everything in Grafana?
+    ↓
+Answer: Yes, yes, yes, yes, YES.
+</code></pre><p><strong>And more importantly</strong>: <em>I understand why each decision was made.</em></p>
+<hr>
+<h2 id="next-steps-production-hardening">Next Steps: Production Hardening<a hidden class="anchor" aria-hidden="true" href="#next-steps-production-hardening">#</a></h2>
+<p>Week 7+8 is &ldquo;complete&rdquo; but not &ldquo;production-hardened&rdquo;. Optional enhancements:</p>
+<h3 id="phase-4-mqtt-resilience">Phase 4: MQTT Resilience<a hidden class="anchor" aria-hidden="true" href="#phase-4-mqtt-resilience">#</a></h3>
+<p><strong>Offline buffering</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">OfflineBuffer</span> {
+</span></span><span style="display:flex;"><span>    queue: <span style="color:#a6e22e">VecDeque</span><span style="color:#f92672">&lt;</span>MqttMessage<span style="color:#f92672">&gt;</span>,
+</span></span><span style="display:flex;"><span>    max_size: <span style="color:#66d9ef">usize</span>,  <span style="color:#75715e">// 1000 messages
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// When MQTT publish fails
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Err(e) <span style="color:#f92672">=</span> mqtt_client.publish(<span style="color:#f92672">..</span>.).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    offline_buffer.enqueue(message)<span style="color:#f92672">?</span>;  <span style="color:#75715e">// Save for later
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// When connection restores
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(msg) <span style="color:#f92672">=</span> offline_buffer.dequeue() {
+</span></span><span style="display:flex;"><span>    mqtt_client.publish(msg).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Exponential backoff reconnection</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> retry_delay <span style="color:#f92672">=</span> Duration::from_secs(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">match</span> mqtt_client.connect().<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>        Ok(_) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">break</span>,
+</span></span><span style="display:flex;"><span>        Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">error!</span>(<span style="color:#e6db74">&#34;MQTT connection failed: {}&#34;</span>, e);
+</span></span><span style="display:flex;"><span>            tokio::time::sleep(retry_delay).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>            retry_delay <span style="color:#f92672">=</span> std::cmp::min(retry_delay <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>, Duration::from_secs(<span style="color:#ae81ff">60</span>));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="phase-5-influxdb-batching">Phase 5: InfluxDB Batching<a hidden class="anchor" aria-hidden="true" href="#phase-5-influxdb-batching">#</a></h3>
+<p><strong>Instead of one write per metric</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Current (9 individual writes)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>influxdb.write_sensor(<span style="color:#e6db74">&#34;temperature&#34;</span>, <span style="color:#ae81ff">27.6</span>, <span style="color:#e6db74">&#34;node1&#34;</span>, Some(<span style="color:#e6db74">&#34;celsius&#34;</span>)).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>influxdb.write_sensor(<span style="color:#e6db74">&#34;humidity&#34;</span>, <span style="color:#ae81ff">54.1</span>, <span style="color:#e6db74">&#34;node1&#34;</span>, Some(<span style="color:#e6db74">&#34;percent&#34;</span>)).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ... 7 more writes
+</span></span></span></code></pre></div><p><strong>Batch all points</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Future (1 batched write)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> points <span style="color:#f92672">=</span> <span style="color:#a6e22e">vec!</span>[
+</span></span><span style="display:flex;"><span>    DataPoint::builder(<span style="color:#e6db74">&#34;temperature&#34;</span>).tag(<span style="color:#e6db74">&#34;node&#34;</span>, <span style="color:#e6db74">&#34;node1&#34;</span>).field(<span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#ae81ff">27.6</span>).build()<span style="color:#f92672">?</span>,
+</span></span><span style="display:flex;"><span>    DataPoint::builder(<span style="color:#e6db74">&#34;humidity&#34;</span>).tag(<span style="color:#e6db74">&#34;node&#34;</span>, <span style="color:#e6db74">&#34;node1&#34;</span>).field(<span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#ae81ff">54.1</span>).build()<span style="color:#f92672">?</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ... all 9 points
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>influxdb.write_batch(points).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;  <span style="color:#75715e">// Single HTTP request
+</span></span></span></code></pre></div><p><strong>Benefits</strong>: Lower latency, less overhead</p>
+<h3 id="phase-6-grafana-alerts">Phase 6: Grafana Alerts<a hidden class="anchor" aria-hidden="true" href="#phase-6-grafana-alerts">#</a></h3>
+<p><strong>Temperature threshold alert</strong>:</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -5m)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;temperature&#34;)
+  |&gt; filter(fn: (r) =&gt; r.node == &#34;node1&#34;)
+  |&gt; mean()
+  |&gt; yield(name: &#34;mean_temp&#34;)
+
+// Alert if mean &gt; 35°C for 5 minutes
+</code></pre><p><strong>Node offline alert</strong>:</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">from(bucket: &#34;telemetry&#34;)
+  |&gt; range(start: -2m)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &#34;packets_received&#34;)
+  |&gt; last()
+  |&gt; elapsed()
+
+// Alert if no data for 2 minutes
+</code></pre><hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 7+8 was about <strong>completing the vision</strong>. Not just &ldquo;adding MQTT&rdquo; or &ldquo;adding InfluxDB&rdquo; but building the <strong>complete path from sensor to insight</strong>.</p>
+<h3 id="technical-achievements">Technical Achievements<a hidden class="anchor" aria-hidden="true" href="#technical-achievements">#</a></h3>
+<ul>
+<li>✅ MQTT broker with hierarchical topics (9 topics per packet)</li>
+<li>✅ InfluxDB time-series storage (8 measurements, tags + fields)</li>
+<li>✅ Grafana dashboards (2 dashboards, 11 panels, Flux queries)</li>
+<li>✅ Docker infrastructure (3 services, reproducible, version-controlled)</li>
+<li>✅ Non-fatal error handling (resilient to service failures)</li>
+<li>✅ Live hardware testing (6+ hours uptime, zero crashes)</li>
+</ul>
+<h3 id="architectural-achievements">Architectural Achievements<a hidden class="anchor" aria-hidden="true" href="#architectural-achievements">#</a></h3>
+<ul>
+<li>✅ Industry-standard IoT stack (edge → gateway → broker → database → visualization)</li>
+<li>✅ Proper data modeling (MQTT topics, InfluxDB schema)</li>
+<li>✅ Async Rust patterns (event loop lifetime management)</li>
+<li>✅ Baby steps testing (Docker networks, ephemeral containers)</li>
+<li>✅ Production patterns (graceful degradation, structured logging)</li>
+</ul>
+<h3 id="the-meta-lesson">The Meta-Lesson<a hidden class="anchor" aria-hidden="true" href="#the-meta-lesson">#</a></h3>
+<blockquote>
+<p><strong>Week 7+8 proves that learning in public, building incrementally, and following the baby steps philosophy can produce production-quality systems.</strong></p>
+</blockquote>
+<p>From Week 1&rsquo;s &ldquo;Can I blink an LED with RTIC?&rdquo; to Week 8&rsquo;s &ldquo;Professional Grafana dashboards visualizing real sensor data from a complete IoT pipeline&rdquo; - every step built on the last.</p>
+<p><strong>This is how systems are built.</strong> Not in one giant leap, but through relentless incremental progress with constant validation.</p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code-repository">Code Repository<a hidden class="anchor" aria-hidden="true" href="#code-repository">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk7-mqtt-influx">Week 7+8 Source Code</a></li>
+</ul>
+<h3 id="documentation">Documentation<a hidden class="anchor" aria-hidden="true" href="#documentation">#</a></h3>
+<ul>
+<li><a href="./MQTT_INFLUX_GUIDE.md">MQTT_INFLUX_GUIDE.md</a> - Comprehensive MQTT + InfluxDB tutorial</li>
+<li><a href="./GRAFANA_SETUP_GUIDE.md">GRAFANA_SETUP_GUIDE.md</a> - Data source configuration</li>
+<li><a href="./GRAFANA_DASHBOARD_GUIDE.md">GRAFANA_DASHBOARD_GUIDE.md</a> - Dashboard creation guide</li>
+<li><a href="./FINAL_SUMMARY.md">FINAL_SUMMARY.md</a> - Complete session summary</li>
+</ul>
+<h3 id="related-projects">Related Projects<a hidden class="anchor" aria-hidden="true" href="#related-projects">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk6-async-gateway">Week 6: Async Gateway</a></li>
+<li><a href="https://github.com/mapfumo/wk5-gateway-firmware">Week 5: Gateway Firmware</a></li>
+<li><a href="https://github.com/mapfumo/wk3-binary-protocol">Week 3: Binary Protocol</a></li>
+</ul>
+<h3 id="external-resources">External Resources<a hidden class="anchor" aria-hidden="true" href="#external-resources">#</a></h3>
+<ul>
+<li><a href="https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/">MQTT 3.1.1 Specification</a></li>
+<li><a href="https://docs.influxdata.com/influxdb/v2/">InfluxDB 2.x Documentation</a></li>
+<li><a href="https://grafana.com/docs/">Grafana Documentation</a></li>
+<li><a href="https://docs.rs/rumqttc/">rumqttc Crate</a></li>
+<li><a href="https://docs.rs/influxdb2/">influxdb2 Crate</a></li>
+<li><a href="https://docs.influxdata.com/flux/">Flux Query Language</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo<br>
+<strong>Part of</strong>: 4-Month Embedded Rust Learning Roadmap<br>
+<strong>Week</strong>: 7+8 of 16 (Combined Phase 2 Complete)<br>
+<strong>Tags</strong>: <code>#mqtt</code> <code>#influxdb</code> <code>#grafana</code> <code>#docker</code> <code>#iot</code> <code>#time-series</code> <code>#visualization</code> <code>#learning-in-public</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) on twitter"
+        href="https://twitter.com/intent/tweet/?text=Complete%20IoT%20Telemetry%20Pipeline%3a%20From%20Sensors%20to%20Dashboards%20-%20Wk7%2c%208%29&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f&amp;title=Complete%20IoT%20Telemetry%20Pipeline%3a%20From%20Sensors%20to%20Dashboards%20-%20Wk7%2c%208%29&amp;summary=Complete%20IoT%20Telemetry%20Pipeline%3a%20From%20Sensors%20to%20Dashboards%20-%20Wk7%2c%208%29&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f&title=Complete%20IoT%20Telemetry%20Pipeline%3a%20From%20Sensors%20to%20Dashboards%20-%20Wk7%2c%208%29">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8) on whatsapp"
+        href="https://api.whatsapp.com/send?text=Complete%20IoT%20Telemetry%20Pipeline%3a%20From%20Sensors%20to%20Dashboards%20-%20Wk7%2c%208%29%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fcomplete-iot-telemetry-pipeline-from-sensors-to-dashboards%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -6,11 +6,20 @@
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 10:34:48 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Jan 2026 11:42:16 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Complete IoT Telemetry Pipeline From Sensors to Dashboards</title>
+      <link>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</link>
+      <pubDate>Sun, 04 Jan 2026 11:42:16 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6</title>
       <link>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</link>
-      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      <pubDate>Sun, 21 Dec 2025 10:34:48 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</guid>
       <description>&lt;p&gt;Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.&lt;/p&gt;

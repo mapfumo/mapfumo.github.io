@@ -3,13 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2026-01-04T10:34:48+10:00</lastmod>
+    <lastmod>2026-01-04T11:42:16+10:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</loc>
-    <lastmod>2026-01-04T10:34:48+10:00</lastmod>
+    <loc>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</loc>
+    <lastmod>2026-01-04T11:42:16+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-01-04T10:34:48+10:00</lastmod>
+    <lastmod>2026-01-04T11:42:16+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</loc>
+    <lastmod>2025-12-21T10:34:48+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
     <lastmod>2025-12-13T09:42:11+10:00</lastmod>
@@ -111,13 +114,7 @@
   </url><url>
     <loc>http://localhost:1313/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/async-rust/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/iiot/</loc>
-  </url><url>
     <loc>http://localhost:1313/portfolio/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/tokio/</loc>
   </url><url>
     <loc>http://localhost:1313/tutorials/</loc>
   </url>

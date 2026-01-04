@@ -1,6 +1,6 @@
 ---
 title: "Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6"
-date: 2026-01-04T10:34:48+10:00
+date: 2025-12-21T10:34:48+10:00
 draft: false
 cover:
     image: /img/wk6_image.png
