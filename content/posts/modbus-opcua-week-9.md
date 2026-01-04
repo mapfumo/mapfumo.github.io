@@ -1,5 +1,5 @@
 ---
-title: "From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9"
+title: "From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture] - Wk9"
 date: 2026-01-04T12:49:44+10:00
 draft: false
 cover:
