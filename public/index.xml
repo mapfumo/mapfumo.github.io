@@ -6,7 +6,18 @@
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Dec 2025 09:42:11 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Jan 2026 10:34:48 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6</title>
+      <link>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</link>
+      <pubDate>Sun, 04 Jan 2026 10:34:48 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/</guid>
+      <description>&lt;p&gt;Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Week 6 changes that.&lt;/strong&gt; It&amp;rsquo;s the bridge between embedded and cloud, between constrained systems and abundant infrastructure, between &lt;code&gt;no_std&lt;/code&gt; and &lt;code&gt;std&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This is the week I learned &lt;strong&gt;async Rust isn&amp;rsquo;t just about performance - it&amp;rsquo;s about building systems that compose.&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Gateway Firmware - From Wireless to Desktop, Wk5</title>
       <link>http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/</link>

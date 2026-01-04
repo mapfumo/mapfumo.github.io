@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 | Antony Mapfumo</title>
+<meta name="keywords" content="">
+<meta name="description" content="Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.
+Week 6 changes that. It&rsquo;s the bridge between embedded and cloud, between constrained systems and abundant infrastructure, between no_std and std.
+This is the week I learned async Rust isn&rsquo;t just about performance - it&rsquo;s about building systems that compose.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/async-rust-gateway-from-embedded-firmware-to-cloud-infrastructure/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6
+    </h1>
+    <div class="post-meta">Jan 4, 2026 · 16 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk6_image.png" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk6_image.png" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards</p>
+</figure>
+  <div class="post-content"><p>Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.</p>
+<p><strong>Week 6 changes that.</strong> It&rsquo;s the bridge between embedded and cloud, between constrained systems and abundant infrastructure, between <code>no_std</code> and <code>std</code>.</p>
+<p>This is the week I learned <strong>async Rust isn&rsquo;t just about performance - it&rsquo;s about building systems that compose.</strong></p>
+<hr>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ol>
+<li><a href="#the-objective">The Objective</a></li>
+<li><a href="#why-async-rust">Why Async Rust?</a></li>
+<li><a href="#five-critical-lessons">Five Critical Lessons</a>
+<ul>
+<li><a href="#lesson-1-async-subprocess-management">Lesson 1: Async Subprocess Management</a></li>
+<li><a href="#lesson-2-baby-steps-debugging-works-again">Lesson 2: Baby Steps Debugging Works (Again)</a></li>
+<li><a href="#lesson-3-bounded-channels-are-backpressure-made-explicit">Lesson 3: Bounded Channels Are Backpressure Made Explicit</a></li>
+<li><a href="#lesson-4-structured-logging-is-professional-infrastructure">Lesson 4: Structured Logging is Professional Infrastructure</a></li>
+<li><a href="#lesson-5-graceful-shutdown-is-not-optional">Lesson 5: Graceful Shutdown is Not Optional</a></li>
+</ul>
+</li>
+<li><a href="#results-at-the-end-of-week-6">Results</a></li>
+<li><a href="#why-this-matters-in-the-plan">Why This Matters</a></li>
+<li><a href="#next-steps-week-7-preview">Next Steps</a></li>
+</ol>
+<hr>
+<h2 id="the-objective">The Objective<a hidden class="anchor" aria-hidden="true" href="#the-objective">#</a></h2>
+<p>Week 6 had a clear goal: <strong>build an async Rust service that consumes telemetry from embedded firmware and prepares it for cloud infrastructure</strong>.</p>
+<h3 id="the-gap">The Gap<a hidden class="anchor" aria-hidden="true" href="#the-gap">#</a></h3>
+<p>At the end of Week 5, we had:</p>
+<ul>
+<li>✅ Node 1: Sensor readings → LoRa transmission</li>
+<li>✅ Node 2: LoRa reception → JSON output via defmt/RTT</li>
+<li>❌ <strong>No way to get that data into databases, MQTT brokers, or dashboards</strong></li>
+</ul>
+<p>defmt/RTT output only exists in the probe-rs terminal. Once you close the terminal, it&rsquo;s gone.</p>
+<h3 id="the-requirements">The Requirements<a hidden class="anchor" aria-hidden="true" href="#the-requirements">#</a></h3>
+<ol>
+<li><strong>Spawn Node 2 firmware</strong> as a subprocess (via probe-rs)</li>
+<li><strong>Parse JSON telemetry</strong> from stdout in real time</li>
+<li><strong>Structure and process</strong> the data using async patterns</li>
+<li><strong>Prepare for cloud integration</strong> (MQTT, InfluxDB in Week 7)</li>
+<li><strong>Do it professionally</strong>: Structured logs, graceful shutdown, error handling</li>
+</ol>
+<h3 id="the-foundation">The Foundation<a hidden class="anchor" aria-hidden="true" href="#the-foundation">#</a></h3>
+<p>This wasn&rsquo;t starting from scratch. Week 6 builds on:</p>
+<ul>
+<li>Week 3&rsquo;s binary protocol (Node 1 firmware)</li>
+<li>Week 5&rsquo;s JSON output (Node 2 firmware)</li>
+<li><strong>New</strong>: Async Rust gateway service to tie it together</li>
+</ul>
+<hr>
+<h2 id="why-async-rust">Why Async Rust?<a hidden class="anchor" aria-hidden="true" href="#why-async-rust">#</a></h2>
+<p>Before diving into implementation, I had to answer: <strong>Why async? Why not just use threads?</strong></p>
+<h3 id="the-alternative-thread-based-architecture">The Alternative: Thread-Based Architecture<a hidden class="anchor" aria-hidden="true" href="#the-alternative-thread-based-architecture">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Thread-based approach
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> std::thread;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::sync::mpsc;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Thread 1: Read probe-rs stdout
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    thread::spawn(<span style="color:#66d9ef">move</span> <span style="color:#f92672">||</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> line <span style="color:#f92672">=</span> read_line_blocking();  <span style="color:#75715e">// Blocks thread
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(json) <span style="color:#f92672">=</span> parse(line) {
+</span></span><span style="display:flex;"><span>                tx.send(json).unwrap();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Thread 2: Process telemetry
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    thread::spawn(<span style="color:#66d9ef">move</span> <span style="color:#f92672">||</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> packet <span style="color:#f92672">=</span> rx.recv().unwrap();  <span style="color:#75715e">// Blocks thread
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            process(packet);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Main thread: Wait forever
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    thread::park();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Problems</strong>:</p>
+<ul>
+<li>Each thread: ~2 MB stack allocation</li>
+<li>Blocking I/O ties up entire thread</li>
+<li>Context switching overhead</li>
+<li>Hard to compose with future network I/O</li>
+</ul>
+<h3 id="the-async-approach">The Async Approach<a hidden class="anchor" aria-hidden="true" href="#the-async-approach">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Async approach
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> tokio::sync::mpsc;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Task 1: Read probe-rs stdout
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> reader <span style="color:#f92672">=</span> BufReader::new(stdout);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> line <span style="color:#f92672">=</span> reader.read_line().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;  <span style="color:#75715e">// Yields, doesn&#39;t block
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(json) <span style="color:#f92672">=</span> parse(line) {
+</span></span><span style="display:flex;"><span>                tx.send(json).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Task 2: Process telemetry
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tokio::spawn(<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">move</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(packet) <span style="color:#f92672">=</span> rx.recv().<span style="color:#66d9ef">await</span> {  <span style="color:#75715e">// Yields, doesn&#39;t block
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            process(packet).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait for Ctrl+C
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tokio::signal::ctrl_c().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Each task: ~2 KB stack (1000× smaller)</li>
+<li>Non-blocking I/O (one thread handles many tasks)</li>
+<li>Natural composition (add MQTT client, InfluxDB writer as more tasks)</li>
+<li>Tokio ecosystem (proven at scale)</li>
+</ul>
+<h3 id="the-decision">The Decision<a hidden class="anchor" aria-hidden="true" href="#the-decision">#</a></h3>
+<p><strong>Chose async Rust</strong> because Week 7 will add:</p>
+<ul>
+<li>MQTT client (network I/O)</li>
+<li>InfluxDB writer (network I/O)</li>
+<li>Metrics HTTP endpoint (network I/O)</li>
+</ul>
+<p>Async Rust scales naturally to this. Threads don&rsquo;t.</p>
+<hr>
+<h2 id="five-critical-lessons">Five Critical Lessons<a hidden class="anchor" aria-hidden="true" href="#five-critical-lessons">#</a></h2>
+<h3 id="lesson-1-async-subprocess-management">Lesson 1: Async Subprocess Management<a hidden class="anchor" aria-hidden="true" href="#lesson-1-async-subprocess-management">#</a></h3>
+<h4 id="the-gotcha">The Gotcha<a hidden class="anchor" aria-hidden="true" href="#the-gotcha">#</a></h4>
+<p>My first attempt:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::process::Command;  <span style="color:#75715e">// ❌ Wrong import!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> Command::new(<span style="color:#e6db74">&#34;probe-rs&#34;</span>)
+</span></span><span style="display:flex;"><span>    .args(<span style="color:#f92672">&amp;</span>[<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#f92672">..</span>.])
+</span></span><span style="display:flex;"><span>    .spawn()<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p>This compiles. It runs. But it&rsquo;s <strong>wrong</strong>.</p>
+<p><strong>Why?</strong> <code>std::process::Command</code> uses <strong>blocking I/O</strong>. When it waits for the subprocess, it blocks the entire Tokio thread. All other tasks stop.</p>
+<h4 id="the-fix">The Fix<a hidden class="anchor" aria-hidden="true" href="#the-fix">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tokio::process::Command;  <span style="color:#75715e">// ✅ Correct import!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> Command::new(<span style="color:#e6db74">&#34;probe-rs&#34;</span>)
+</span></span><span style="display:flex;"><span>    .args(<span style="color:#f92672">&amp;</span>[<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#f92672">..</span>.])
+</span></span><span style="display:flex;"><span>    .stdout(Stdio::piped())
+</span></span><span style="display:flex;"><span>    .stderr(Stdio::inherit())  <span style="color:#75715e">// ← Note: function call, not constant!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    .spawn()<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p><strong>What changed</strong>:</p>
+<ol>
+<li><code>tokio::process::Command</code> instead of <code>std::process::Command</code></li>
+<li>Registers subprocess with Tokio reactor</li>
+<li>Non-blocking waits using epoll/kqueue/IOCP</li>
+</ol>
+<h4 id="the-second-gotcha">The Second Gotcha<a hidden class="anchor" aria-hidden="true" href="#the-second-gotcha">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>.stderr(Stdio::inherit)  <span style="color:#75715e">// ❌ Compile error!
+</span></span></span></code></pre></div><p><strong>Error message</strong>:</p>
+<pre tabindex="0"><code>error[E0277]: the trait bound `Stdio: From&lt;fn() -&gt; Stdio {...}&gt;` is not satisfied
+</code></pre><p><strong>Fix</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>.stderr(Stdio::inherit())  <span style="color:#75715e">// ✅ It&#39;s a function call!
+</span></span></span></code></pre></div><p>This was Week 6&rsquo;s <strong>first compile error</strong>. The message was cryptic, but reading the docs revealed: <code>inherit()</code> is a method, not a constant.</p>
+<h4 id="the-ownership-challenge">The Ownership Challenge<a hidden class="anchor" aria-hidden="true" href="#the-ownership-challenge">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> stdout <span style="color:#f92672">=</span> child.stdout.take()
+</span></span><span style="display:flex;"><span>    .context(<span style="color:#e6db74">&#34;Failed to capture stdout&#34;</span>)<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p><strong>Why <code>.take()</code>?</strong> We need to:</p>
+<ol>
+<li><strong>Move</strong> stdout ownership into the parser task</li>
+<li><strong>Keep</strong> mutable access to <code>child</code> for killing it later</li>
+</ol>
+<p>Can&rsquo;t do both without <code>.take()</code> because Rust&rsquo;s ownership rules prevent simultaneous mutable and immutable borrows.</p>
+<p><strong>Pattern</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> Command::new(<span style="color:#f92672">..</span>.).spawn()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> stdout <span style="color:#f92672">=</span> child.stdout.take()<span style="color:#f92672">?</span>;  <span style="color:#75715e">// Move stdout out
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Later:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>child.kill().<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;  <span style="color:#75715e">// Still have mutable access to child
+</span></span></span></code></pre></div><h4 id="the-lesson">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson">#</a></h4>
+<blockquote>
+<p><strong>Async runtimes require async-aware primitives. Using std::process in Tokio is like bringing a blocking API to an async party - you&rsquo;ll block everyone.</strong></p>
+</blockquote>
+<p><strong>Rule of thumb</strong>: If you&rsquo;re using Tokio, search for <code>tokio::</code> equivalents before reaching for <code>std::</code>.</p>
+<hr>
+<h3 id="lesson-2-baby-steps-debugging-works-again">Lesson 2: Baby Steps Debugging Works (Again)<a hidden class="anchor" aria-hidden="true" href="#lesson-2-baby-steps-debugging-works-again">#</a></h3>
+<h4 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h4>
+<p>First run of the gateway service:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cargo run
+</span></span><span style="display:flex;"><span>INFO Week <span style="color:#ae81ff">6</span> Async Gateway Service starting
+</span></span><span style="display:flex;"><span>INFO Spawning probe-rs subprocess
+</span></span><span style="display:flex;"><span>INFO Service running. Press Ctrl+C to stop.
+</span></span><span style="display:flex;"><span>WARN Failed to parse JSON error<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;trailing characters at line 1 column 116&#34;</span> json<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>
+</span></span><span style="display:flex;"><span>WARN Failed to parse JSON error<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;trailing characters at line 1 column 116&#34;</span> json<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>
+</span></span></code></pre></div><p>Every packet was failing to parse. But the JSON <em>looked</em> correct in the logs.</p>
+<h4 id="baby-step-1-build-and-check-compilation">Baby Step 1: Build and Check Compilation<a hidden class="anchor" aria-hidden="true" href="#baby-step-1-build-and-check-compilation">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cargo build
+</span></span></code></pre></div><p><strong>Result</strong>: Compilation succeeded. The code was syntactically correct.</p>
+<p><strong>Takeaway</strong>: Not a syntax error or type mismatch. Must be runtime behavior.</p>
+<h4 id="baby-step-2-run-with-live-hardware">Baby Step 2: Run with Live Hardware<a hidden class="anchor" aria-hidden="true" href="#baby-step-2-run-with-live-hardware">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cargo run
+</span></span></code></pre></div><p><strong>Result</strong>: JSON extraction working (marker found), but parsing failing.</p>
+<p><strong>Takeaway</strong>: The <code>extract_json_from_log_line</code> function is finding the JSON. Problem is in what it&rsquo;s returning.</p>
+<h4 id="baby-step-3-look-at-the-exact-error">Baby Step 3: Look at the Exact Error<a hidden class="anchor" aria-hidden="true" href="#baby-step-3-look-at-the-exact-error">#</a></h4>
+<pre tabindex="0"><code>WARN Failed to parse JSON error=&#34;trailing characters at line 1 column 116&#34;
+</code></pre><p><strong>Column 116?</strong> That means the first 115 characters parsed successfully. Something at position 116 broke it.</p>
+<p><strong>Takeaway</strong>: The JSON isn&rsquo;t completely wrong - most of it is valid. There&rsquo;s extra junk at the end.</p>
+<h4 id="baby-step-4-inspect-the-actual-string">Baby Step 4: Inspect the Actual String<a hidden class="anchor" aria-hidden="true" href="#baby-step-4-inspect-the-actual-string">#</a></h4>
+<p>I added logging:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">warn!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, json <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>json_str, <span style="color:#e6db74">&#34;Failed to parse JSON&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Output</strong>:</p>
+<pre tabindex="0"><code>json=&#34;{\&#34;ts\&#34;:12000,\&#34;id\&#34;:\&#34;N2\&#34;,\&#34;n1\&#34;:{\&#34;t\&#34;:27.6,...}}\n (wk5_gateway_firmware src/main.rs:573)&#34;
+</code></pre><p><strong>Aha!</strong> There&rsquo;s:</p>
+<ol>
+<li><code>\n</code> (escaped newline as text characters)</li>
+<li><code> (wk5_gateway_firmware src/main.rs:573)</code> (defmt source location)</li>
+<li>Actual newline character at the very end</li>
+</ol>
+<p>Column 116 is where <code> (wk5...</code> starts.</p>
+<h4 id="baby-step-5-fix-incrementally">Baby Step 5: Fix Incrementally<a hidden class="anchor" aria-hidden="true" href="#baby-step-5-fix-incrementally">#</a></h4>
+<p><strong>First fix</strong> (remove source location):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> without_location <span style="color:#f92672">=</span> json_str
+</span></span><span style="display:flex;"><span>    .split(<span style="color:#e6db74">&#34; (&#34;</span>)
+</span></span><span style="display:flex;"><span>    .next()
+</span></span><span style="display:flex;"><span>    .unwrap_or(json_str);
+</span></span></code></pre></div><p><strong>Test</strong>: Still failing, but now &ldquo;trailing characters at column 112&rdquo;</p>
+<p><strong>Progress!</strong> We removed some junk, but not all.</p>
+<p><strong>Second fix</strong> (remove escaped <code>\n</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> json_clean <span style="color:#f92672">=</span> without_location
+</span></span><span style="display:flex;"><span>    .trim_end_matches(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>);
+</span></span></code></pre></div><p><strong>Test</strong>: Still failing! &ldquo;trailing characters at column 110&rdquo;</p>
+<p><strong>Wait, what?</strong> Ah - there&rsquo;s <strong>also</strong> an actual newline character (not just the text <code>\n</code>).</p>
+<p><strong>Third fix</strong> (remove both):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> json_clean <span style="color:#f92672">=</span> without_location
+</span></span><span style="display:flex;"><span>    .trim_end_matches(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>)  <span style="color:#75715e">// Escaped backslash-n
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    .trim_end_matches(<span style="color:#e6db74">&#39;\n&#39;</span>)   <span style="color:#75715e">// Actual newline
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    .trim();
+</span></span></code></pre></div><p><strong>Test</strong>: ✅ <strong>Success!</strong> Parsing works.</p>
+<h4 id="the-evolution">The Evolution<a hidden class="anchor" aria-hidden="true" href="#the-evolution">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Attempt 1 (naive)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> json_str.trim();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ❌ Still has \\n and source location
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Attempt 2 (closer)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> json_str.trim_end_matches(<span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ❌ Still has \\n as text and source location
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Attempt 3 (almost)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> json_str.trim_end_matches(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>).trim_end_matches(<span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ❌ Still has source location
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Attempt 4 (works!)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> without_location <span style="color:#f92672">=</span> json_str.split(<span style="color:#e6db74">&#34; (&#34;</span>).next().unwrap();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> without_location.trim_end_matches(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n&#34;</span>).trim_end_matches(<span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ✅ Success!
+</span></span></span></code></pre></div><p><strong>Total debugging time</strong>: ~10 minutes</p>
+<h4 id="the-lesson-1">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-1">#</a></h4>
+<blockquote>
+<p><strong>Parse errors tell you exactly what&rsquo;s wrong if you look at the exact error message and the exact data.</strong></p>
+</blockquote>
+<p><strong>Baby steps approach</strong>:</p>
+<ol>
+<li>Build → Check compilation</li>
+<li>Run → Verify partial success</li>
+<li>Read error → Identify exact problem location</li>
+<li>Inspect data → See what&rsquo;s actually there</li>
+<li>Fix incrementally → Test each change</li>
+</ol>
+<p>This approach works <strong>every time</strong>.</p>
+<hr>
+<h3 id="lesson-3-bounded-channels-are-backpressure-made-explicit">Lesson 3: Bounded Channels Are Backpressure Made Explicit<a hidden class="anchor" aria-hidden="true" href="#lesson-3-bounded-channels-are-backpressure-made-explicit">#</a></h3>
+<h4 id="the-design-choice">The Design Choice<a hidden class="anchor" aria-hidden="true" href="#the-design-choice">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel::<span style="color:#f92672">&lt;</span>TelemetryPacket<span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">100</span>);
+</span></span></code></pre></div><p>Capacity: <strong>100 packets</strong></p>
+<p>Why not unbounded?</p>
+<h4 id="the-unbounded-temptation">The Unbounded Temptation<a hidden class="anchor" aria-hidden="true" href="#the-unbounded-temptation">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::unbounded_channel();
+</span></span></code></pre></div><p><strong>Pros</strong>:</p>
+<ul>
+<li>Never blocks on send</li>
+<li>Simple mental model (&ldquo;infinite buffer&rdquo;)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Can grow without limit</li>
+<li>No backpressure signal</li>
+<li><strong>Memory leak waiting to happen</strong></li>
+</ul>
+<p><strong>Scenario</strong>: Processor task crashes. Parser keeps reading probe-rs output and sending to channel. Channel grows: 100 packets&hellip; 1000 packets&hellip; 10,000 packets&hellip; <strong>OOM kill</strong>.</p>
+<h4 id="the-bounded-design">The Bounded Design<a hidden class="anchor" aria-hidden="true" href="#the-bounded-design">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel(<span style="color:#ae81ff">100</span>);
+</span></span></code></pre></div><p><strong>What happens when full?</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>tx.send(packet).<span style="color:#66d9ef">await</span>  <span style="color:#75715e">// ← Blocks here if channel is full
+</span></span></span></code></pre></div><p><strong>This is a feature, not a bug!</strong></p>
+<p>If the channel is full, it means:</p>
+<ul>
+<li>Processor is slower than parser, OR</li>
+<li>Processor has stopped</li>
+</ul>
+<p><strong>Backpressure in action</strong>:</p>
+<ol>
+<li>Channel fills to 100 packets</li>
+<li>Parser&rsquo;s <code>send().await</code> blocks</li>
+<li>Parser stops reading probe-rs output</li>
+<li>probe-rs stdout buffer fills</li>
+<li><strong>System achieves equilibrium at a safe state</strong></li>
+</ol>
+<h4 id="sizing-the-capacity">Sizing the Capacity<a hidden class="anchor" aria-hidden="true" href="#sizing-the-capacity">#</a></h4>
+<p><strong>Calculation</strong>:</p>
+<ul>
+<li>Node 1 sends ~1 packet every 10 seconds</li>
+<li>Capacity of 100 packets = ~16 minutes of buffering</li>
+<li>Processing time: &lt;1 ms per packet</li>
+</ul>
+<p><strong>Normal operation</strong>: Channel stays nearly empty (packets processed immediately)</p>
+<p><strong>Processor slow</strong>: Channel fills, parser waits - <strong>this is good!</strong></p>
+<p><strong>Processor crashed</strong>: Channel fills to 100, parser waits indefinitely - <strong>this is also good!</strong> (Better than OOM)</p>
+<h4 id="the-pattern">The Pattern<a hidden class="anchor" aria-hidden="true" href="#the-pattern">#</a></h4>
+<p><strong>Producer (parser)</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">match</span> tx.send(packet).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    Ok(()) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Sent successfully (or waited until space available)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>    Err(e) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">error!</span>(error <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>e, <span style="color:#e6db74">&#34;Channel closed, processor stopped&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;  <span style="color:#75715e">// Exit gracefully
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Consumer (processor)</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">let</span> Some(packet) <span style="color:#f92672">=</span> rx.recv().<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>    process_telemetry(packet);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Channel closed, parser stopped&#34;</span>);
+</span></span></code></pre></div><p><strong>If processor crashes</strong>:</p>
+<ol>
+<li><code>rx</code> is dropped</li>
+<li>Channel closes</li>
+<li>Parser&rsquo;s next <code>tx.send()</code> returns <code>Err</code></li>
+<li>Parser logs error and exits gracefully</li>
+</ol>
+<p><strong>No infinite loops. No memory leaks. No panics.</strong></p>
+<h4 id="the-lesson-2">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-2">#</a></h4>
+<blockquote>
+<p><strong>Unbounded channels hide problems until they become catastrophic. Bounded channels make resource limits explicit.</strong></p>
+</blockquote>
+<p>In production systems:</p>
+<ul>
+<li><strong>Always bound your queues</strong></li>
+<li><strong>Always handle send errors</strong></li>
+<li><strong>Always test what happens when the consumer stops</strong></li>
+</ul>
+<p>Infinite buffers create infinite problems.</p>
+<hr>
+<h3 id="lesson-4-structured-logging-is-professional-infrastructure">Lesson 4: Structured Logging is Professional Infrastructure<a hidden class="anchor" aria-hidden="true" href="#lesson-4-structured-logging-is-professional-infrastructure">#</a></h3>
+<h4 id="the-progression">The Progression<a hidden class="anchor" aria-hidden="true" href="#the-progression">#</a></h4>
+<p><strong>Week 1-5</strong>: <code>defmt</code> logging (embedded)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>defmt::<span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Temperature: {} C&#34;</span>, temp);
+</span></span></code></pre></div><p><strong>Week 6 (first attempt)</strong>: <code>println!</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a6e22e">println!</span>(<span style="color:#e6db74">&#34;Received packet: temp=</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">, humidity=</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, temp, humidity);
+</span></span></code></pre></div><p><strong>Week 6 (final)</strong>: <code>tracing</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a6e22e">info!</span>(
+</span></span><span style="display:flex;"><span>    temperature <span style="color:#f92672">=</span> temp,
+</span></span><span style="display:flex;"><span>    humidity <span style="color:#f92672">=</span> humidity,
+</span></span><span style="display:flex;"><span>    rssi <span style="color:#f92672">=</span> rssi,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Packet received&#34;</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><h4 id="why-not-println">Why Not println!?<a hidden class="anchor" aria-hidden="true" href="#why-not-println">#</a></h4>
+<p><strong>Example output</strong>:</p>
+<pre tabindex="0"><code>Received packet: temp=27.6, humidity=54.1
+Processing...
+Received packet: temp=27.8, humidity=54.2
+Processing...
+</code></pre><p><strong>Problems</strong>:</p>
+<ol>
+<li>❌ No timestamps (when did this happen?)</li>
+<li>❌ No log levels (is this INFO, DEBUG, ERROR?)</li>
+<li>❌ No filtering (can&rsquo;t turn off DEBUG without recompiling)</li>
+<li>❌ Unstructured (can&rsquo;t query &ldquo;all packets with temp &gt; 30&rdquo;)</li>
+<li>❌ Hard to parse in log aggregators</li>
+</ol>
+<h4 id="why-not-the-log-crate">Why Not the log Crate?<a hidden class="anchor" aria-hidden="true" href="#why-not-the-log-crate">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> log::info;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Received packet: temp={}, humidity={}&#34;</span>, temp, humidity);
+</span></span></code></pre></div><p><strong>Better, but</strong>:</p>
+<ul>
+<li>❌ Still string formatting (not structured fields)</li>
+<li>❌ Hard to parse/query</li>
+<li>❌ No context propagation for distributed tracing</li>
+<li>❌ Can&rsquo;t output JSON format without a custom logger</li>
+</ul>
+<h4 id="why-tracing">Why tracing?<a hidden class="anchor" aria-hidden="true" href="#why-tracing">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tracing::info;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">info!</span>(
+</span></span><span style="display:flex;"><span>    timestamp_ms <span style="color:#f92672">=</span> packet.ts,
+</span></span><span style="display:flex;"><span>    node_id <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>packet.id,
+</span></span><span style="display:flex;"><span>    temperature <span style="color:#f92672">=</span> packet.n1.t,
+</span></span><span style="display:flex;"><span>    humidity <span style="color:#f92672">=</span> packet.n1.h,
+</span></span><span style="display:flex;"><span>    gas_resistance <span style="color:#f92672">=</span> packet.n1.g,
+</span></span><span style="display:flex;"><span>    rssi <span style="color:#f92672">=</span> packet.sig.rssi,
+</span></span><span style="display:flex;"><span>    snr <span style="color:#f92672">=</span> packet.sig.snr,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Processing telemetry packet&#34;</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p><strong>Output</strong>:</p>
+<pre tabindex="0"><code>INFO Processing telemetry packet timestamp_ms=12000 node_id=&#34;N2&#34; temperature=27.6 humidity=54.1 gas_resistance=84190 rssi=-39 snr=13
+</code></pre><p><strong>Benefits</strong>:</p>
+<ol>
+<li>✅ <strong>Structured data</strong>: Each field is a key-value pair</li>
+<li>✅ <strong>Filterable</strong>: <code>RUST_LOG=debug</code> without recompiling</li>
+<li>✅ <strong>Multiple formats</strong>: Text for dev, JSON for production</li>
+<li>✅ <strong>Queryable</strong>: &ldquo;Show all packets where temperature &gt; 30&rdquo;</li>
+<li>✅ <strong>Context propagation</strong>: Spans track request flow</li>
+<li>✅ <strong>Efficient</strong>: Can disable at compile time</li>
+</ol>
+<h4 id="environment-based-filtering">Environment-Based Filtering<a hidden class="anchor" aria-hidden="true" href="#environment-based-filtering">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Default (INFO and above)</span>
+</span></span><span style="display:flex;"><span>cargo run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Debug mode</span>
+</span></span><span style="display:flex;"><span>RUST_LOG<span style="color:#f92672">=</span>debug cargo run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Module-specific</span>
+</span></span><span style="display:flex;"><span>RUST_LOG<span style="color:#f92672">=</span>wk6_async_gateway<span style="color:#f92672">=</span>trace cargo run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Specific targets only</span>
+</span></span><span style="display:flex;"><span>RUST_LOG<span style="color:#f92672">=</span>wk6_async_gateway::parser<span style="color:#f92672">=</span>debug cargo run
+</span></span></code></pre></div><p><strong>No recompilation needed!</strong> Just set the environment variable.</p>
+<h4 id="json-output-for-production">JSON Output for Production<a hidden class="anchor" aria-hidden="true" href="#json-output-for-production">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>tracing_subscriber::fmt()
+</span></span><span style="display:flex;"><span>    .json()  <span style="color:#75715e">// ← Output as JSON instead of text
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    .init();
+</span></span></code></pre></div><p><strong>Output</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;timestamp&#34;</span>: <span style="color:#e6db74">&#34;2024-12-27T10:30:15.123Z&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;level&#34;</span>: <span style="color:#e6db74">&#34;INFO&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;message&#34;</span>: <span style="color:#e6db74">&#34;Processing telemetry packet&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;fields&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;timestamp_ms&#34;</span>: <span style="color:#ae81ff">12000</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;node_id&#34;</span>: <span style="color:#e6db74">&#34;N2&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;temperature&#34;</span>: <span style="color:#ae81ff">27.6</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;humidity&#34;</span>: <span style="color:#ae81ff">54.1</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Perfect for</strong>:</p>
+<ul>
+<li>Elasticsearch</li>
+<li>Splunk</li>
+<li>CloudWatch Logs</li>
+<li>Any log aggregator that speaks JSON</li>
+</ul>
+<h4 id="the-lesson-3">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-3">#</a></h4>
+<blockquote>
+<p><strong>Structured logging is the difference between &ldquo;it works on my machine&rdquo; and &ldquo;I can debug it in production&rdquo;.</strong></p>
+</blockquote>
+<p><strong>When to use each</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Logger</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>println!</code></td>
+          <td>Quick scripts, throwaway code</td>
+      </tr>
+      <tr>
+          <td><code>log</code> crate</td>
+          <td>Libraries (let applications choose backend)</td>
+      </tr>
+      <tr>
+          <td><code>tracing</code></td>
+          <td>Applications, services, production systems</td>
+      </tr>
+  </tbody>
+</table>
+<p>Week 6 is a <strong>service</strong>, not a script. <code>tracing</code> was the right choice from day one.</p>
+<hr>
+<h3 id="lesson-5-graceful-shutdown-is-not-optional">Lesson 5: Graceful Shutdown is Not Optional<a hidden class="anchor" aria-hidden="true" href="#lesson-5-graceful-shutdown-is-not-optional">#</a></h3>
+<h4 id="the-naive-approach">The Naive Approach<a hidden class="anchor" aria-hidden="true" href="#the-naive-approach">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> child <span style="color:#f92672">=</span> spawn_probe_rs();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tokio::spawn(parse_probe_rs_output(child.stdout, tx));
+</span></span><span style="display:flex;"><span>    tokio::spawn(process_telemetry(rx));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait forever
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>        tokio::time::sleep(Duration::from_secs(<span style="color:#ae81ff">1</span>)).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>What happens on Ctrl+C?</strong></p>
+<ul>
+<li>❌ Program exits immediately</li>
+<li>❌ probe-rs subprocess becomes zombie</li>
+<li>❌ Packets in channel are lost</li>
+<li>❌ Logs cut off mid-message</li>
+<li>❌ Resources not cleaned up</li>
+</ul>
+<p><strong>Verification</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># After Ctrl+C</span>
+</span></span><span style="display:flex;"><span>$ ps aux | grep probe-rs
+</span></span><span style="display:flex;"><span>tony  <span style="color:#ae81ff">12345</span>  0.0  0.1  ... probe-rs run ...  <span style="color:#75715e"># ← Zombie!</span>
+</span></span></code></pre></div><h4 id="the-graceful-approach">The Graceful Approach<a hidden class="anchor" aria-hidden="true" href="#the-graceful-approach">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> child <span style="color:#f92672">=</span> spawn_probe_rs()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> stdout <span style="color:#f92672">=</span> child.stdout.take()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> (tx, rx) <span style="color:#f92672">=</span> mpsc::channel(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> parser_handle <span style="color:#f92672">=</span> tokio::spawn(parse_probe_rs_output(stdout, tx));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> processor_handle <span style="color:#f92672">=</span> tokio::spawn(process_telemetry(rx));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Service running. Press Ctrl+C to stop.&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait for EITHER Ctrl+C OR task exit
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tokio::<span style="color:#a6e22e">select!</span> {
+</span></span><span style="display:flex;"><span>        _ <span style="color:#f92672">=</span> tokio::signal::ctrl_c() <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Received Ctrl+C, shutting down gracefully&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        _ <span style="color:#f92672">=</span> parser_handle <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">warn!</span>(<span style="color:#e6db74">&#34;Parser task ended unexpectedly&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Clean up
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Killing probe-rs subprocess&#34;</span>);
+</span></span><span style="display:flex;"><span>    child.kill().<span style="color:#66d9ef">await</span>.ok();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait for processor to drain channel
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    processor_handle.<span style="color:#66d9ef">await</span>.ok();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Week 6 Async Gateway Service stopped&#34;</span>);
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="the-select-macro">The select! Macro<a hidden class="anchor" aria-hidden="true" href="#the-select-macro">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>tokio::<span style="color:#a6e22e">select!</span> {
+</span></span><span style="display:flex;"><span>    result1 <span style="color:#f92672">=</span> future1 <span style="color:#f92672">=&gt;</span> { <span style="color:#75715e">/* future1 completed first */</span> }
+</span></span><span style="display:flex;"><span>    result2 <span style="color:#f92672">=</span> future2 <span style="color:#f92672">=&gt;</span> { <span style="color:#75715e">/* future2 completed first */</span> }
+</span></span><span style="display:flex;"><span>    result3 <span style="color:#f92672">=</span> future3 <span style="color:#f92672">=&gt;</span> { <span style="color:#75715e">/* future3 completed first */</span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Waits for the first future to complete</strong>, then executes its branch.</p>
+<p><strong>In our case</strong>:</p>
+<ul>
+<li>If user presses Ctrl+C → Graceful shutdown</li>
+<li>If parser exits (probe-rs crashes) → Detect and log</li>
+<li>Either way → Clean up resources</li>
+</ul>
+<h4 id="what-gets-cleaned-up">What Gets Cleaned Up<a hidden class="anchor" aria-hidden="true" href="#what-gets-cleaned-up">#</a></h4>
+<ol>
+<li>
+<p><strong>probe-rs subprocess</strong>: Explicitly killed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>child.kill().<span style="color:#66d9ef">await</span>.ok();
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Channel data</strong>: Processor finishes in-flight packets</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>processor_handle.<span style="color:#66d9ef">await</span>.ok();
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Logs</strong>: Shutdown message logged</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Week 6 Async Gateway Service stopped&#34;</span>);
+</span></span></code></pre></div></li>
+</ol>
+<h4 id="testing-graceful-shutdown">Testing Graceful Shutdown<a hidden class="anchor" aria-hidden="true" href="#testing-graceful-shutdown">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Terminal 1: Start service</span>
+</span></span><span style="display:flex;"><span>cargo run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Wait for packets...</span>
+</span></span><span style="display:flex;"><span>INFO Telemetry packet received node_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;N2&#34;</span> ...
+</span></span><span style="display:flex;"><span>INFO Processing telemetry packet ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Press Ctrl+C</span>
+</span></span><span style="display:flex;"><span>^C
+</span></span><span style="display:flex;"><span>INFO Received Ctrl+C, shutting down gracefully
+</span></span><span style="display:flex;"><span>INFO Killing probe-rs subprocess
+</span></span><span style="display:flex;"><span>INFO Telemetry processor stopped
+</span></span><span style="display:flex;"><span>INFO Week <span style="color:#ae81ff">6</span> Async Gateway Service stopped
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Terminal 2: Verify cleanup</span>
+</span></span><span style="display:flex;"><span>$ ps aux | grep probe-rs
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># (no output - no zombie processes!)</span>
+</span></span></code></pre></div><h4 id="the-lesson-4">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-4">#</a></h4>
+<blockquote>
+<p><strong>Graceful shutdown isn&rsquo;t a nice-to-have. It&rsquo;s table stakes for production services.</strong></p>
+</blockquote>
+<p><strong>Why it matters</strong>:</p>
+<ul>
+<li><strong>Resource leaks</strong>: Zombie processes accumulate over restarts</li>
+<li><strong>Data loss</strong>: In-flight packets discarded</li>
+<li><strong>Debugging</strong>: Can&rsquo;t tell what happened (logs cut off)</li>
+<li><strong>Operations</strong>: Harder to automate (can&rsquo;t rely on clean exits)</li>
+</ul>
+<p><strong>Rule of thumb</strong>: If you can press Ctrl+C, you should test what happens when you do.</p>
+<hr>
+<h2 id="results-at-the-end-of-week-6">Results at the End of Week 6<a hidden class="anchor" aria-hidden="true" href="#results-at-the-end-of-week-6">#</a></h2>
+<h3 id="system-behavior">System Behavior<a hidden class="anchor" aria-hidden="true" href="#system-behavior">#</a></h3>
+<p><strong>End-to-end flow</strong> (working reliably):</p>
+<ol>
+<li><strong>Node 1</strong>: Sensors → Binary protocol → LoRa transmit</li>
+<li><strong>LoRa</strong>: ~300 ms propagation</li>
+<li><strong>Node 2</strong>: LoRa receive → CRC validate → ACK → JSON via defmt/RTT</li>
+<li><strong>probe-rs</strong>: stdout capture</li>
+<li><strong>Gateway service</strong>: Parse → Deserialize → Log</li>
+<li><strong>Structured logs</strong>: Observable, queryable data</li>
+</ol>
+<p><strong>Total latency</strong>: ~350-400 ms (LoRa is the bottleneck)</p>
+<h3 id="performance-metrics">Performance Metrics<a hidden class="anchor" aria-hidden="true" href="#performance-metrics">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>End-to-end latency</strong></td>
+          <td>350-400 ms</td>
+          <td>LoRa transmission dominates</td>
+      </tr>
+      <tr>
+          <td><strong>Memory usage (RSS)</strong></td>
+          <td>15 MB</td>
+          <td>Gateway service process</td>
+      </tr>
+      <tr>
+          <td><strong>CPU usage (average)</strong></td>
+          <td>&lt;5%</td>
+          <td>On 4-core i5</td>
+      </tr>
+      <tr>
+          <td><strong>CPU usage (spike)</strong></td>
+          <td>2-3%</td>
+          <td>During packet processing</td>
+      </tr>
+      <tr>
+          <td><strong>Packet loss</strong></td>
+          <td>0%</td>
+          <td>CRC validation + ACK</td>
+      </tr>
+      <tr>
+          <td><strong>Parse errors</strong></td>
+          <td>0%</td>
+          <td>After JSON parser fixes</td>
+      </tr>
+      <tr>
+          <td><strong>Channel utilization</strong></td>
+          <td>&lt;1%</td>
+          <td>Nearly empty (immediate processing)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="reliability">Reliability<a hidden class="anchor" aria-hidden="true" href="#reliability">#</a></h3>
+<p><strong>Tested scenarios</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Test</th>
+          <th>Result</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Normal operation</strong></td>
+          <td>✅ Runs indefinitely</td>
+      </tr>
+      <tr>
+          <td><strong>Ctrl+C shutdown</strong></td>
+          <td>✅ Graceful cleanup</td>
+      </tr>
+      <tr>
+          <td><strong>probe-rs crash</strong></td>
+          <td>✅ Detected, logged, cleaned up</td>
+      </tr>
+      <tr>
+          <td><strong>Node 1 offline</strong></td>
+          <td>✅ No packets, service waits</td>
+      </tr>
+      <tr>
+          <td><strong>Node 2 restart</strong></td>
+          <td>✅ Reconnects automatically</td>
+      </tr>
+      <tr>
+          <td><strong>Invalid JSON</strong></td>
+          <td>✅ Logged, skipped, continues</td>
+      </tr>
+      <tr>
+          <td><strong>Channel backpressure</strong></td>
+          <td>✅ Parser waits (not tested at scale)</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Uptime</strong>: Ran for 6+ hours continuous during testing with zero issues.</p>
+<h3 id="example-output">Example Output<a hidden class="anchor" aria-hidden="true" href="#example-output">#</a></h3>
+<pre tabindex="0"><code>INFO Week 6 Async Gateway Service starting
+INFO Spawning probe-rs subprocess probe=&#34;0483:374b:066DFF3833584B3043115433&#34;
+INFO Service running. Press Ctrl+C to stop.
+INFO Telemetry packet received node_id=&#34;N2&#34; timestamp_ms=12000 temp_c=27.6 humidity_pct=54.1 rssi_dbm=-39
+INFO Processing telemetry packet n1_temperature=27.6 n1_humidity=54.1 n1_gas_resistance=84190 rssi=-39 snr=13
+INFO Gateway local sensor (BMP280) n2_temperature=Some(25.3) n2_pressure=Some(1013.2)
+</code></pre><p><strong>Clean. Structured. Professional.</strong></p>
+<hr>
+<h2 id="why-this-matters-in-the-plan">Why This Matters in the Plan<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-in-the-plan">#</a></h2>
+<h3 id="the-transition-point">The Transition Point<a hidden class="anchor" aria-hidden="true" href="#the-transition-point">#</a></h3>
+<p>Week 6 represents a <strong>fundamental shift</strong> in the project:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Before Week 6</th>
+          <th>After Week 6</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Embedded-only</td>
+          <td>Embedded + Cloud</td>
+      </tr>
+      <tr>
+          <td><code>no_std</code></td>
+          <td><code>std</code></td>
+      </tr>
+      <tr>
+          <td>Firmware</td>
+          <td>Service</td>
+      </tr>
+      <tr>
+          <td>OLED displays</td>
+          <td>Structured logs</td>
+      </tr>
+      <tr>
+          <td>Single-purpose</td>
+          <td>Composable</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>This is the bridge</strong> between constrained systems and cloud infrastructure.</p>
+<h3 id="what-week-6-enables">What Week 6 Enables<a hidden class="anchor" aria-hidden="true" href="#what-week-6-enables">#</a></h3>
+<p><strong>Immediate benefits</strong>:</p>
+<ul>
+<li>✅ Observable telemetry (structured logs, not just defmt)</li>
+<li>✅ Composable architecture (easy to add MQTT, InfluxDB)</li>
+<li>✅ Professional patterns (async, backpressure, graceful shutdown)</li>
+<li>✅ Production-ready (error handling, resource cleanup)</li>
+</ul>
+<p><strong>Foundation for Week 7</strong>:</p>
+<ul>
+<li>✅ MQTT client (just another task)</li>
+<li>✅ InfluxDB writer (just another task)</li>
+<li>✅ Metrics endpoint (just another task)</li>
+<li>✅ Configuration management (already structured)</li>
+</ul>
+<p><strong>Long-term value</strong>:</p>
+<ul>
+<li>✅ Reusable patterns (subprocess management, channel architecture)</li>
+<li>✅ Testable design (can mock subprocess, channel)</li>
+<li>✅ Scalable foundation (async naturally handles concurrency)</li>
+</ul>
+<h3 id="the-architectural-insight">The Architectural Insight<a hidden class="anchor" aria-hidden="true" href="#the-architectural-insight">#</a></h3>
+<blockquote>
+<p><strong>Embedded and cloud aren&rsquo;t separate worlds. They&rsquo;re two parts of one system, connected by async Rust.</strong></p>
+</blockquote>
+<p>Week 6 proves this. The gateway service:</p>
+<ul>
+<li>Spawns embedded firmware (<code>no_std</code>)</li>
+<li>Parses its output (string processing)</li>
+<li>Processes asynchronously (<code>std</code> + <code>tokio</code>)</li>
+<li>Prepares for network I/O (MQTT, InfluxDB)</li>
+</ul>
+<p><strong>All in one Cargo workspace.</strong> All in Rust.</p>
+<h3 id="the-meta-lesson">The Meta-Lesson<a hidden class="anchor" aria-hidden="true" href="#the-meta-lesson">#</a></h3>
+<p><strong>Week 6 teaches that professional software isn&rsquo;t about clever algorithms or cutting-edge features. It&rsquo;s about</strong>:</p>
+<ol>
+<li><strong>Robust error handling</strong>: Every <code>.await?</code> has a plan</li>
+<li><strong>Observable behavior</strong>: Logs tell you what&rsquo;s happening</li>
+<li><strong>Graceful degradation</strong>: Failures don&rsquo;t cascade</li>
+<li><strong>Resource management</strong>: Clean shutdown, no leaks</li>
+<li><strong>Composable design</strong>: Easy to extend, hard to break</li>
+</ol>
+<p>These aren&rsquo;t &ldquo;nice to have&rdquo; - they&rsquo;re <strong>table stakes</strong> for production systems.</p>
+<hr>
+<h2 id="next-steps-week-7-preview">Next Steps: Week 7 Preview<a hidden class="anchor" aria-hidden="true" href="#next-steps-week-7-preview">#</a></h2>
+<p>With the gateway service reliably processing telemetry, Week 7 will add <strong>cloud integration</strong>.</p>
+<h3 id="mqtt-publishing">MQTT Publishing<a hidden class="anchor" aria-hidden="true" href="#mqtt-publishing">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> rumqttc::{AsyncClient, MqttOptions, QoS};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Add to process_telemetry:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> topic <span style="color:#f92672">=</span> <span style="color:#a6e22e">format!</span>(<span style="color:#e6db74">&#34;iiot/node1/temperature&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> payload <span style="color:#f92672">=</span> packet.n1.t.to_string();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client.publish(topic, QoS::AtLeastOnce, <span style="color:#66d9ef">false</span>, payload).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><p><strong>Topic hierarchy</strong>:</p>
+<pre tabindex="0"><code>iiot/
+├── node1/
+│   ├── temperature
+│   ├── humidity
+│   └── gas_resistance
+├── node2/
+│   ├── temperature
+│   └── pressure
+├── signal/
+│   ├── rssi
+│   └── snr
+└── stats/
+    ├── packets_received
+    └── crc_errors
+</code></pre><h3 id="influxdb-writing">InfluxDB Writing<a hidden class="anchor" aria-hidden="true" href="#influxdb-writing">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> influxdb2::{Client, models::DataPoint};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> point <span style="color:#f92672">=</span> DataPoint::builder(<span style="color:#e6db74">&#34;sensor_data&#34;</span>)
+</span></span><span style="display:flex;"><span>    .tag(<span style="color:#e6db74">&#34;node_id&#34;</span>, <span style="color:#e6db74">&#34;N1&#34;</span>)
+</span></span><span style="display:flex;"><span>    .tag(<span style="color:#e6db74">&#34;sensor&#34;</span>, <span style="color:#e6db74">&#34;sht31&#34;</span>)
+</span></span><span style="display:flex;"><span>    .field(<span style="color:#e6db74">&#34;temperature&#34;</span>, packet.n1.t <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">f64</span>)
+</span></span><span style="display:flex;"><span>    .field(<span style="color:#e6db74">&#34;humidity&#34;</span>, packet.n1.h <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">f64</span>)
+</span></span><span style="display:flex;"><span>    .build()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client.write(<span style="color:#e6db74">&#34;iiot-bucket&#34;</span>, stream::iter(<span style="color:#a6e22e">vec!</span>[point])).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span></code></pre></div><h3 id="configuration-management">Configuration Management<a hidden class="anchor" aria-hidden="true" href="#configuration-management">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#75715e"># config.toml</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">mqtt</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">broker</span> = <span style="color:#e6db74">&#34;mqtt://localhost:1883&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">client_id</span> = <span style="color:#e6db74">&#34;wk6-gateway&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">username</span> = <span style="color:#e6db74">&#34;sensor_gateway&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">password_env</span> = <span style="color:#e6db74">&#34;MQTT_PASSWORD&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">influxdb</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">url</span> = <span style="color:#e6db74">&#34;http://localhost:8086&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">org</span> = <span style="color:#e6db74">&#34;iiot-lab&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bucket</span> = <span style="color:#e6db74">&#34;sensor-data&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">token_env</span> = <span style="color:#e6db74">&#34;INFLUXDB_TOKEN&#34;</span>
+</span></span></code></pre></div><p><strong>Parse with <code>serde</code></strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(Deserialize)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Config</span> {
+</span></span><span style="display:flex;"><span>    mqtt: <span style="color:#a6e22e">MqttConfig</span>,
+</span></span><span style="display:flex;"><span>    influxdb: <span style="color:#a6e22e">InfluxDbConfig</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> config: <span style="color:#a6e22e">Config</span> <span style="color:#f92672">=</span> toml::from_str(<span style="color:#f92672">&amp;</span>fs::read_to_string(<span style="color:#e6db74">&#34;config.toml&#34;</span>)<span style="color:#f92672">?</span>)<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><h3 id="testing-infrastructure">Testing Infrastructure<a hidden class="anchor" aria-hidden="true" href="#testing-infrastructure">#</a></h3>
+<p><strong>Week 7 setup</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Install Mosquitto MQTT broker</span>
+</span></span><span style="display:flex;"><span>sudo apt install mosquitto mosquitto-clients
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Install InfluxDB</span>
+</span></span><span style="display:flex;"><span>wget https://download.influxdata.com/influxdb/releases/influxdb2-2.7.5-linux-amd64.tar.gz
+</span></span><span style="display:flex;"><span>tar xvzf influxdb2-*.tar.gz
+</span></span><span style="display:flex;"><span>./influxd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Test MQTT</span>
+</span></span><span style="display:flex;"><span>mosquitto_sub -t <span style="color:#e6db74">&#39;iiot/#&#39;</span> -v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Test InfluxDB</span>
+</span></span><span style="display:flex;"><span>influx query <span style="color:#e6db74">&#39;from(bucket: &#34;iiot-bucket&#34;) |&gt; range(start: -1h)&#39;</span>
+</span></span></code></pre></div><p><strong>The foundation is ready.</strong> Week 6&rsquo;s architecture makes this integration <strong>straightforward</strong>.</p>
+<hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 6 was about more than just adding async Rust. It was about <strong>crossing the chasm</strong> from embedded hobby project to professional IIoT system.</p>
+<h3 id="technical-achievements">Technical Achievements<a hidden class="anchor" aria-hidden="true" href="#technical-achievements">#</a></h3>
+<ul>
+<li>✅ Tokio async runtime (tasks, channels, select!)</li>
+<li>✅ Subprocess management (spawning, monitoring, cleanup)</li>
+<li>✅ Robust parsing (handled all edge cases incrementally)</li>
+<li>✅ Structured logging (tracing with key-value pairs)</li>
+<li>✅ Graceful shutdown (Ctrl+C handling, resource cleanup)</li>
+<li>✅ Bounded channels (backpressure made explicit)</li>
+</ul>
+<h3 id="architectural-achievements">Architectural Achievements<a hidden class="anchor" aria-hidden="true" href="#architectural-achievements">#</a></h3>
+<ul>
+<li>✅ Unified Cargo workspace (firmware + service)</li>
+<li>✅ Clean separation (<code>no_std</code> vs <code>std</code>)</li>
+<li>✅ Extensible design (ready for MQTT, InfluxDB)</li>
+<li>✅ Production patterns (error handling, observability)</li>
+</ul>
+<h3 id="the-lessons">The Lessons<a hidden class="anchor" aria-hidden="true" href="#the-lessons">#</a></h3>
+<ol>
+<li><strong>Async subprocess management</strong>: Use <code>tokio::process</code>, not <code>std::process</code></li>
+<li><strong>Baby steps debugging</strong>: Incremental fixes based on exact errors</li>
+<li><strong>Bounded channels</strong>: Backpressure prevents runaway memory growth</li>
+<li><strong>Structured logging</strong>: <code>tracing</code> is professional infrastructure</li>
+<li><strong>Graceful shutdown</strong>: Test what happens when you press Ctrl+C</li>
+</ol>
+<h3 id="the-path-forward">The Path Forward<a hidden class="anchor" aria-hidden="true" href="#the-path-forward">#</a></h3>
+<p>Week 6 built the bridge. Week 7 will cross it.</p>
+<p>The data pipeline is ready:</p>
+<ul>
+<li><strong>Embedded</strong>: Sensors → LoRa → Gateway firmware</li>
+<li><strong>Desktop</strong>: Gateway service → Async processing</li>
+<li><strong>Cloud</strong>: (Week 7) MQTT + InfluxDB</li>
+</ul>
+<p><strong>This is how real IIoT systems work.</strong> And it&rsquo;s all in Rust.</p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code-repository">Code Repository<a hidden class="anchor" aria-hidden="true" href="#code-repository">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk6-async-gateway">Week 6 Source Code</a></li>
+</ul>
+<h3 id="related-posts">Related Posts<a hidden class="anchor" aria-hidden="true" href="#related-posts">#</a></h3>
+<ul>
+<li><a href="https://www.mapfumo.net/posts/building-deterministic-iiot-systems-with-embedded-rust-and-rtic/">Week 1: Building Deterministic IIoT Systems</a></li>
+<li><a href="https://www.mapfumo.net/posts/lora-sensor-fusion-when-simple-becomes-reliable/">Week 2: LoRa Sensor Fusion</a></li>
+<li><a href="https://www.mapfumo.net/posts/gateway-firmware-from-wireless-to-desktop-wk5/">Week 5: Gateway Firmware - Adaptive Architecture</a></li>
+</ul>
+<h3 id="technical-references">Technical References<a hidden class="anchor" aria-hidden="true" href="#technical-references">#</a></h3>
+<ul>
+<li><a href="https://tokio.rs/tokio/tutorial">Tokio Tutorial</a></li>
+<li><a href="https://rust-lang.github.io/async-book/">Async Rust Book</a></li>
+<li><a href="https://docs.rs/tracing/">tracing Documentation</a></li>
+<li><a href="https://docs.rs/serde_json/">serde_json Documentation</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo<br>
+<strong>Part of</strong>: 4-Month Embedded Rust Learning Roadmap<br>
+<strong>Week</strong>: 6 of 16<br>
+<strong>Tags</strong>: <code>#async-rust</code> <code>#tokio</code> <code>#subprocess-management</code> <code>#structured-logging</code> <code>#iiot</code> <code>#gateway</code> <code>#learning-in-public</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/gateway-firmware-from-wireless-to-desktop-wk5/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Gateway Firmware - From Wireless to Desktop, Wk5</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 on twitter"
+        href="https://twitter.com/intent/tweet/?text=Async%20Rust%20Gateway%20From%20Embedded%20Firmware%20to%20Cloud%20Infrastructure%20-%20wk6&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f&amp;title=Async%20Rust%20Gateway%20From%20Embedded%20Firmware%20to%20Cloud%20Infrastructure%20-%20wk6&amp;summary=Async%20Rust%20Gateway%20From%20Embedded%20Firmware%20to%20Cloud%20Infrastructure%20-%20wk6&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f&title=Async%20Rust%20Gateway%20From%20Embedded%20Firmware%20to%20Cloud%20Infrastructure%20-%20wk6">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Async Rust Gateway From Embedded Firmware to Cloud Infrastructure - wk6 on whatsapp"
+        href="https://api.whatsapp.com/send?text=Async%20Rust%20Gateway%20From%20Embedded%20Firmware%20to%20Cloud%20Infrastructure%20-%20wk6%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fasync-rust-gateway-from-embedded-firmware-to-cloud-infrastructure%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
