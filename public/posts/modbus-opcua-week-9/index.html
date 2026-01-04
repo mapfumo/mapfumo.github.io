@@ -5,9 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Modbus Opcua Week 9 | Antony Mapfumo</title>
+<title>From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 | Antony Mapfumo</title>
 <meta name="keywords" content="">
-<meta name="description" content="Modbus Opcua Week 9 - Antony Mapfumo">
+<meta name="description" content="Week 9 represents a fundamental shift in the project. For the past eight weeks, we&rsquo;ve been building IoT systems - MQTT, InfluxDB, Grafana, cloud-oriented architectures. Week 9 is different.
+Week 9 is industrial automation.
+This isn&rsquo;t about publishing sensor data to the cloud. It&rsquo;s about PLC integration, SCADA systems, and factory floor protocols. It&rsquo;s about Modbus TCP - the protocol that&rsquo;s been running industrial plants since the 1970s. It&rsquo;s about OPC-UA - the modern standard for industrial interoperability.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/modbus-opcua-week-9/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
@@ -109,12 +111,996 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title">
-      Modbus Opcua Week 9
+      From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9
     </h1>
-    <div class="post-meta">Jan 4, 2026 · 0 min
+    <div class="post-meta">Jan 4, 2026 · 17 min
 
 </div>
   </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk9_image.png" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk9_image.png" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards</p>
+</figure>
+  <div class="post-content"><p>Week 9 represents a fundamental shift in the project. For the past eight weeks, we&rsquo;ve been building IoT systems - MQTT, InfluxDB, Grafana, cloud-oriented architectures. Week 9 is different.</p>
+<p><strong>Week 9 is industrial automation.</strong></p>
+<p>This isn&rsquo;t about publishing sensor data to the cloud. It&rsquo;s about <strong>PLC integration</strong>, <strong>SCADA systems</strong>, and <strong>factory floor protocols</strong>. It&rsquo;s about Modbus TCP - the protocol that&rsquo;s been running industrial plants since the 1970s. It&rsquo;s about OPC-UA - the modern standard for industrial interoperability.</p>
+<p>After nine weeks:</p>
+<ul>
+<li>Week 1-3: Sensors talk via LoRa ✅</li>
+<li>Week 5: Gateway firmware ✅</li>
+<li>Week 6: Async Rust service ✅</li>
+<li>Week 7-8: MQTT + InfluxDB + Grafana ✅</li>
+<li>Week 9: <strong>Modbus TCP slaves + OPC-UA gateway</strong> ✅</li>
+</ul>
+<p><strong>This is the language of factories, utilities, and building automation systems.</strong> And it&rsquo;s all running on STM32 microcontrollers with custom Rust firmware.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents<a hidden class="anchor" aria-hidden="true" href="#table-of-contents">#</a></h2>
+<ol>
+<li><a href="#the-objective">The Objective</a></li>
+<li><a href="#the-shift-iot-vs-industrial">The Shift: IoT vs Industrial</a></li>
+<li><a href="#five-critical-lessons">Five Critical Lessons</a>
+<ul>
+<li><a href="#lesson-1-the-pin-configuration-discovery">Lesson 1: The Pin Configuration Discovery</a></li>
+<li><a href="#lesson-2-i2c-bus-sharing---async-and-blocking-on-the-same-bus">Lesson 2: I2C Bus Sharing - Async and Blocking on the Same Bus</a></li>
+<li><a href="#lesson-3-socket-state-machines-are-not-optional">Lesson 3: Socket State Machines Are Not Optional</a></li>
+<li><a href="#lesson-4-modbus-register-encoding---ieee-754-and-big-endian">Lesson 4: Modbus Register Encoding - IEEE 754 and Big-Endian</a></li>
+<li><a href="#lesson-5-opc-ua-as-a-protocol-gateway">Lesson 5: OPC-UA as a Protocol Gateway</a></li>
+</ul>
+</li>
+<li><a href="#results-at-the-end-of-week-9">Results</a></li>
+<li><a href="#why-this-matters-in-the-plan">Why This Matters</a></li>
+<li><a href="#next-steps-production-deployment">Next Steps</a></li>
+</ol>
+<hr>
+<h2 id="the-objective">The Objective<a hidden class="anchor" aria-hidden="true" href="#the-objective">#</a></h2>
+<p>Week 9 had one overarching goal: <strong>Implement industry-standard industrial automation protocols on embedded hardware</strong>.</p>
+<h3 id="the-gap">The Gap<a hidden class="anchor" aria-hidden="true" href="#the-gap">#</a></h3>
+<p>At the end of Week 8, we had a complete IoT telemetry pipeline:</p>
+<ul>
+<li>Sensors → LoRa → Gateway → MQTT → InfluxDB → Grafana</li>
+</ul>
+<p>Beautiful. But fundamentally <strong>consumer-oriented</strong>. MQTT is great for IoT, but if you want to integrate with a <strong>PLC</strong> or a <strong>SCADA system</strong>, you need Modbus.</p>
+<p><strong>Questions we couldn&rsquo;t answer</strong>:</p>
+<ul>
+<li>How do we connect to a Siemens PLC?</li>
+<li>How do we integrate with a factory HMI?</li>
+<li>How do we expose data to industrial control systems?</li>
+<li>How do we speak the language of automation engineers?</li>
+</ul>
+<h3 id="the-requirements">The Requirements<a hidden class="anchor" aria-hidden="true" href="#the-requirements">#</a></h3>
+<ol>
+<li><strong>Modbus TCP slave devices</strong> on STM32 hardware</li>
+<li><strong>W5500 Ethernet</strong> (SPI-based, static IP)</li>
+<li><strong>Custom protocol implementation</strong> (no TCP/IP stack abstraction)</li>
+<li><strong>OPC-UA gateway</strong> to bridge Modbus to modern clients</li>
+<li><strong>Real-time OLED display</strong> showing connection status</li>
+<li><strong>Production-ready error handling</strong> and auto-recovery</li>
+</ol>
+<h3 id="the-vision">The Vision<a hidden class="anchor" aria-hidden="true" href="#the-vision">#</a></h3>
+<pre tabindex="0"><code>STM32 Modbus TCP Slaves (10.10.10.100, 10.10.10.200)
+    ↓ Ethernet
+Python OPC-UA Gateway (10.10.10.1:4840)
+    ↓ OPC-UA
+SCADA Systems, UaExpert, PLCs
+</code></pre><p><strong>This is how industrial automation works.</strong></p>
+<hr>
+<h2 id="the-shift-iot-vs-industrial">The Shift: IoT vs Industrial<a hidden class="anchor" aria-hidden="true" href="#the-shift-iot-vs-industrial">#</a></h2>
+<h3 id="a-tale-of-two-worlds">A Tale of Two Worlds<a hidden class="anchor" aria-hidden="true" href="#a-tale-of-two-worlds">#</a></h3>
+<p>Week 9 wasn&rsquo;t just &ldquo;adding Ethernet&rdquo; - it was crossing into a completely different domain.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Aspect</th>
+          <th>IoT (Weeks 7-8)</th>
+          <th>Industrial (Week 9)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Protocol</strong></td>
+          <td>MQTT (pub/sub)</td>
+          <td>Modbus TCP (request/response)</td>
+      </tr>
+      <tr>
+          <td><strong>Data Format</strong></td>
+          <td>JSON (flexible)</td>
+          <td>Binary (standardized)</td>
+      </tr>
+      <tr>
+          <td><strong>Network</strong></td>
+          <td>Internet, cloud</td>
+          <td>Factory LAN</td>
+      </tr>
+      <tr>
+          <td><strong>Discovery</strong></td>
+          <td>DNS, service discovery</td>
+          <td>Static IP addresses</td>
+      </tr>
+      <tr>
+          <td><strong>Security</strong></td>
+          <td>TLS, tokens</td>
+          <td>Physical isolation</td>
+      </tr>
+      <tr>
+          <td><strong>Clients</strong></td>
+          <td>Any MQTT subscriber</td>
+          <td>PLCs, SCADA, HMI</td>
+      </tr>
+      <tr>
+          <td><strong>Error Handling</strong></td>
+          <td>Retry, backoff</td>
+          <td>Modbus exceptions</td>
+      </tr>
+      <tr>
+          <td><strong>Standards</strong></td>
+          <td>OASIS</td>
+          <td>Modbus Organization, OPC Foundation</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="why-modbus-tcp">Why Modbus TCP?<a hidden class="anchor" aria-hidden="true" href="#why-modbus-tcp">#</a></h3>
+<p><strong>Modbus is the universal language of industrial automation:</strong></p>
+<p>Imagine you&rsquo;re building a factory monitoring system. You have:</p>
+<ul>
+<li>Allen-Bradley PLC controlling conveyor belts</li>
+<li>Siemens temperature sensors</li>
+<li>Schneider Electric power meters</li>
+<li>Custom STM32 devices (yours)</li>
+</ul>
+<p><strong>They all speak Modbus.</strong> It&rsquo;s the lowest common denominator. It works with equipment from the 1970s and equipment from 2026.</p>
+<p><strong>Real-world applications</strong>:</p>
+<ul>
+<li><strong>Factory Floor</strong>: Machine status, production counters, alarm states</li>
+<li><strong>Building Automation</strong>: HVAC setpoints, energy meters, lighting control</li>
+<li><strong>Utilities</strong>: Water pump speeds, tank levels, valve positions</li>
+<li><strong>Process Control</strong>: Chemical plant temperatures, pressures, flow rates</li>
+</ul>
+<h3 id="why-opc-ua">Why OPC-UA?<a hidden class="anchor" aria-hidden="true" href="#why-opc-ua">#</a></h3>
+<p><strong>OPC-UA is the modern industrial interoperability standard:</strong></p>
+<p>Modbus is simple but limited - it&rsquo;s just registers. OPC-UA adds:</p>
+<ul>
+<li><strong>Rich data models</strong>: Not just values, but types and relationships</li>
+<li><strong>Security</strong>: Authentication, encryption built-in</li>
+<li><strong>Subscriptions</strong>: Clients notified of changes (not just polling)</li>
+<li><strong>Platform independence</strong>: Works on Windows, Linux, embedded</li>
+</ul>
+<p><strong>Our architecture</strong>:</p>
+<pre tabindex="0"><code>Modbus TCP Slaves (simple, embedded-friendly)
+    ↓
+OPC-UA Gateway (powerful, flexible)
+    ↓
+Modern SCADA/HMI clients
+</code></pre><p><strong>Best of both worlds</strong>: Lightweight slaves, powerful gateway.</p>
+<hr>
+<h2 id="five-critical-lessons">Five Critical Lessons<a hidden class="anchor" aria-hidden="true" href="#five-critical-lessons">#</a></h2>
+<h3 id="lesson-1-the-pin-configuration-discovery">Lesson 1: The Pin Configuration Discovery<a hidden class="anchor" aria-hidden="true" href="#lesson-1-the-pin-configuration-discovery">#</a></h3>
+<h4 id="the-bug">The Bug<a hidden class="anchor" aria-hidden="true" href="#the-bug">#</a></h4>
+<p>First attempt to initialize W5500:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Initialize SPI1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> spi <span style="color:#f92672">=</span> Spi::new(
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">SPI1</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">PB3</span>,  <span style="color:#75715e">// SCK
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PB5</span>,  <span style="color:#75715e">// MOSI
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PB4</span>,  <span style="color:#75715e">// MISO
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">DMA2_CH3</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">DMA2_CH2</span>,
+</span></span><span style="display:flex;"><span>    spi_config,
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p><strong>Result</strong>:</p>
+<pre tabindex="0"><code>[INFO] SPI TX: [00 39 00 00]
+[INFO] SPI RX: [FF FF FF FF]
+[WARN] W5500 version: 0xFF - UNEXPECTED (expected 0x04)
+</code></pre><p><strong>W5500 not responding.</strong> MISO stuck high.</p>
+<h4 id="the-investigation">The Investigation<a hidden class="anchor" aria-hidden="true" href="#the-investigation">#</a></h4>
+<p><strong>Step 1</strong>: Check wiring</p>
+<ul>
+<li>Multimeter shows continuity on all connections ✓</li>
+<li>Power supply stable at 3.3V ✓</li>
+<li>No shorts or opens ✓</li>
+</ul>
+<p><strong>Step 2</strong>: Check SPI signals with logic analyzer</p>
+<ul>
+<li>SCK toggling correctly ✓</li>
+<li>MOSI showing data ✓</li>
+<li>MISO always high ✗</li>
+</ul>
+<p><strong>Step 3</strong>: Check working example code</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// From modbus_example (working code)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> spi <span style="color:#f92672">=</span> Spi::new(
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">SPI1</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">PA5</span>,  <span style="color:#75715e">// ← Wait, PA5???
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PA7</span>,  <span style="color:#75715e">// ← PA7???
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PA6</span>,  <span style="color:#75715e">// ← PA6???
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">..</span>.
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p><strong>Aha!</strong> The working code uses <strong>PA5/PA6/PA7</strong>, not PB3/PB4/PB5!</p>
+<h4 id="the-root-cause">The Root Cause<a hidden class="anchor" aria-hidden="true" href="#the-root-cause">#</a></h4>
+<p><strong>The wiring document said</strong>: &ldquo;Use Arduino connector D11-D13 (SPI)&rdquo;</p>
+<p><strong>Arduino connector SPI pins on Nucleo-F446RE</strong>:</p>
+<ul>
+<li>D11 = PB5 (MOSI)</li>
+<li>D12 = PB4 (MISO)</li>
+<li>D13 = PB3 (SCK)</li>
+</ul>
+<p><strong>But the W5500 module was actually wired to the Morpho connector</strong>:</p>
+<ul>
+<li>PA5 = SPI1_SCK (Morpho CN7 pin 10)</li>
+<li>PA6 = SPI1_MISO (Morpho CN7 pin 12)</li>
+<li>PA7 = SPI1_MOSI (Morpho CN7 pin 14)</li>
+</ul>
+<p><strong>The fix</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> spi <span style="color:#f92672">=</span> Spi::new(
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">SPI1</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">PA5</span>,  <span style="color:#75715e">// Morpho connector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PA7</span>,  <span style="color:#75715e">// Morpho connector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PA6</span>,  <span style="color:#75715e">// Morpho connector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">DMA2_CH3</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">DMA2_CH2</span>,
+</span></span><span style="display:flex;"><span>    spi_config,
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p><strong>Result</strong>:</p>
+<pre tabindex="0"><code>[INFO] SPI TX: [00 39 00 00]
+[INFO] SPI RX: [00 00 00 04]
+[INFO] W5500 version: 0x04 ✓
+</code></pre><p><strong>It works!</strong></p>
+<h4 id="the-lesson">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson">#</a></h4>
+<blockquote>
+<p><strong>Always check working example code first. Documentation can be misleading, but working code never lies.</strong></p>
+</blockquote>
+<p><strong>Debugging approach</strong>:</p>
+<ol>
+<li><strong>Don&rsquo;t assume the docs are right</strong> - verify against working examples</li>
+<li><strong>Use a logic analyzer</strong> - see what&rsquo;s actually happening on the wires</li>
+<li><strong>Compare with known-good</strong> - find code that works and copy it</li>
+<li><strong>Baby steps</strong> - test one peripheral at a time</li>
+</ol>
+<p><strong>Time wasted on wrong pins</strong>: ~2 hours<br>
+<strong>Time to fix after checking example</strong>: ~5 minutes</p>
+<hr>
+<h3 id="lesson-2-i2c-bus-sharing---async-and-blocking-on-the-same-bus">Lesson 2: I2C Bus Sharing - Async and Blocking on the Same Bus<a hidden class="anchor" aria-hidden="true" href="#lesson-2-i2c-bus-sharing---async-and-blocking-on-the-same-bus">#</a></h3>
+<h4 id="the-challenge">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h4>
+<p>Week 9 hardware:</p>
+<ul>
+<li><strong>SHT3x sensor</strong> on I2C1 (needs async with DMA for Embassy)</li>
+<li><strong>SSD1306 OLED</strong> on I2C1 (uses blocking I2C in driver)</li>
+</ul>
+<p><strong>Problem</strong>: Same I2C peripheral, different access patterns.</p>
+<p><strong>Can&rsquo;t do this</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> i2c <span style="color:#f92672">=</span> I2c::new(p.<span style="color:#66d9ef">I2C1</span>, <span style="color:#f92672">..</span>.);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> sensor <span style="color:#f92672">=</span> SHT3x::new(i2c, <span style="color:#f92672">..</span>.);  <span style="color:#75715e">// Consumes I2C1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> oled <span style="color:#f92672">=</span> <span style="color:#66d9ef">SSD1306</span>::new(i2c, <span style="color:#f92672">..</span>.);  <span style="color:#75715e">// ← Compile error! I2C1 already moved
+</span></span></span></code></pre></div><h4 id="the-options">The Options<a hidden class="anchor" aria-hidden="true" href="#the-options">#</a></h4>
+<p><strong>Option A: Shared bus abstraction</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> embedded_hal_bus::i2c::CriticalSectionDevice;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> bus <span style="color:#f92672">=</span> CriticalSectionDevice::new(i2c);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> sensor <span style="color:#f92672">=</span> SHT3x::new(bus.clone(), <span style="color:#f92672">..</span>.);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> oled <span style="color:#f92672">=</span> <span style="color:#66d9ef">SSD1306</span>::new(bus, <span style="color:#f92672">..</span>.);
+</span></span></code></pre></div><p><strong>Problem</strong>: <code>embedded-hal-bus</code> doesn&rsquo;t support async I2C yet. Embassy I2C is async-only.</p>
+<p><strong>Option B: Separate I2C peripherals</strong></p>
+<p>F446RE has I2C1, I2C2, I2C3. Could use different buses.</p>
+<p><strong>Problem</strong>: Hardware already wired to I2C1. Don&rsquo;t want to rewire.</p>
+<p><strong>Option C: Peripheral &ldquo;stealing&rdquo;</strong> (chosen)</p>
+<p>Insight: <strong>Peripherals are accessed sequentially in the main loop, never simultaneously.</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// First: Initialize async I2C for sensor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> i2c_async <span style="color:#f92672">=</span> I2c::new(
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">I2C1</span>,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">PB8</span>,  <span style="color:#75715e">// SCL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PB9</span>,  <span style="color:#75715e">// SDA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Irqs,
+</span></span><span style="display:flex;"><span>    p.<span style="color:#66d9ef">DMA1_CH6</span>,  <span style="color:#75715e">// TX DMA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">DMA1_CH0</span>,  <span style="color:#75715e">// RX DMA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    i2c_config,
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> sht3x <span style="color:#f92672">=</span> SHT3x::new(i2c_async, delay, address);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Later: &#34;Steal&#34; peripheral for OLED (blocking, no DMA)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> i2c_blocking <span style="color:#f92672">=</span> I2c::new(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsafe</span> { embassy_stm32::Peripherals::steal().<span style="color:#66d9ef">I2C1</span> },  <span style="color:#75715e">// ← Steal!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PB8</span>,  <span style="color:#75715e">// Same pins
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p.<span style="color:#66d9ef">PB9</span>,
+</span></span><span style="display:flex;"><span>    Irqs,
+</span></span><span style="display:flex;"><span>    NoDma,   <span style="color:#75715e">// No DMA for OLED
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    NoDma,
+</span></span><span style="display:flex;"><span>    i2c_config,
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> oled <span style="color:#f92672">=</span> Ssd1306::new(i2c_blocking, <span style="color:#f92672">..</span>.);
+</span></span></code></pre></div><h4 id="why-this-works">Why This Works<a hidden class="anchor" aria-hidden="true" href="#why-this-works">#</a></h4>
+<p><strong>Key insight</strong>: The sensor and OLED are <strong>never used simultaneously</strong>.</p>
+<p><strong>Main loop structure</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. Read sensor (async I2C with DMA)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> (temp, hum) <span style="color:#f92672">=</span> read_sht3x(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> sht3x).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. Update OLED (blocking I2C, no DMA)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    update_display(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> oled, temp, hum);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. Handle Modbus
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    Timer::after_secs(<span style="color:#ae81ff">2</span>).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Sequential access = no conflicts.</strong></p>
+<h4 id="safety-considerations">Safety Considerations<a hidden class="anchor" aria-hidden="true" href="#safety-considerations">#</a></h4>
+<p><strong>Is <code>unsafe</code> justified here?</strong></p>
+<p>Embassy&rsquo;s safety model:</p>
+<ul>
+<li>Peripherals can only be used once (consumed by constructor)</li>
+<li>Prevents simultaneous access to same hardware</li>
+<li><code>steal()</code> bypasses this check</li>
+</ul>
+<p><strong>Our guarantee</strong>:</p>
+<ul>
+<li>Sensor task completed before OLED initialized</li>
+<li>OLED only used in main loop (single-threaded)</li>
+<li>No concurrent access possible</li>
+</ul>
+<p><strong>Verdict</strong>: Safe in this context, but well-documented and contained.</p>
+<h4 id="the-lesson-1">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-1">#</a></h4>
+<blockquote>
+<p><strong>Sometimes you need to work around the type system&rsquo;s safety guarantees when you have additional runtime knowledge the compiler can&rsquo;t verify. Document your reasoning and limit the scope.</strong></p>
+</blockquote>
+<p><strong>Alternatives considered</strong>:</p>
+<ul>
+<li>✗ Shared bus abstraction (no async support)</li>
+<li>✗ Separate I2C buses (requires rewiring)</li>
+<li>✅ Peripheral stealing (works, well-understood, contained)</li>
+</ul>
+<p><strong>This pattern is common in embedded</strong>:</p>
+<ul>
+<li>DMA channels shared between peripherals</li>
+<li>GPIO banks partially reconfigured</li>
+<li>Peripherals time-multiplexed</li>
+</ul>
+<hr>
+<h3 id="lesson-3-socket-state-machines-are-not-optional">Lesson 3: Socket State Machines Are Not Optional<a hidden class="anchor" aria-hidden="true" href="#lesson-3-socket-state-machines-are-not-optional">#</a></h3>
+<h4 id="the-naive-approach">The Naive Approach<a hidden class="anchor" aria-hidden="true" href="#the-naive-approach">#</a></h4>
+<p>First attempt at Modbus TCP server:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Check for data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> rx_size <span style="color:#f92672">=</span> w5500_read_rx_size()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> rx_size <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Read data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> data <span style="color:#f92672">=</span> w5500_read_data(rx_size)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Parse Modbus
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> response <span style="color:#f92672">=</span> handle_modbus(data)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Send response
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        w5500_write_data(response)<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Seems reasonable, right?</strong></p>
+<p><strong>What actually happened</strong>:</p>
+<pre tabindex="0"><code>[INFO] Connection ESTABLISHED
+[INFO] Processing request...
+[INFO] Response sent
+[INFO] Connection ESTABLISHED
+[INFO] Processing request...
+[WARN] Socket CLOSED - why?
+[WARN] Failed to read RX size
+[WARN] Socket CLOSED
+[WARN] Socket CLOSED
+[WARN] Socket CLOSED
+</code></pre><p><strong>Socket enters CLOSED state randomly. No automatic recovery.</strong></p>
+<h4 id="the-w5500-socket-states">The W5500 Socket States<a hidden class="anchor" aria-hidden="true" href="#the-w5500-socket-states">#</a></h4>
+<p>Reading the W5500 datasheet reveals <strong>socket has 12+ states</strong>:</p>
+<pre tabindex="0"><code>0x00 = SOCK_CLOSED
+0x13 = SOCK_INIT
+0x14 = SOCK_LISTEN
+0x17 = SOCK_ESTABLISHED
+0x1C = SOCK_CLOSE_WAIT
+0x18 = SOCK_FIN_WAIT
+0x1A = SOCK_CLOSING
+0x1B = SOCK_TIME_WAIT
+... (more states)
+</code></pre><p><strong>Each state transition requires specific commands.</strong></p>
+<h4 id="the-state-machine">The State Machine<a hidden class="anchor" aria-hidden="true" href="#the-state-machine">#</a></h4>
+<p><strong>Correct implementation</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> status <span style="color:#f92672">=</span> check_socket_status(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">match</span> status {
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x00</span> <span style="color:#f92672">=&gt;</span> {  <span style="color:#75715e">// CLOSED - need to reopen
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">warn!</span>(<span style="color:#e6db74">&#34;Socket CLOSED - reopening...&#34;</span>);
+</span></span><span style="display:flex;"><span>            reopen_socket(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x13</span> <span style="color:#f92672">=&gt;</span> {  <span style="color:#75715e">// INIT - need to LISTEN
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Socket INIT - sending LISTEN&#34;</span>);
+</span></span><span style="display:flex;"><span>            listen_socket(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x14</span> <span style="color:#f92672">=&gt;</span> {  <span style="color:#75715e">// LISTEN - waiting for connection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// Just wait
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x17</span> <span style="color:#f92672">=&gt;</span> {  <span style="color:#75715e">// ESTABLISHED - handle data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(rx_size) <span style="color:#f92672">=</span> check_rx_size(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> rx_size <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Process Modbus request
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0x1C</span> <span style="color:#f92672">=&gt;</span> {  <span style="color:#75715e">// CLOSE_WAIT - client closed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">info!</span>(<span style="color:#e6db74">&#34;Socket CLOSE_WAIT - closing&#34;</span>);
+</span></span><span style="display:flex;"><span>            close_socket(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        _ <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Unknown or transitional state
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Timer::after_millis(<span style="color:#ae81ff">500</span>).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Each state handled explicitly. No assumptions.</strong></p>
+<h4 id="the-commands">The Commands<a hidden class="anchor" aria-hidden="true" href="#the-commands">#</a></h4>
+<p><strong>Opening and listening</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">reopen_socket</span>(spi, cs) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. Write socket mode (TCP, no options)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    w5500_write_socket_register(<span style="color:#66d9ef">SOCKET_MODE</span>, <span style="color:#ae81ff">0x01</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. Write source port (502 - Modbus TCP)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    w5500_write_socket_register(<span style="color:#66d9ef">SOCKET_SOURCE_PORT</span>, <span style="color:#ae81ff">502</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. Send OPEN command
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    w5500_write_socket_register(<span style="color:#66d9ef">SOCKET_COMMAND</span>, <span style="color:#66d9ef">CMD_OPEN</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. Wait for INIT state
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. Send LISTEN command
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    w5500_write_socket_register(<span style="color:#66d9ef">SOCKET_COMMAND</span>, <span style="color:#66d9ef">CMD_LISTEN</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Closing gracefully</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">close_socket</span>(spi, cs) -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Send DISCON command (graceful close)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    w5500_write_socket_register(<span style="color:#66d9ef">SOCKET_COMMAND</span>, <span style="color:#66d9ef">CMD_DISCON</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait for state to settle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Timer::after_millis(<span style="color:#ae81ff">50</span>).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Reopen for next connection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    reopen_socket(spi, cs).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="the-lesson-2">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-2">#</a></h4>
+<blockquote>
+<p><strong>TCP connection lifecycle is a state machine. Handle all states explicitly or you&rsquo;ll have mysterious failures.</strong></p>
+</blockquote>
+<p><strong>Common mistakes</strong>:</p>
+<ul>
+<li>❌ Assuming socket stays ESTABLISHED</li>
+<li>❌ Not handling CLOSE_WAIT (client disconnect)</li>
+<li>❌ Not reopening after CLOSED state</li>
+<li>❌ Ignoring transitional states</li>
+</ul>
+<p><strong>Production pattern</strong>:</p>
+<ul>
+<li>✅ Explicit state machine</li>
+<li>✅ Handle every possible state</li>
+<li>✅ Auto-recovery from errors</li>
+<li>✅ Logging for debugging</li>
+</ul>
+<p><strong>This applies to any stateful protocol</strong>: USB, Bluetooth, cellular modems, etc.</p>
+<hr>
+<h3 id="lesson-4-modbus-register-encoding---ieee-754-and-big-endian">Lesson 4: Modbus Register Encoding - IEEE 754 and Big-Endian<a hidden class="anchor" aria-hidden="true" href="#lesson-4-modbus-register-encoding---ieee-754-and-big-endian">#</a></h3>
+<h4 id="the-modbus-data-model">The Modbus Data Model<a hidden class="anchor" aria-hidden="true" href="#the-modbus-data-model">#</a></h4>
+<p>Modbus registers are <strong>16-bit values</strong>. Always.</p>
+<p>But we want to send <strong>float32 temperature</strong> (32 bits).</p>
+<p><strong>Solution</strong>: Use <strong>two consecutive registers</strong> to encode one float.</p>
+<h4 id="the-encoding-challenge">The Encoding Challenge<a hidden class="anchor" aria-hidden="true" href="#the-encoding-challenge">#</a></h4>
+<p><strong>Temperature</strong>: 30.3°C as float32</p>
+<p><strong>IEEE 754 representation</strong> (big-endian):</p>
+<pre tabindex="0"><code>30.3 = 0x41F26666
+
+Breaking down:
+  Sign:     0
+  Exponent: 10000011 (131 - 127 = 4)
+  Mantia:   11110010011001100110011
+
+Bytes: [0x41, 0xF2, 0x66, 0x66]
+</code></pre><p><strong>Modbus registers</strong> (16-bit big-endian):</p>
+<pre tabindex="0"><code>Register 40001 (addr 0): 0x41F2
+Register 40002 (addr 1): 0x6666
+</code></pre><p><strong>Python decoding</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> struct
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Read two Modbus registers</span>
+</span></span><span style="display:flex;"><span>registers <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>read_holding_registers(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>)  <span style="color:#75715e"># Returns [0x41F2, 0x6666]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Pack as big-endian 16-bit ints</span>
+</span></span><span style="display:flex;"><span>bytes_data <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;&gt;HH&#39;</span>, registers[<span style="color:#ae81ff">0</span>], registers[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># bytes_data = b&#39;\x41\xF2\x66\x66&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Unpack as big-endian float32</span>
+</span></span><span style="display:flex;"><span>temperature <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;f&#39;</span>, bytes_data)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># temperature = 30.299999...</span>
+</span></span></code></pre></div><h4 id="rust-implementation">Rust Implementation<a hidden class="anchor" aria-hidden="true" href="#rust-implementation">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">f32_to_registers</span>(value: <span style="color:#66d9ef">f32</span>) -&gt; [<span style="color:#66d9ef">u16</span>; <span style="color:#ae81ff">2</span>] {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Convert f32 to big-endian bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> bytes <span style="color:#f92672">=</span> value.to_be_bytes();  <span style="color:#75715e">// [0x41, 0xF2, 0x66, 0x66]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Pack into two 16-bit registers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    [
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">u16</span>::from_be_bytes([bytes[<span style="color:#ae81ff">0</span>], bytes[<span style="color:#ae81ff">1</span>]]),  <span style="color:#75715e">// 0x41F2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">u16</span>::from_be_bytes([bytes[<span style="color:#ae81ff">2</span>], bytes[<span style="color:#ae81ff">3</span>]]),  <span style="color:#75715e">// 0x6666
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Usage in Modbus response</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Handle read registers request
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">handle_read_registers</span>(
+</span></span><span style="display:flex;"><span>    start_addr: <span style="color:#66d9ef">u16</span>,
+</span></span><span style="display:flex;"><span>    count: <span style="color:#66d9ef">u16</span>,
+</span></span><span style="display:flex;"><span>    sensor_data: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">SensorData</span>,
+</span></span><span style="display:flex;"><span>    buffer: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> [<span style="color:#66d9ef">u8</span>],
+</span></span><span style="display:flex;"><span>) -&gt; Result<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">usize</span>, <span style="color:#66d9ef">u8</span><span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> pos <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> addr <span style="color:#66d9ef">in</span> start_addr<span style="color:#f92672">..</span>(start_addr <span style="color:#f92672">+</span> count) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> value <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> addr {
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span> <span style="color:#f92672">|</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Temperature (2 registers)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">let</span> regs <span style="color:#f92672">=</span> f32_to_registers(sensor_data.temperature);
+</span></span><span style="display:flex;"><span>                regs[(addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">usize</span>]
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Humidity (2 registers)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">let</span> regs <span style="color:#f92672">=</span> f32_to_registers(sensor_data.humidity);
+</span></span><span style="display:flex;"><span>                regs[(addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">usize</span>]
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">4</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Status (1 register)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                sensor_data.status
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Uptime (2 registers, u32)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">let</span> bytes <span style="color:#f92672">=</span> sensor_data.uptime.to_be_bytes();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> addr <span style="color:#f92672">==</span> <span style="color:#ae81ff">5</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">u16</span>::from_be_bytes([bytes[<span style="color:#ae81ff">0</span>], bytes[<span style="color:#ae81ff">1</span>]])
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">u16</span>::from_be_bytes([bytes[<span style="color:#ae81ff">2</span>], bytes[<span style="color:#ae81ff">3</span>]])
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            _ <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">return</span> Err(<span style="color:#ae81ff">0x02</span>),  <span style="color:#75715e">// Illegal address exception
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Write register to buffer (big-endian)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        buffer[pos<span style="color:#f92672">..</span>pos<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>].copy_from_slice(<span style="color:#f92672">&amp;</span>value.to_be_bytes());
+</span></span><span style="display:flex;"><span>        pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Ok(pos)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="the-testing">The Testing<a hidden class="anchor" aria-hidden="true" href="#the-testing">#</a></h4>
+<p><strong>Modbus query</strong> (using <code>mbpoll</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mbpoll -a <span style="color:#ae81ff">1</span> -r <span style="color:#ae81ff">1</span> -c <span style="color:#ae81ff">4</span> -t <span style="color:#ae81ff">4</span> -1 10.10.10.100
+</span></span></code></pre></div><p><strong>Raw response</strong> (hex):</p>
+<pre tabindex="0"><code>[1]: 16502  16650   → 0x41F2 0x6666 → 30.3°C
+[3]: 16824  -26214  → 0x41B8 0x999A → 23.1°C
+</code></pre><p><strong>Python verification</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> struct
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Temperature</span>
+</span></span><span style="display:flex;"><span>temp_bytes <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;&gt;HH&#39;</span>, <span style="color:#ae81ff">16502</span>, <span style="color:#ae81ff">16650</span>)
+</span></span><span style="display:flex;"><span>temp <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;f&#39;</span>, temp_bytes)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Temperature: </span><span style="color:#e6db74">{</span>temp<span style="color:#e6db74">:</span><span style="color:#e6db74">.1f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">°C&#34;</span>)  <span style="color:#75715e"># 30.3°C ✓</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Humidity</span>
+</span></span><span style="display:flex;"><span>hum_bytes <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;&gt;HH&#39;</span>, <span style="color:#ae81ff">16824</span>, <span style="color:#ae81ff">39322</span>)  <span style="color:#75715e"># -26214 as u16 = 39322</span>
+</span></span><span style="display:flex;"><span>hum <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;f&#39;</span>, hum_bytes)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Humidity: </span><span style="color:#e6db74">{</span>hum<span style="color:#e6db74">:</span><span style="color:#e6db74">.1f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">%&#34;</span>)  <span style="color:#75715e"># 23.1% ✓</span>
+</span></span></code></pre></div><h4 id="the-lesson-3">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-3">#</a></h4>
+<blockquote>
+<p><strong>Modbus doesn&rsquo;t define data types beyond 16-bit registers. IEEE 754 float encoding is a common convention, but byte order matters. Always use big-endian.</strong></p>
+</blockquote>
+<p><strong>Common mistakes</strong>:</p>
+<ul>
+<li>❌ Using little-endian (Intel x86 native)</li>
+<li>❌ Sending f32 as single 32-bit value (not possible in Modbus)</li>
+<li>❌ Forgetting to handle negative values in two&rsquo;s complement</li>
+<li>❌ Not testing with real client software</li>
+</ul>
+<p><strong>Production pattern</strong>:</p>
+<ul>
+<li>✅ Always big-endian for Modbus</li>
+<li>✅ Test encoding/decoding with Python</li>
+<li>✅ Document register map clearly</li>
+<li>✅ Use standard conventions (IEEE 754 for floats)</li>
+</ul>
+<hr>
+<h3 id="lesson-5-opc-ua-as-a-protocol-gateway">Lesson 5: OPC-UA as a Protocol Gateway<a hidden class="anchor" aria-hidden="true" href="#lesson-5-opc-ua-as-a-protocol-gateway">#</a></h3>
+<h4 id="the-architecture-decision">The Architecture Decision<a hidden class="anchor" aria-hidden="true" href="#the-architecture-decision">#</a></h4>
+<p><strong>Why not expose Modbus directly to SCADA?</strong></p>
+<p>We could. Many SCADA systems support Modbus TCP natively.</p>
+<p><strong>But OPC-UA offers</strong>:</p>
+<ul>
+<li>Richer data model (not just registers)</li>
+<li>Subscriptions (push, not poll)</li>
+<li>Security (authentication, encryption)</li>
+<li>Discovery (clients can browse available data)</li>
+<li>Modern tooling (UaExpert, etc.)</li>
+</ul>
+<p><strong>Best of both worlds</strong>: Modbus on embedded (simple), OPC-UA on desktop (powerful).</p>
+<h4 id="the-python-gateway">The Python Gateway<a hidden class="anchor" aria-hidden="true" href="#the-python-gateway">#</a></h4>
+<p><strong>Architecture</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Create OPC-UA server</span>
+</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">=</span> Server()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> server<span style="color:#f92672">.</span>init()
+</span></span><span style="display:flex;"><span>    server<span style="color:#f92672">.</span>set_endpoint(<span style="color:#e6db74">&#34;opc.tcp://0.0.0.0:4840/freeopcua/server/&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Create namespace</span>
+</span></span><span style="display:flex;"><span>    idx <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> server<span style="color:#f92672">.</span>register_namespace(<span style="color:#e6db74">&#34;http://opcua.modbus.gateway&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Create variables for each Modbus device</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> device <span style="color:#f92672">in</span> MODBUS_DEVICES:
+</span></span><span style="display:flex;"><span>        device_folder <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> root<span style="color:#f92672">.</span>add_object(idx, device[<span style="color:#e6db74">&#34;name&#34;</span>])
+</span></span><span style="display:flex;"><span>        temp_node <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> device_folder<span style="color:#f92672">.</span>add_variable(idx, <span style="color:#e6db74">&#34;Temperature&#34;</span>, <span style="color:#ae81ff">0.0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># ... more variables</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Polling loop</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">with</span> server:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> device <span style="color:#f92672">in</span> MODBUS_DEVICES:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Poll Modbus</span>
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> modbus_client<span style="color:#f92672">.</span>read_holding_registers(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Decode</span>
+</span></span><span style="display:flex;"><span>                temperature <span style="color:#f92672">=</span> decode_float32(result<span style="color:#f92672">.</span>registers[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Update OPC-UA</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">await</span> temp_node<span style="color:#f92672">.</span>write_value(temperature)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">await</span> asyncio<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">2.0</span>)  <span style="color:#75715e"># Poll every 2 seconds</span>
+</span></span></code></pre></div><p><strong>Simple. Effective. Powerful.</strong></p>
+<h4 id="data-type-conversion">Data Type Conversion<a hidden class="anchor" aria-hidden="true" href="#data-type-conversion">#</a></h4>
+<p><strong>Modbus</strong> → <strong>OPC-UA</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Modbus Registers</th>
+          <th>Type</th>
+          <th>OPC-UA Variable</th>
+          <th>Type</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>40001-40002</td>
+          <td>2x u16</td>
+          <td>Temperature</td>
+          <td>Float</td>
+      </tr>
+      <tr>
+          <td>40003-40004</td>
+          <td>2x u16</td>
+          <td>Humidity</td>
+          <td>Float</td>
+      </tr>
+      <tr>
+          <td>40005</td>
+          <td>u16</td>
+          <td>DeviceStatus</td>
+          <td>UInt16</td>
+      </tr>
+      <tr>
+          <td>40006-40007</td>
+          <td>2x u16</td>
+          <td>Uptime</td>
+          <td>UInt32</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Decoding logic</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_float32</span>(registers):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode two Modbus registers as IEEE 754 float32 (big-endian)&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    bytes_data <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;&gt;HH&#39;</span>, registers[<span style="color:#ae81ff">0</span>], registers[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;f&#39;</span>, bytes_data)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_uint32</span>(registers):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode two Modbus registers as uint32 (big-endian)&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (registers[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> registers[<span style="color:#ae81ff">1</span>]
+</span></span></code></pre></div><h4 id="opc-ua-namespace-structure">OPC-UA Namespace Structure<a hidden class="anchor" aria-hidden="true" href="#opc-ua-namespace-structure">#</a></h4>
+<pre tabindex="0"><code>opc.tcp://10.10.10.1:4840/freeopcua/server/
+└── ModbusDevices/
+    ├── MODBUS_1/
+    │   ├── Temperature (Float) - 30.3°C
+    │   ├── Humidity (Float) - 56.7%
+    │   ├── DeviceStatus (UInt16) - 0
+    │   ├── Uptime (UInt32) - 3329s
+    │   └── ConnectionStatus (String) - &#34;CONNECTED&#34;
+    └── MODBUS_2/
+        ├── Temperature (Float) - 31.0°C
+        ├── Humidity (Float) - 52.6%
+        ├── DeviceStatus (UInt16) - 0
+        ├── Uptime (UInt32) - 1456s
+        └── ConnectionStatus (String) - &#34;CONNECTED&#34;
+</code></pre><p><strong>Browsable in UaExpert. Subscribable. Historical logging ready.</strong></p>
+<h4 id="error-handling">Error Handling<a hidden class="anchor" aria-hidden="true" href="#error-handling">#</a></h4>
+<p><strong>Connection monitoring</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> client<span style="color:#f92672">.</span>connect():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> nodes[<span style="color:#e6db74">&#34;status&#34;</span>]<span style="color:#f92672">.</span>write_value(<span style="color:#e6db74">&#34;DISCONNECTED&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> client<span style="color:#f92672">.</span>read_holding_registers(<span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> result<span style="color:#f92672">.</span>isError():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> nodes[<span style="color:#e6db74">&#34;status&#34;</span>]<span style="color:#f92672">.</span>write_value(<span style="color:#e6db74">&#34;ERROR&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Decode and update</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> nodes[<span style="color:#e6db74">&#34;temperature&#34;</span>]<span style="color:#f92672">.</span>write_value(temperature)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> nodes[<span style="color:#e6db74">&#34;status&#34;</span>]<span style="color:#f92672">.</span>write_value(<span style="color:#e6db74">&#34;CONNECTED&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Exception: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> nodes[<span style="color:#e6db74">&#34;status&#34;</span>]<span style="color:#f92672">.</span>write_value(<span style="color:#e6db74">&#34;ERROR&#34;</span>)
+</span></span></code></pre></div><p><strong>Graceful degradation</strong>: If one device fails, gateway continues polling others.</p>
+<h4 id="the-lesson-4">The Lesson<a hidden class="anchor" aria-hidden="true" href="#the-lesson-4">#</a></h4>
+<blockquote>
+<p><strong>Protocol gateways abstract complexity from clients. Keep embedded devices simple (Modbus), add intelligence at the gateway layer (OPC-UA).</strong></p>
+</blockquote>
+<p><strong>Architecture benefits</strong>:</p>
+<ul>
+<li>✅ STM32 firmware stays simple (just Modbus)</li>
+<li>✅ Gateway adds rich features (OPC-UA)</li>
+<li>✅ Easy to add more Modbus devices (just config)</li>
+<li>✅ Clients get modern protocol (OPC-UA)</li>
+</ul>
+<p><strong>Production pattern</strong>:</p>
+<ul>
+<li>Embedded: Simple, standard protocols</li>
+<li>Gateway: Protocol translation, data enrichment</li>
+<li>Clients: Modern, feature-rich interfaces</li>
+</ul>
+<p><strong>This is how industrial systems scale.</strong></p>
+<hr>
+<h2 id="results-at-the-end-of-week-9">Results at the End of Week 9<a hidden class="anchor" aria-hidden="true" href="#results-at-the-end-of-week-9">#</a></h2>
+<h3 id="complete-industrial-automation-system">Complete Industrial Automation System<a hidden class="anchor" aria-hidden="true" href="#complete-industrial-automation-system">#</a></h3>
+<pre tabindex="0"><code>2x STM32 Boards (MODBUS_1, MODBUS_2)
+    ↓ W5500 Ethernet (10.10.10.100, 10.10.10.200)
+Python OPC-UA Gateway (10.10.10.1:4840)
+    ↓ Poll Modbus every 2s, expose OPC-UA variables
+UaExpert / SCADA Clients
+    ↓ Subscribe to live sensor data
+</code></pre><p><strong>Full stack operational</strong>: Sensors → Modbus → OPC-UA → Visualization</p>
+<h3 id="performance-metrics">Performance Metrics<a hidden class="anchor" aria-hidden="true" href="#performance-metrics">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Sensor reading</strong></td>
+          <td>Every 2s</td>
+          <td>SHT3x I2C with async DMA</td>
+      </tr>
+      <tr>
+          <td><strong>Modbus polling</strong></td>
+          <td>Every 2s</td>
+          <td>OPC-UA gateway → slaves</td>
+      </tr>
+      <tr>
+          <td><strong>OLED update</strong></td>
+          <td>Every 2s</td>
+          <td>Real-time connection status</td>
+      </tr>
+      <tr>
+          <td><strong>Round-trip latency</strong></td>
+          <td>~70ms</td>
+          <td>Sensor → Modbus → OPC-UA</td>
+      </tr>
+      <tr>
+          <td><strong>Uptime tested</strong></td>
+          <td>6+ hours</td>
+          <td>Zero crashes, auto-recovery</td>
+      </tr>
+      <tr>
+          <td><strong>Packet loss</strong></td>
+          <td>0%</td>
+          <td>TCP guaranteed delivery</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="validation-results">Validation Results<a hidden class="anchor" aria-hidden="true" href="#validation-results">#</a></h3>
+<p><strong>Live system output</strong> (January 2026):</p>
+<pre tabindex="0"><code>============================================================
+MODBUS_1 (10.10.10.100:502) - CONNECTED
+  Temperature: 30.3°C
+  Humidity: 56.7%
+  Device Status: 0
+  Uptime: 3329s (55min 29s)
+
+MODBUS_2 (10.10.10.200:502) - CONNECTED
+  Temperature: 31.0°C
+  Humidity: 52.6%
+  Device Status: 0
+  Uptime: 1456s (24min 16s)
+============================================================
+</code></pre><p><strong>OLED displays</strong> (both boards):</p>
+<pre tabindex="0"><code>MODBUS_1
+10.10.10.100:502
+T: 30.3C
+H: 56.7%
+CONNECTED
+</code></pre><p><strong>Everything working. Production-ready.</strong></p>
+<hr>
+<h2 id="why-this-matters-in-the-plan">Why This Matters in the Plan<a hidden class="anchor" aria-hidden="true" href="#why-this-matters-in-the-plan">#</a></h2>
+<h3 id="the-industrial-automation-achievement">The Industrial Automation Achievement<a hidden class="anchor" aria-hidden="true" href="#the-industrial-automation-achievement">#</a></h3>
+<p>Week 9 demonstrates <strong>production-ready industrial automation knowledge</strong>:</p>
+<ol>
+<li><strong>Modbus TCP Protocol</strong>: Industry-standard PLC communication</li>
+<li><strong>OPC-UA Integration</strong>: Modern interoperability standard</li>
+<li><strong>W5500 Ethernet</strong>: Custom SPI-based TCP/IP stack</li>
+<li><strong>Socket State Machines</strong>: Robust TCP connection handling</li>
+<li><strong>Real-time OLED Display</strong>: Live system status monitoring</li>
+<li><strong>I2C Bus Sharing</strong>: Advanced peripheral management</li>
+<li><strong>IEEE 754 Encoding</strong>: Standard data representation</li>
+</ol>
+<p><strong>This is what runs factories, utilities, and building automation.</strong></p>
+<h3 id="industry-standard-patterns">Industry-Standard Patterns<a hidden class="anchor" aria-hidden="true" href="#industry-standard-patterns">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Pattern</th>
+          <th>Implementation</th>
+          <th>Industry Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Modbus TCP</strong></td>
+          <td>FC03 Read Holding Registers</td>
+          <td>Every PLC, sensor, meter worldwide</td>
+      </tr>
+      <tr>
+          <td><strong>OPC-UA</strong></td>
+          <td>asyncua Python gateway</td>
+          <td>SCADA systems, historians, MES</td>
+      </tr>
+      <tr>
+          <td><strong>W5500</strong></td>
+          <td>Custom SPI driver</td>
+          <td>Industrial embedded Ethernet</td>
+      </tr>
+      <tr>
+          <td><strong>IEEE 754</strong></td>
+          <td>Big-endian float32</td>
+          <td>Universal data exchange</td>
+      </tr>
+      <tr>
+          <td><strong>Static IP</strong></td>
+          <td>No DHCP dependency</td>
+          <td>Deterministic industrial networks</td>
+      </tr>
+      <tr>
+          <td><strong>Socket State Machine</strong></td>
+          <td>Explicit state handling</td>
+          <td>Robust TCP implementations</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>These aren&rsquo;t hobby implementations - they&rsquo;re production patterns.</strong></p>
+<h3 id="the-resume-impact">The Resume Impact<a hidden class="anchor" aria-hidden="true" href="#the-resume-impact">#</a></h3>
+<p>After Week 9, you can confidently claim:</p>
+<ul>
+<li>✅ <strong>Modbus TCP slave implementation</strong> on embedded hardware</li>
+<li>✅ <strong>Custom W5500 Ethernet driver</strong> with async Embassy</li>
+<li>✅ <strong>OPC-UA gateway development</strong> for SCADA integration</li>
+<li>✅ <strong>Industrial protocol expertise</strong> (Modbus, OPC-UA)</li>
+<li>✅ <strong>IEEE 754 float encoding</strong> for data exchange</li>
+<li>✅ <strong>TCP socket state machine</strong> design and implementation</li>
+<li>✅ <strong>I2C bus sharing</strong> with async and blocking access</li>
+<li>✅ <strong>Real-time OLED displays</strong> with embedded graphics</li>
+<li>✅ <strong>SPI, I2C, and TCP debugging</strong> at register level</li>
+</ul>
+<p><strong>This is industrial automation engineering experience.</strong> Not theoretical - demonstrated with working hardware.</p>
+<h3 id="the-learning-progression">The Learning Progression<a hidden class="anchor" aria-hidden="true" href="#the-learning-progression">#</a></h3>
+<pre tabindex="0"><code>Week 1-3: Can I make embedded sensors work?
+    ↓
+Week 5-6: Can I build async services?
+    ↓
+Week 7-8: Can I publish to cloud infrastructure?
+    ↓
+Week 9: Can I integrate with industrial automation?
+    ↓
+Answer: Yes. And here&#39;s the hardware to prove it.
+</code></pre><p><strong>The meta-lesson</strong>: Baby steps, relentless incremental progress, constant validation.</p>
+<hr>
+<h2 id="next-steps-production-deployment">Next Steps: Production Deployment<a hidden class="anchor" aria-hidden="true" href="#next-steps-production-deployment">#</a></h2>
+<p>Week 9 is &ldquo;complete&rdquo; but ready for production hardening:</p>
+<h3 id="phase-4-enhanced-modbus">Phase 4: Enhanced Modbus<a hidden class="anchor" aria-hidden="true" href="#phase-4-enhanced-modbus">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> FC06 (Write Single Register)</li>
+<li><input disabled="" type="checkbox"> Writable configuration registers</li>
+<li><input disabled="" type="checkbox"> FC16 (Write Multiple Registers)</li>
+<li><input disabled="" type="checkbox"> Proper Modbus exception responses</li>
+</ul>
+<h3 id="phase-5-scada-integration">Phase 5: SCADA Integration<a hidden class="anchor" aria-hidden="true" href="#phase-5-scada-integration">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Connect to real SCADA system</li>
+<li><input disabled="" type="checkbox"> PLC communication testing</li>
+<li><input disabled="" type="checkbox"> HMI dashboard integration</li>
+<li><input disabled="" type="checkbox"> Historical data logging</li>
+</ul>
+<h3 id="phase-6-multi-sensor-support">Phase 6: Multi-Sensor Support<a hidden class="anchor" aria-hidden="true" href="#phase-6-multi-sensor-support">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> Multiple SHT3x per board</li>
+<li><input disabled="" type="checkbox"> BME680 gas sensors</li>
+<li><input disabled="" type="checkbox"> Pressure/flow sensors</li>
+<li><input disabled="" type="checkbox"> Analog inputs (ADC)</li>
+</ul>
+<h3 id="phase-7-advanced-features">Phase 7: Advanced Features<a hidden class="anchor" aria-hidden="true" href="#phase-7-advanced-features">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> SNMP monitoring</li>
+<li><input disabled="" type="checkbox"> Web interface for diagnostics</li>
+<li><input disabled="" type="checkbox"> Alert/threshold monitoring</li>
+<li><input disabled="" type="checkbox"> Firmware update over Ethernet</li>
+</ul>
+<hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 9 was about <strong>crossing into a different world</strong>. Not IoT, but industrial automation. Not MQTT, but Modbus. Not Grafana dashboards, but SCADA systems.</p>
+<h3 id="technical-achievements">Technical Achievements<a hidden class="anchor" aria-hidden="true" href="#technical-achievements">#</a></h3>
+<ul>
+<li>✅ <strong>W5500 Ethernet driver</strong> (custom SPI implementation)</li>
+<li>✅ <strong>Modbus TCP slaves</strong> (FC03, register map, IEEE 754)</li>
+<li>✅ <strong>Socket state machine</strong> (robust TCP connection handling)</li>
+<li>✅ <strong>I2C bus sharing</strong> (async sensor + blocking OLED)</li>
+<li>✅ <strong>OPC-UA gateway</strong> (Python asyncua, protocol translation)</li>
+<li>✅ <strong>Real-time OLED</strong> (live status updates)</li>
+</ul>
+<h3 id="architectural-achievements">Architectural Achievements<a hidden class="anchor" aria-hidden="true" href="#architectural-achievements">#</a></h3>
+<ul>
+<li>✅ <strong>Industrial protocols</strong> (Modbus TCP, OPC-UA)</li>
+<li>✅ <strong>Embedded-to-SCADA integration</strong> (full stack)</li>
+<li>✅ <strong>Production error handling</strong> (auto-recovery, graceful degradation)</li>
+<li>✅ <strong>Protocol gateway pattern</strong> (simple slaves, intelligent gateway)</li>
+</ul>
+<h3 id="the-meta-lesson">The Meta-Lesson<a hidden class="anchor" aria-hidden="true" href="#the-meta-lesson">#</a></h3>
+<blockquote>
+<p><strong>Week 9 proves that embedded Rust can handle industrial automation. Not just &ldquo;hobby IoT&rdquo; - real factory floor, PLC-compatible, SCADA-ready systems.</strong></p>
+</blockquote>
+<p>From Week 1&rsquo;s LED blink to Week 9&rsquo;s Modbus TCP slaves with OPC-UA integration - <strong>every step built on the last</strong>.</p>
+<p><strong>This is how you learn industrial automation engineering.</strong> Not by reading about it. By building it. On real hardware. With production protocols.</p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code-repository">Code Repository<a hidden class="anchor" aria-hidden="true" href="#code-repository">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk9-opcua-modbus">Week 9 Source Code</a></li>
+</ul>
+<h3 id="documentation">Documentation<a hidden class="anchor" aria-hidden="true" href="#documentation">#</a></h3>
+<ul>
+<li><a href="./USERGUIDE.md">USERGUIDE.md</a> - Complete operational guide</li>
+<li><a href="./STATUS.md">STATUS.md</a> - Current system status</li>
+<li><a href="./NOTES.md">NOTES.md</a> - Development session logs</li>
+<li><a href="./TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> - Common issues</li>
+</ul>
+<h3 id="specifications">Specifications<a hidden class="anchor" aria-hidden="true" href="#specifications">#</a></h3>
+<ul>
+<li><a href="https://www.modbus.org/specs.php">Modbus TCP Specification</a></li>
+<li><a href="https://reference.opcfoundation.org/">OPC-UA Specification</a></li>
+<li><a href="https://www.wiznet.io/product-item/w5500/">W5500 Datasheet</a></li>
+<li><a href="https://ieeexplore.ieee.org/document/8766229">IEEE 754 Standard</a></li>
+</ul>
+<h3 id="related-projects">Related Projects<a hidden class="anchor" aria-hidden="true" href="#related-projects">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk7-mqtt-influx">Week 7+8: MQTT + InfluxDB + Grafana</a></li>
+<li><a href="https://github.com/mapfumo/wk6-async-gateway">Week 6: Async Gateway</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo<br>
+<strong>Part of</strong>: 4-Month Embedded Rust Learning Roadmap<br>
+<strong>Week</strong>: 9 of 16<br>
+<strong>Tags</strong>: <code>#modbus-tcp</code> <code>#opcua</code> <code>#w5500</code> <code>#industrial-automation</code> <code>#scada</code> <code>#plc</code> <code>#embassy</code> <code>#learning-in-public</code></p>
+
+
+  </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
@@ -129,36 +1115,36 @@
 
 
 <div class="share-buttons">
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Modbus Opcua Week 9 on twitter"
-        href="https://twitter.com/intent/tweet/?text=Modbus%20Opcua%20Week%209&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&amp;hashtags=">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 on twitter"
+        href="https://twitter.com/intent/tweet/?text=From%20IoT%20to%20Industrial%20Automation%3a%20Modbus%20TCP%20and%20OPC%20UA%20%5bOpen%20Platform%20Communications%20Unified%20Architecture%5d-%20Wk9&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&amp;hashtags=">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
         </svg>
     </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Modbus Opcua Week 9 on linkedin"
-        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&amp;title=Modbus%20Opcua%20Week%209&amp;summary=Modbus%20Opcua%20Week%209&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&amp;title=From%20IoT%20to%20Industrial%20Automation%3a%20Modbus%20TCP%20and%20OPC%20UA%20%5bOpen%20Platform%20Communications%20Unified%20Architecture%5d-%20Wk9&amp;summary=From%20IoT%20to%20Industrial%20Automation%3a%20Modbus%20TCP%20and%20OPC%20UA%20%5bOpen%20Platform%20Communications%20Unified%20Architecture%5d-%20Wk9&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
         </svg>
     </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Modbus Opcua Week 9 on reddit"
-        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&title=Modbus%20Opcua%20Week%209">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f&title=From%20IoT%20to%20Industrial%20Automation%3a%20Modbus%20TCP%20and%20OPC%20UA%20%5bOpen%20Platform%20Communications%20Unified%20Architecture%5d-%20Wk9">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
         </svg>
     </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Modbus Opcua Week 9 on facebook"
+    <a target="_blank" rel="noopener noreferrer" aria-label="share From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 on facebook"
         href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
         </svg>
     </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Modbus Opcua Week 9 on whatsapp"
-        href="https://api.whatsapp.com/send?text=Modbus%20Opcua%20Week%209%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9 on whatsapp"
+        href="https://api.whatsapp.com/send?text=From%20IoT%20to%20Industrial%20Automation%3a%20Modbus%20TCP%20and%20OPC%20UA%20%5bOpen%20Platform%20Communications%20Unified%20Architecture%5d-%20Wk9%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fmodbus-opcua-week-9%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />

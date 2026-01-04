@@ -1,6 +1,6 @@
 ---
 title: "Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8)"
-date: 2026-01-04T11:42:16+10:00
+date: 2025-12-28T11:42:16+10:00
 draft: false
 cover:
     image: /img/wk7_image.png

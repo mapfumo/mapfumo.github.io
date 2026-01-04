@@ -8,9 +8,20 @@
     <language>en-us</language>
     <lastBuildDate>Sun, 04 Jan 2026 12:49:44 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture]- Wk9</title>
+      <link>http://localhost:1313/posts/modbus-opcua-week-9/</link>
+      <pubDate>Sun, 04 Jan 2026 12:49:44 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/modbus-opcua-week-9/</guid>
+      <description>&lt;p&gt;Week 9 represents a fundamental shift in the project. For the past eight weeks, we&amp;rsquo;ve been building IoT systems - MQTT, InfluxDB, Grafana, cloud-oriented architectures. Week 9 is different.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Week 9 is industrial automation.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This isn&amp;rsquo;t about publishing sensor data to the cloud. It&amp;rsquo;s about &lt;strong&gt;PLC integration&lt;/strong&gt;, &lt;strong&gt;SCADA systems&lt;/strong&gt;, and &lt;strong&gt;factory floor protocols&lt;/strong&gt;. It&amp;rsquo;s about Modbus TCP - the protocol that&amp;rsquo;s been running industrial plants since the 1970s. It&amp;rsquo;s about OPC-UA - the modern standard for industrial interoperability.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Complete IoT Telemetry Pipeline: From Sensors to Dashboards - Wk7, 8)</title>
       <link>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</link>
-      <pubDate>Sun, 04 Jan 2026 11:42:16 +1000</pubDate>
+      <pubDate>Sun, 28 Dec 2025 11:42:16 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/complete-iot-telemetry-pipeline-from-sensors-to-dashboards/</guid>
       <description>&lt;p&gt;Week 7+8 represents &lt;strong&gt;project completion&lt;/strong&gt; at the infrastructure level. This isn&amp;rsquo;t about adding one more feature - it&amp;rsquo;s about building the &lt;strong&gt;complete path from sensor to insight&lt;/strong&gt;.&lt;/p&gt;
