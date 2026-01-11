@@ -6,7 +6,19 @@
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 12:49:44 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Jan 2026 13:50:05 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>From LoRa Modules to Native LoRaWAN the STM32WL Migration - Wk10</title>
+      <link>http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/</link>
+      <pubDate>Sun, 11 Jan 2026 13:50:05 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/</guid>
+      <description>&lt;h2 id=&#34;the-challenge&#34;&gt;The Challenge&lt;/h2&gt;
+&lt;p&gt;For the first 9 weeks of this project, I&amp;rsquo;ve been using RYLR998 LoRa modules - simple AT command modules that handled the radio work while my STM32 focused on sensors. They worked beautifully for point-to-point communication (600m range, 95% success rate), but they had a fundamental limitation:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;They weren&amp;rsquo;t LoRaWAN.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;LoRa (the physical layer) is great for custom networks. But &lt;strong&gt;LoRaWAN&lt;/strong&gt; (the MAC layer protocol) is what you need for:&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>From IoT to Industrial Automation: Modbus TCP and OPC UA [Open Platform Communications Unified Architecture] - Wk9</title>
       <link>http://localhost:1313/posts/modbus-opcua-week-9/</link>
