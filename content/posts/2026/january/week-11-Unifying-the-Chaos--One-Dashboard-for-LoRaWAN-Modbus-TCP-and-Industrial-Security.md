@@ -973,8 +973,8 @@ One more week to polish, document, and ship. Let's finish strong.
 ### Code
 
 - [Week 11 Repository](https://github.com/mapfumo/wk11-unified-monitoring)
-- [USERGUIDE.md](./USERGUIDE.md) - Complete deployment guide
-- [SECURITY.md](./SECURITY.md) - Full STRIDE analysis
+- [USERGUIDE.md](https://github.com/mapfumo/wk11-unified-monitoring/blob/main/USERGUIDE.md) - Complete deployment guide
+- [SECURITY.md](https://github.com/mapfumo/wk11-unified-monitoring/blob/main/SECURITY.md) - Full STRIDE analysis
 
 ### Documentation
 
