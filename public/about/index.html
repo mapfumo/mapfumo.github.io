@@ -121,10 +121,27 @@
   <div class="post-content"><hr>
 <p><img loading="lazy" src="/img/ants.jpg#floatleft" alt="Antony Mapfumo"  title="Antony Mapfumo"  />
 </p>
-<p>I&rsquo;m Tony — a network engineer currently focused on <strong>Industrial IoT (IIoT)</strong> and <strong>embedded systems</strong>. My work centres on building reliable, efficient, and purpose-driven technology using tools such as <strong>Embedded Rust/C++</strong>, <strong>STM32 microcontrollers</strong>, <strong>LoRa/LoRaWAN</strong>, and <strong>industrial communication protocols</strong>.</p>
-<p>This blog documents my journey into IIoT engineering: from working with sensors, microcontrollers, and logic analyzers to designing deterministic, energy-aware systems. My aim is to make complex technical topics clear, practical, and grounded in real-world engineering.</p>
-<p>You&rsquo;ll find concise explanations, hands-on experiments, and insights from the intersection of communications, embedded development, and distributed industrial systems. All related projects and code are shared on my GitHub: <strong><a href="https://github.com/mapfumo">https://github.com/mapfumo</a></strong>.</p>
-<p>Thanks for visiting — I hope you find something here that informs or inspires your own engineering journey.</p>
+<p>I&rsquo;m Tony — a network engineer transitioning into Industrial IoT and embedded systems engineering. Currently building production-grade IIoT systems in Embedded Rust — LoRaWAN sensor networks, Modbus TCP slaves, real-time data pipelines, and unified monitoring platforms.</p>
+<p><strong>Recent Work:</strong></p>
+<ul>
+<li><strong>Unified IIoT Platform</strong>: 4-node system combining LoRaWAN + Modbus TCP → single Grafana dashboard. Includes STRIDE security analysis identifying 12+ threats with prioritized mitigations.</li>
+<li><strong>LoRaWAN Migration</strong>: Transitioned from RYLR998 modules to native STM32WL55 radio with dual-node network (SHT41, BME680 sensors).</li>
+<li><strong>Modbus TCP Slaves</strong>: STM32F446 + W5500 Ethernet implementing IEEE 754 float32 register encoding, concurrent client handling.</li>
+<li><strong>MQTT Pipelines</strong>: LoRa → MQTT → InfluxDB → Grafana with sub-second end-to-end latency.</li>
+</ul>
+<hr>
+<p><strong>Technical Stack:</strong></p>
+<ul>
+<li><strong>Embedded:</strong> Rust (Embassy async HAL, RTIC), C++, STM32 (F4/WL55)</li>
+<li><strong>Protocols:</strong> LoRaWAN, Modbus TCP, MQTT, OPC-UA, binary formats (Postcard)</li>
+<li><strong>Tools:</strong> probe-rs, logic analyzers, Docker, InfluxDB, Grafana</li>
+<li><strong>Security:</strong> STRIDE threat modeling, IEC 62443 awareness</li>
+</ul>
+<p><strong>Engineering Philosophy:</strong> Systematic, hardware-validated, production-minded. Every project includes: working hardware, comprehensive documentation, security analysis, and open-source code.</p>
+<h2 id="portfolio">Portfolio<a hidden class="anchor" aria-hidden="true" href="#portfolio">#</a></h2>
+<ul>
+<li><strong>GitHub:</strong> <a href="https://github.com/mapfumo">github.com/mapfumo</a></li>
+</ul>
 
 
   </div>
