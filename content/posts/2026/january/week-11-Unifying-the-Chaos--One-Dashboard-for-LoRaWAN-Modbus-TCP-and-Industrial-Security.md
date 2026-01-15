@@ -882,35 +882,6 @@ from(bucket: "sensors")
 
 ---
 
-## Week 12 Preview
-
-Week 11 completes the technical work. Week 12 focuses on **polish and presentation**:
-
-### Portfolio Assembly
-
-- Main repository linking all 12 weeks
-- System architecture diagrams
-- Performance benchmarks
-- Case study document
-
-### Video Demonstration
-
-- 5-10 minute walkthrough
-- Show working hardware
-- Explain one complex debugging story
-- Walk through dashboard
-
-### Job Readiness
-
-- LinkedIn portfolio post
-- GitHub profile optimization
-- Resume updates with quantified achievements
-- Interview preparation
-
-**The goal**: Make this portfolio **recruiter-ready**.
-
----
-
 ## Try It Yourself
 
 ### Hardware Needed
@@ -951,13 +922,6 @@ cd firmware/modbus && cargo run --release --bin modbus_2
 open http://localhost:3000
 # Login: admin/admin
 ```
-
-**Expected timeline**:
-
-- Infrastructure: 10 seconds
-- Firmware flashing: 2 minutes per board
-- First data points: <30 seconds
-- Full dashboard: <5 minutes
 
 ---
 
@@ -1024,12 +988,3 @@ One more week to polish, document, and ship. Let's finish strong.
 - [Week 10: LoRaWAN Migration](https://github.com/mapfumo/wk10-lorawan)
 - [Week 9: Modbus TCP + OPC-UA](https://github.com/mapfumo/wk9-opcua-modbus)
 - [Week 7+8: MQTT + InfluxDB + Grafana](https://github.com/mapfumo/wk7-mqtt-influx)
-
----
-
-**Author**: Antony (Tony) Mapfumo  
-**Part of**: 12-Week IIoT Systems Engineer Transition  
-**Week**: 11 of 12 (92% complete)  
-**Status**: ✅ Unified Platform + Security Analysis Complete  
-**Next**: Week 12 - Portfolio Assembly & Polish  
-**Tags**: `#iiot` `#security` `#stride` `#lorawan` `#modbus` `#grafana` `#learning-in-public`
