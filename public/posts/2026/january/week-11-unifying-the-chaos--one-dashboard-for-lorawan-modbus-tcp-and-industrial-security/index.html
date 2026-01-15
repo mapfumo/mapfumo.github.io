@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 | Antony Mapfumo</title>
+<meta name="keywords" content="">
+<meta name="description" content="The Challenge
+After 10 weeks, I had a problem. A good problem, but a problem nonetheless:
+
+Week 9: Two Modbus TCP nodes (STM32F446 &#43; W5500 Ethernet)
+Week 10: Two LoRaWAN nodes (STM32WL55 native radio)
+Separate dashboards: Modbus data in one Grafana, LoRaWAN in another
+Different buckets: modbus bucket, lorawan bucket
+No unified view: Can&rsquo;t compare all 4 nodes at once
+
+Week 11&rsquo;s goal: Unify everything into a single monitoring platform while analyzing what it would take to make this production-ready from a security perspective.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11
+    </h1>
+    <div class="post-meta">Jan 15, 2026 · 15 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk11_image.svg" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk11_image.svg" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>From LoRa Modules to Native LoRaWAN the STM32WL Migration</p>
+</figure>
+  <div class="post-content"><h2 id="the-challenge">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h2>
+<p>After 10 weeks, I had a problem. A <strong>good</strong> problem, but a problem nonetheless:</p>
+<ul>
+<li><strong>Week 9</strong>: Two Modbus TCP nodes (STM32F446 + W5500 Ethernet)</li>
+<li><strong>Week 10</strong>: Two LoRaWAN nodes (STM32WL55 native radio)</li>
+<li><strong>Separate dashboards</strong>: Modbus data in one Grafana, LoRaWAN in another</li>
+<li><strong>Different buckets</strong>: <code>modbus</code> bucket, <code>lorawan</code> bucket</li>
+<li><strong>No unified view</strong>: Can&rsquo;t compare all 4 nodes at once</li>
+</ul>
+<p><strong>Week 11&rsquo;s goal</strong>: <strong>Unify everything into a single monitoring platform while analyzing what it would take to make this production-ready from a security perspective.</strong></p>
+<hr>
+<h2 id="what-changed-the-unified-architecture">What Changed: The Unified Architecture<a hidden class="anchor" aria-hidden="true" href="#what-changed-the-unified-architecture">#</a></h2>
+<h3 id="before-week-11">Before Week 11<a hidden class="anchor" aria-hidden="true" href="#before-week-11">#</a></h3>
+<pre tabindex="0"><code>Week 9:                         Week 10:
+┌─────────────┐                ┌─────────────┐
+│ Modbus-1/2  │                │  LoRa-1/2   │
+│ (STM32F4)   │                │ (STM32WL55) │
+└──────┬──────┘                └──────┬──────┘
+       │ Modbus TCP                   │ LoRaWAN
+       ▼                              ▼
+┌─────────────┐                ┌─────────────┐
+│modbus-bridge│                │ mqtt-bridge │
+└──────┬──────┘                └──────┬──────┘
+       │                              │
+       ▼                              ▼
+┌─────────────┐                ┌─────────────┐
+│InfluxDB     │                │InfluxDB     │
+│bucket:modbus│                │bucket:lorawan│
+└──────┬──────┘                └──────┬──────┘
+       │                              │
+       ▼                              ▼
+┌─────────────┐                ┌─────────────┐
+│ Dashboard 1 │                │ Dashboard 2 │
+└─────────────┘                └─────────────┘
+</code></pre><p><strong>Pain points</strong>:</p>
+<ul>
+<li>2 separate InfluxDB instances</li>
+<li>2 separate bridges</li>
+<li>2 separate dashboards</li>
+<li>No protocol comparison</li>
+<li>Operational overhead</li>
+</ul>
+<h3 id="after-week-11-the-unified-platform">After Week 11: The Unified Platform<a hidden class="anchor" aria-hidden="true" href="#after-week-11-the-unified-platform">#</a></h3>
+<pre tabindex="0"><code>┌─────────────────┐     ┌─────────────────┐
+│   LoRa-1/2      │     │  Modbus-1/2     │
+│  (STM32WL55)    │     │   (STM32F4)     │
+└────────┬────────┘     └────────┬────────┘
+         │ LoRaWAN               │ Modbus TCP
+         ▼                       │
+┌─────────────────┐              │
+│  RAK7268V2 GW   │              │
+│  10.10.10.254   │              │
+└────────┬────────┘              │
+         │ MQTT                  │
+         ▼                       ▼
+┌─────────────────────────────────────────┐
+│           Docker Compose                │
+│  ┌─────────────┐   ┌─────────────┐     │
+│  │ mqtt-bridge │   │modbus-bridge│     │
+│  └──────┬──────┘   └──────┬──────┘     │
+│         │                 │             │
+│         ▼                 ▼             │
+│  ┌──────────────────────────────┐      │
+│  │      InfluxDB 2.x            │      │
+│  │   bucket: &#34;sensors&#34;          │      │
+│  │   measurements:              │      │
+│  │   - lorawan_sensor           │      │
+│  │   - modbus_sensor            │      │
+│  └──────────────┬───────────────┘      │
+│                 │                       │
+│                 ▼                       │
+│  ┌──────────────────────────────┐      │
+│  │         Grafana              │      │
+│  │  Unified 4-Node Dashboard    │      │
+│  └──────────────────────────────┘      │
+└──────────────────────────────────────────┘
+</code></pre><p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Single InfluxDB bucket (<code>sensors</code>)</li>
+<li>✅ Both bridges write to same database</li>
+<li>✅ One dashboard showing all 4 nodes</li>
+<li>✅ Protocol comparison enabled</li>
+<li>✅ Unified operational view</li>
+</ul>
+<hr>
+<h2 id="the-implementation">The Implementation<a hidden class="anchor" aria-hidden="true" href="#the-implementation">#</a></h2>
+<h3 id="1-unified-data-model">1. Unified Data Model<a hidden class="anchor" aria-hidden="true" href="#1-unified-data-model">#</a></h3>
+<p><strong>Key insight</strong>: Use measurement names and tags to separate protocols, not separate buckets.</p>
+<p><strong>InfluxDB Schema</strong>:</p>
+<pre tabindex="0"><code>Bucket: sensors
+
+Measurements:
+  1. lorawan_sensor
+  2. modbus_sensor
+
+Tags (for filtering):
+  - node: lora1, lora2, modbus1, modbus2
+  - sensor: SHT41, BME680, SHT3x
+  - protocol: lorawan, modbus
+  - dev_eui: (LoRaWAN only)
+  - ip: (Modbus only)
+
+Fields (data):
+  - temperature (common to all)
+  - humidity (common to all)
+  - pressure (BME680 only)
+  - gas_resistance (BME680 only)
+  - rssi (LoRaWAN only)
+  - snr (LoRaWAN only)
+  - frame_count (LoRaWAN only)
+  - status (Modbus only)
+  - uptime (Modbus only)
+</code></pre><p><strong>Why this works</strong>:</p>
+<ul>
+<li>✅ <strong>Single query</strong> can compare temperature across all nodes</li>
+<li>✅ <strong>Protocol-specific metrics</strong> preserved with tags</li>
+<li>✅ <strong>Easy filtering</strong>: <code>filter(fn: (r) =&gt; r.protocol == &quot;lorawan&quot;)</code></li>
+<li>✅ <strong>No data duplication</strong></li>
+</ul>
+<h3 id="2-mqtt-bridge-lorawan">2. MQTT Bridge (LoRaWAN)<a hidden class="anchor" aria-hidden="true" href="#2-mqtt-bridge-lorawan">#</a></h3>
+<p>The MQTT bridge subscribes to the RAK7268V2 gateway and decodes LoRaWAN payloads:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># mqtt_to_influx.py - Key sections</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>GATEWAY_MQTT_HOST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;10.10.10.254&#34;</span>
+</span></span><span style="display:flex;"><span>GATEWAY_MQTT_PORT <span style="color:#f92672">=</span> <span style="color:#ae81ff">1883</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>INFLUXDB_HOST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;influxdb&#34;</span>  <span style="color:#75715e"># Docker service name</span>
+</span></span><span style="display:flex;"><span>INFLUXDB_BUCKET <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sensors&#34;</span>  <span style="color:#75715e"># Unified bucket</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_lora1</span>(payload_bytes):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode LoRa-1 (SHT41) - 4 bytes&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(payload_bytes) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> {}
+</span></span><span style="display:flex;"><span>    temp_raw, hum_raw <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;hH&#39;</span>, payload_bytes[:<span style="color:#ae81ff">4</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;temperature&#39;</span>: temp_raw <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;humidity&#39;</span>: hum_raw <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_lora2</span>(payload_bytes):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode LoRa-2 (BME680) - 12 bytes&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(payload_bytes) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> {}
+</span></span><span style="display:flex;"><span>    temp_raw, hum_raw, press_raw, gas_raw <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;hHHH&#39;</span>, payload_bytes[:<span style="color:#ae81ff">8</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;temperature&#39;</span>: temp_raw <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;humidity&#39;</span>: hum_raw <span style="color:#f92672">/</span> <span style="color:#ae81ff">100.0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;pressure&#39;</span>: press_raw <span style="color:#f92672">/</span> <span style="color:#ae81ff">10.0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;gas_resistance&#39;</span>: float(gas_raw),
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">process_message</span>(topic, message):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Process LoRaWAN uplink from gateway&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(message)
+</span></span><span style="display:flex;"><span>    dev_eui <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;devEUI&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#f92672">.</span>lower()
+</span></span><span style="display:flex;"><span>    payload_b64 <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;data&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    payload_bytes <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(payload_b64)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rx_info <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;rxInfo&#34;</span>, [{}])[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    rssi <span style="color:#f92672">=</span> rx_info<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;rssi&#34;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    snr <span style="color:#f92672">=</span> rx_info<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;loRaSNR&#34;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> dev_eui <span style="color:#f92672">==</span> LORA1_DEVEUI:
+</span></span><span style="display:flex;"><span>        fields <span style="color:#f92672">=</span> decode_lora1(payload_bytes)
+</span></span><span style="display:flex;"><span>        sensor <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SHT41&#34;</span>
+</span></span><span style="display:flex;"><span>        node <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;lora1&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> dev_eui <span style="color:#f92672">==</span> LORA2_DEVEUI:
+</span></span><span style="display:flex;"><span>        fields <span style="color:#f92672">=</span> decode_lora2(payload_bytes)
+</span></span><span style="display:flex;"><span>        sensor <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;BME680&#34;</span>
+</span></span><span style="display:flex;"><span>        node <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;lora2&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    fields[<span style="color:#e6db74">&#34;rssi&#34;</span>] <span style="color:#f92672">=</span> rssi
+</span></span><span style="display:flex;"><span>    fields[<span style="color:#e6db74">&#34;snr&#34;</span>] <span style="color:#f92672">=</span> snr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tags <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;dev_eui&#34;</span>: dev_eui,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;node&#34;</span>: node,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;sensor&#34;</span>: sensor,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;protocol&#34;</span>: <span style="color:#e6db74">&#34;lorawan&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    write_to_influx(<span style="color:#e6db74">&#34;lorawan_sensor&#34;</span>, tags, fields)
+</span></span></code></pre></div><p><strong>MQTT Keep-Alive Fix</strong>: Week 10 had a bug where the connection died after 90 seconds. Week 11 adds proper PINGREQ/PINGRESP handling:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mqtt_ping</span>(sock):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Send MQTT PINGREQ to keep connection alive.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    sock<span style="color:#f92672">.</span>send(bytes([<span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0x00</span>]))  <span style="color:#75715e"># PINGREQ packet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># In main loop:</span>
+</span></span><span style="display:flex;"><span>last_ping <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>PING_INTERVAL <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>  <span style="color:#75715e"># Send ping every 30 seconds</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> shutdown_flag:
+</span></span><span style="display:flex;"><span>    topic, message <span style="color:#f92672">=</span> mqtt_read_message(sock)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> topic <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;PINGRESP&#34;</span>:
+</span></span><span style="display:flex;"><span>        last_activity <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Send periodic ping</span>
+</span></span><span style="display:flex;"><span>    now <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> now <span style="color:#f92672">-</span> last_ping <span style="color:#f92672">&gt;=</span> PING_INTERVAL:
+</span></span><span style="display:flex;"><span>        mqtt_ping(sock)
+</span></span><span style="display:flex;"><span>        last_ping <span style="color:#f92672">=</span> now
+</span></span></code></pre></div><h3 id="3-modbus-bridge">3. Modbus Bridge<a hidden class="anchor" aria-hidden="true" href="#3-modbus-bridge">#</a></h3>
+<p>The Modbus bridge polls both STM32 slaves and decodes registers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># modbus_to_influx.py - Key sections</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>MODBUS_DEVICES <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;modbus1&#34;</span>, <span style="color:#e6db74">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;10.10.10.100&#34;</span>, <span style="color:#e6db74">&#34;port&#34;</span>: <span style="color:#ae81ff">502</span>, <span style="color:#e6db74">&#34;sensor&#34;</span>: <span style="color:#e6db74">&#34;SHT3x&#34;</span>},
+</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;modbus2&#34;</span>, <span style="color:#e6db74">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;10.10.10.200&#34;</span>, <span style="color:#e6db74">&#34;port&#34;</span>: <span style="color:#ae81ff">502</span>, <span style="color:#e6db74">&#34;sensor&#34;</span>: <span style="color:#e6db74">&#34;SHT3x&#34;</span>},
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>POLL_INTERVAL <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># seconds</span>
+</span></span><span style="display:flex;"><span>INFLUXDB_BUCKET <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sensors&#34;</span>  <span style="color:#75715e"># Unified bucket</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_float32</span>(reg_high, reg_low):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode two Modbus registers into IEEE 754 float32&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    bytes_data <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;&gt;HH&#39;</span>, reg_high, reg_low)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> struct<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;&gt;f&#39;</span>, bytes_data)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_uint32</span>(reg_high, reg_low):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decode two Modbus registers into uint32&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (reg_high <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> reg_low
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">poll_device</span>(device):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Poll a single Modbus device&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    name <span style="color:#f92672">=</span> device[<span style="color:#e6db74">&#34;name&#34;</span>]
+</span></span><span style="display:flex;"><span>    host <span style="color:#f92672">=</span> device[<span style="color:#e6db74">&#34;host&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Read 7 registers starting at address 0 (40001-40007)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 40001-40002: Temperature (float32)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 40003-40004: Humidity (float32)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 40005: Status (u16)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 40006-40007: Uptime (u32)</span>
+</span></span><span style="display:flex;"><span>    registers <span style="color:#f92672">=</span> modbus_read_holding_registers(host, <span style="color:#ae81ff">502</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> registers <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Decode values</span>
+</span></span><span style="display:flex;"><span>    temperature <span style="color:#f92672">=</span> decode_float32(registers[<span style="color:#ae81ff">0</span>], registers[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>    humidity <span style="color:#f92672">=</span> decode_float32(registers[<span style="color:#ae81ff">2</span>], registers[<span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>    status <span style="color:#f92672">=</span> registers[<span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>    uptime <span style="color:#f92672">=</span> decode_uint32(registers[<span style="color:#ae81ff">5</span>], registers[<span style="color:#ae81ff">6</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    fields <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;temperature&#34;</span>: round(temperature, <span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;humidity&#34;</span>: round(humidity, <span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;status&#34;</span>: status,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;uptime&#34;</span>: uptime,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tags <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;node&#34;</span>: name,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;sensor&#34;</span>: device[<span style="color:#e6db74">&#34;sensor&#34;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;protocol&#34;</span>: <span style="color:#e6db74">&#34;modbus&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;ip&#34;</span>: host,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    write_to_influx(<span style="color:#e6db74">&#34;modbus_sensor&#34;</span>, tags, fields)
+</span></span></code></pre></div><p><strong>Network Mode</strong>: The Modbus bridge uses <code>network_mode: host</code> in Docker Compose because the Modbus slaves are on the host&rsquo;s <code>10.10.10.x</code> network, not in the Docker bridge network.</p>
+<h3 id="4-docker-compose-orchestration">4. Docker Compose Orchestration<a hidden class="anchor" aria-hidden="true" href="#4-docker-compose-orchestration">#</a></h3>
+<p>Everything runs in one <code>docker-compose.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Unified InfluxDB</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">influxdb</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">influxdb:2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">unified-influxdb</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">DOCKER_INFLUXDB_INIT_BUCKET=sensors</span> <span style="color:#75715e"># Single bucket!</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">influxdb-data:/var/lib/influxdb2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">monitoring-network</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Grafana with auto-provisioned dashboard</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">grafana</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">grafana/grafana:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">unified-grafana</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./grafana/provisioning:/etc/grafana/provisioning:ro</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./grafana/dashboards:/var/lib/grafana/dashboards:ro</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">depends_on</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">influxdb</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">monitoring-network</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># MQTT bridge (LoRaWAN)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">mqtt-bridge</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">python:3.11-slim</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>: <span style="color:#ae81ff">python -u /app/mqtt_to_influx.py</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./mqtt_to_influx.py:/app/mqtt_to_influx.py:ro</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">monitoring-network</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Modbus bridge (host network for 10.10.10.x access)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">modbus-bridge</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">python:3.11-slim</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>: <span style="color:#ae81ff">python -u /app/modbus_to_influx.py</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./modbus_to_influx.py:/app/modbus_to_influx.py:ro</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">network_mode</span>: <span style="color:#ae81ff">host</span> <span style="color:#75715e"># Required for Modbus TCP access</span>
+</span></span></code></pre></div><p><strong>One-Command Deployment</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Start everything</span>
+</span></span><span style="display:flex;"><span>./start_services.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Check status</span>
+</span></span><span style="display:flex;"><span>docker compose ps
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># View logs</span>
+</span></span><span style="display:flex;"><span>docker compose logs -f mqtt-bridge
+</span></span><span style="display:flex;"><span>docker compose logs -f modbus-bridge
+</span></span></code></pre></div><h3 id="5-unified-grafana-dashboard">5. Unified Grafana Dashboard<a hidden class="anchor" aria-hidden="true" href="#5-unified-grafana-dashboard">#</a></h3>
+<p>The dashboard shows all 4 nodes in a single view:</p>
+<p><strong>Panel Layout</strong>:</p>
+<ol>
+<li><strong>Temperature Overview</strong> - All 4 nodes on one time-series graph</li>
+<li><strong>Humidity Overview</strong> - All 4 nodes compared</li>
+<li><strong>Stat Panels</strong> - Current readings per node (4 panels)</li>
+<li><strong>LoRaWAN Signal Quality</strong> - RSSI/SNR for LoRa-1 and LoRa-2</li>
+<li><strong>BME680 Environment</strong> - Pressure and gas resistance (LoRa-2 only)</li>
+</ol>
+<p><strong>Flux Query Example</strong> (temperature comparison):</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">from(bucket: &#34;sensors&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._field == &#34;temperature&#34;)
+  |&gt; filter(fn: (r) =&gt;
+       r.node == &#34;lora1&#34; or
+       r.node == &#34;lora2&#34; or
+       r.node == &#34;modbus1&#34; or
+       r.node == &#34;modbus2&#34;
+  )
+  |&gt; aggregateWindow(every: 10s, fn: mean)
+</code></pre><p><strong>Protocol Filtering</strong>:</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">// LoRaWAN nodes only
+from(bucket: &#34;sensors&#34;)
+  |&gt; filter(fn: (r) =&gt; r.protocol == &#34;lorawan&#34;)
+
+// Modbus nodes only
+from(bucket: &#34;sensors&#34;)
+  |&gt; filter(fn: (r) =&gt; r.protocol == &#34;modbus&#34;)
+</code></pre><p><strong>Dashboard Auto-Provisioning</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># grafana/provisioning/dashboards/dashboards.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">providers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;default&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">folder</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">options</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/var/lib/grafana/dashboards</span>
+</span></span></code></pre></div><p>No manual import needed - the dashboard appears automatically on first boot!</p>
+<hr>
+<h2 id="the-security-deep-dive-stride-analysis">The Security Deep Dive: STRIDE Analysis<a hidden class="anchor" aria-hidden="true" href="#the-security-deep-dive-stride-analysis">#</a></h2>
+<p>Week 11 isn&rsquo;t just about unification - it&rsquo;s about understanding what it takes to deploy this <strong>in production</strong>. Enter STRIDE threat modeling.</p>
+<h3 id="what-is-stride">What is STRIDE?<a hidden class="anchor" aria-hidden="true" href="#what-is-stride">#</a></h3>
+<p>STRIDE is Microsoft&rsquo;s threat modeling framework:</p>
+<ul>
+<li><strong>S</strong>poofing - Pretending to be someone/something else</li>
+<li><strong>T</strong>ampering - Modifying data or code</li>
+<li><strong>R</strong>epudiation - Denying actions took place</li>
+<li><strong>I</strong>nformation Disclosure - Exposing info to unauthorized parties</li>
+<li><strong>D</strong>enial of Service - Making systems unavailable</li>
+<li><strong>E</strong>levation of Privilege - Gaining unauthorized capabilities</li>
+</ul>
+<h3 id="component-by-component-analysis">Component-by-Component Analysis<a hidden class="anchor" aria-hidden="true" href="#component-by-component-analysis">#</a></h3>
+<h4 id="1-lorawan-layer-sensor--gateway">1. LoRaWAN Layer (Sensor → Gateway)<a hidden class="anchor" aria-hidden="true" href="#1-lorawan-layer-sensor--gateway">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Threat</th>
+          <th>Risk</th>
+          <th>Current State</th>
+          <th>Mitigation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Device Spoofing</td>
+          <td>🟢 Low</td>
+          <td>AES-128 device keys (AppKey)</td>
+          <td>LoRaWAN OTAA join requires valid credentials</td>
+      </tr>
+      <tr>
+          <td>Replay Attack</td>
+          <td>🟢 Low</td>
+          <td>Frame counters</td>
+          <td>Gateway rejects duplicate fCnt</td>
+      </tr>
+      <tr>
+          <td>Payload Tampering</td>
+          <td>🟢 Low</td>
+          <td>AES-128 + MIC</td>
+          <td>Message Integrity Code verification</td>
+      </tr>
+      <tr>
+          <td>Radio Jamming</td>
+          <td>🟡 Medium</td>
+          <td>No software mitigation</td>
+          <td>Physical security; spread spectrum helps</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>LoRaWAN Security Strengths</strong>:</p>
+<ul>
+<li>✅ End-to-end encryption (NwkSKey for network, AppSKey for application)</li>
+<li>✅ Device authentication via OTAA join</li>
+<li>✅ Frame counter anti-replay protection</li>
+<li>✅ MIC integrity verification</li>
+</ul>
+<p><strong>Current Gaps</strong>:</p>
+<ul>
+<li>⚠️ AppKey stored in plaintext in firmware source</li>
+<li>⚠️ No secure element (ATECC608) for key storage</li>
+</ul>
+<p><strong>Fix for Production</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Use secure element instead of hardcoded key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> secure_element <span style="color:#f92672">=</span> <span style="color:#66d9ef">ATECC608</span>::new(i2c);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> app_key <span style="color:#f92672">=</span> secure_element.get_lorawan_key()<span style="color:#f92672">?</span>;
+</span></span></code></pre></div><h4 id="2-mqtt-layer-gateway--bridge">2. MQTT Layer (Gateway → Bridge)<a hidden class="anchor" aria-hidden="true" href="#2-mqtt-layer-gateway--bridge">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Threat</th>
+          <th>Risk</th>
+          <th>Current State</th>
+          <th>Mitigation Needed</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Unauthorized Subscribe</td>
+          <td>🔴 <strong>High</strong></td>
+          <td><strong>NO authentication</strong></td>
+          <td>Enable MQTT auth</td>
+      </tr>
+      <tr>
+          <td>Publish Injection</td>
+          <td>🔴 <strong>High</strong></td>
+          <td><strong>NO authentication</strong></td>
+          <td>Username/password</td>
+      </tr>
+      <tr>
+          <td>Eavesdropping</td>
+          <td>🔴 <strong>High</strong></td>
+          <td><strong>NO TLS</strong> - plaintext</td>
+          <td>Enable MQTTS (port 8883)</td>
+      </tr>
+      <tr>
+          <td>Broker Overload</td>
+          <td>🟡 Medium</td>
+          <td>No rate limiting</td>
+          <td>Configure limits</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Current Vulnerabilities</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Anyone on the network can:</span>
+</span></span><span style="display:flex;"><span>mosquitto_sub -h 10.10.10.254 -t <span style="color:#e6db74">&#34;#&#34;</span> -v  <span style="color:#75715e"># Read ALL topics</span>
+</span></span><span style="display:flex;"><span>mosquitto_pub -h 10.10.10.254 -t <span style="color:#e6db74">&#34;application/TOT/device/+/rx&#34;</span> -m <span style="color:#e6db74">&#34;{fake data}&#34;</span>
+</span></span></code></pre></div><p><strong>Production Fix</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># mosquitto.conf</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">allow_anonymous false</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">password_file /mosquitto/config/passwd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">listener 8883</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">cafile /mosquitto/certs/ca.crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">certfile /mosquitto/certs/server.crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">keyfile /mosquitto/certs/server.key</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">require_certificate true</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># mqtt_to_influx.py</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#f92672">=</span> mqtt<span style="color:#f92672">.</span>Client(client_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;bridge&#34;</span>, protocol<span style="color:#f92672">=</span>mqtt<span style="color:#f92672">.</span>MQTTv311)
+</span></span><span style="display:flex;"><span>client<span style="color:#f92672">.</span>username_pw_set(<span style="color:#e6db74">&#34;lorawan_bridge&#34;</span>, <span style="color:#e6db74">&#34;secure_password_here&#34;</span>)
+</span></span><span style="display:flex;"><span>client<span style="color:#f92672">.</span>tls_set(ca_certs<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/certs/ca.crt&#34;</span>,
+</span></span><span style="display:flex;"><span>               certfile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/certs/client.crt&#34;</span>,
+</span></span><span style="display:flex;"><span>               keyfile<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/certs/client.key&#34;</span>)
+</span></span><span style="display:flex;"><span>client<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#34;10.10.10.254&#34;</span>, <span style="color:#ae81ff">8883</span>, <span style="color:#ae81ff">60</span>)
+</span></span></code></pre></div><h4 id="3-modbus-tcp-layer-sensors--bridge">3. Modbus TCP Layer (Sensors → Bridge)<a hidden class="anchor" aria-hidden="true" href="#3-modbus-tcp-layer-sensors--bridge">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Threat</th>
+          <th>Risk</th>
+          <th>Current State</th>
+          <th>Mitigation Needed</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Device Spoofing</td>
+          <td>🔴 <strong>High</strong></td>
+          <td><strong>NO authentication</strong></td>
+          <td>Network segmentation</td>
+      </tr>
+      <tr>
+          <td>Register Tampering</td>
+          <td>🔴 <strong>High</strong></td>
+          <td>Unprotected writes</td>
+          <td>Read-only registers</td>
+      </tr>
+      <tr>
+          <td>Data Interception</td>
+          <td>🔴 <strong>High</strong></td>
+          <td><strong>Unencrypted</strong></td>
+          <td>VPN or TLS wrapper</td>
+      </tr>
+      <tr>
+          <td>Slave Scanning</td>
+          <td>🟡 Medium</td>
+          <td>Open TCP port 502</td>
+          <td>Firewall rules</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Current Vulnerabilities</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Anyone can read registers:</span>
+</span></span><span style="display:flex;"><span>mbpoll -a <span style="color:#ae81ff">1</span> -r <span style="color:#ae81ff">0</span> -c <span style="color:#ae81ff">7</span> -t <span style="color:#ae81ff">4</span> -1 10.10.10.100
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Or even write (if implemented):</span>
+</span></span><span style="display:flex;"><span>mbpoll -a <span style="color:#ae81ff">1</span> -r <span style="color:#ae81ff">0</span> -c <span style="color:#ae81ff">2</span> -t <span style="color:#ae81ff">4</span> -w <span style="color:#ae81ff">999</span> 10.10.10.100  <span style="color:#75715e"># Fake temp</span>
+</span></span></code></pre></div><p><strong>Why Modbus TCP is Insecure</strong>:</p>
+<ul>
+<li>❌ NO built-in authentication mechanism</li>
+<li>❌ NO encryption (cleartext on wire)</li>
+<li>❌ NO integrity checks</li>
+<li>❌ Protocol designed in 1979 (pre-Internet security)</li>
+</ul>
+<p><strong>Production Fix Strategy</strong>:</p>
+<p><strong>Option 1: Network Segmentation</strong></p>
+<pre tabindex="0"><code>┌─────────────────┐
+│   IT Network    │  (General network)
+│  192.168.1.x    │
+└────────┬────────┘
+         │ Firewall
+         ▼
+┌─────────────────┐
+│   DMZ / Jump    │  (Bastion host)
+│  10.10.10.1     │
+└────────┬────────┘
+         │ Firewall (port 502 only)
+         ▼
+┌─────────────────┐
+│  OT Network     │  (Operational Technology)
+│  10.10.10.x     │  (Modbus devices here)
+└─────────────────┘
+</code></pre><p><strong>Option 2: VPN Tunnel</strong></p>
+<pre tabindex="0"><code>Modbus Bridge ──[VPN]──&gt; OT Network ──[Modbus TCP]──&gt; Sensors
+</code></pre><p><strong>Option 3: TLS Wrapper</strong> (Modbus/TCP-to-Modbus/TCP gateway)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Use stunnel or custom TLS proxy</span>
+</span></span><span style="display:flex;"><span>stunnel_config <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[modbus-tls]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">client = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">accept = 127.0.0.1:5502
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">connect = 10.10.10.100:502
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">CAfile = /certs/ca.crt
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cert = /certs/client.crt
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">key = /certs/client.key
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span></code></pre></div><h4 id="4-influxdb-layer">4. InfluxDB Layer<a hidden class="anchor" aria-hidden="true" href="#4-influxdb-layer">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Threat</th>
+          <th>Risk</th>
+          <th>Current State</th>
+          <th>Mitigation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Unauthorized Access</td>
+          <td>🟡 Medium</td>
+          <td>Token auth enabled</td>
+          <td>⚠️ Weak token</td>
+      </tr>
+      <tr>
+          <td>Data Tampering</td>
+          <td>🟡 Medium</td>
+          <td>Write-only tokens</td>
+          <td>✅ Bridges can&rsquo;t delete</td>
+      </tr>
+      <tr>
+          <td>Data Exfiltration</td>
+          <td>🟡 Medium</td>
+          <td>Token scope limits</td>
+          <td>✅ Grafana read-only</td>
+      </tr>
+      <tr>
+          <td>Storage Exhaustion</td>
+          <td>🟢 Low</td>
+          <td>Retention policies</td>
+          <td>Configure quotas</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Current Configuration</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># docker-compose.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token</span> <span style="color:#75715e"># ⚠️</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">DOCKER_INFLUXDB_INIT_PASSWORD=admin123456</span> <span style="color:#75715e"># ⚠️</span>
+</span></span></code></pre></div><p><strong>Production Fix</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Generate cryptographically secure tokens</span>
+</span></span><span style="display:flex;"><span>openssl rand -base64 <span style="color:#ae81ff">32</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create separate tokens</span>
+</span></span><span style="display:flex;"><span>influx auth create --org my-org --write-bucket sensors --description <span style="color:#e6db74">&#34;mqtt-bridge&#34;</span>
+</span></span><span style="display:flex;"><span>influx auth create --org my-org --write-bucket sensors --description <span style="color:#e6db74">&#34;modbus-bridge&#34;</span>
+</span></span><span style="display:flex;"><span>influx auth create --org my-org --read-bucket sensors --description <span style="color:#e6db74">&#34;grafana&#34;</span>
+</span></span></code></pre></div><h4 id="5-grafana-layer">5. Grafana Layer<a hidden class="anchor" aria-hidden="true" href="#5-grafana-layer">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Threat</th>
+          <th>Risk</th>
+          <th>Current State</th>
+          <th>Mitigation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Unauthorized Access</td>
+          <td>🟡 Medium</td>
+          <td>Auth enabled</td>
+          <td>⚠️ Default admin/admin</td>
+      </tr>
+      <tr>
+          <td>Session Hijacking</td>
+          <td>🟡 Medium</td>
+          <td>No HTTPS</td>
+          <td>Enable TLS</td>
+      </tr>
+      <tr>
+          <td>Dashboard Tampering</td>
+          <td>🟢 Low</td>
+          <td>RBAC available</td>
+          <td>Configure roles</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Production Fix</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># docker-compose.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}</span> <span style="color:#75715e"># From .env</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">GF_SERVER_PROTOCOL=https</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">GF_SERVER_CERT_FILE=/certs/grafana.crt</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">GF_SERVER_CERT_KEY=/certs/grafana.key</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">GF_AUTH_ANONYMOUS_ENABLED=false</span>
+</span></span></code></pre></div><h3 id="risk-summary-matrix">Risk Summary Matrix<a hidden class="anchor" aria-hidden="true" href="#risk-summary-matrix">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Component</th>
+          <th>Spoofing</th>
+          <th>Tampering</th>
+          <th>Repudiation</th>
+          <th>Info Disclosure</th>
+          <th>DoS</th>
+          <th>Elevation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LoRaWAN</td>
+          <td>🟢 Low</td>
+          <td>🟢 Low</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+      </tr>
+      <tr>
+          <td><strong>MQTT</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🟡 Med</td>
+          <td>🟡 Med</td>
+      </tr>
+      <tr>
+          <td><strong>Modbus TCP</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🔴 <strong>High</strong></td>
+          <td>🟡 Med</td>
+          <td>🟡 Med</td>
+      </tr>
+      <tr>
+          <td>InfluxDB</td>
+          <td>🟡 Med</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+          <td>🟢 Low</td>
+      </tr>
+      <tr>
+          <td>Grafana</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+          <td>🟢 Low</td>
+          <td>🟡 Med</td>
+          <td>🟢 Low</td>
+          <td>🟢 Low</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Legend</strong>: 🟢 Low Risk | 🟡 Medium Risk | 🔴 High Risk</p>
+<h3 id="the-honest-assessment">The Honest Assessment<a hidden class="anchor" aria-hidden="true" href="#the-honest-assessment">#</a></h3>
+<p><strong>Current system is suitable for</strong>:</p>
+<ul>
+<li>✅ Development and learning</li>
+<li>✅ Lab environments</li>
+<li>✅ Proof-of-concept demonstrations</li>
+<li>✅ Internal networks with trusted users</li>
+</ul>
+<p><strong>Current system is NOT suitable for</strong>:</p>
+<ul>
+<li>❌ Production deployment</li>
+<li>❌ Internet-exposed systems</li>
+<li>❌ Environments with regulatory compliance (IEC 62443, NIST)</li>
+<li>❌ Critical infrastructure</li>
+</ul>
+<h3 id="priority-remediation-roadmap">Priority Remediation Roadmap<a hidden class="anchor" aria-hidden="true" href="#priority-remediation-roadmap">#</a></h3>
+<p><strong>Immediate (Before Production)</strong>:</p>
+<ol>
+<li>✅ Change all default passwords</li>
+<li>✅ Enable MQTT authentication</li>
+<li>✅ Network segmentation (OT vs IT)</li>
+<li>✅ Generate secure InfluxDB tokens</li>
+</ol>
+<p><strong>Short-term</strong>: 5. Enable TLS for all services (MQTTS, HTTPS) 6. Implement InfluxDB retention policies 7. Configure Grafana RBAC 8. Firewall rules for Modbus access</p>
+<p><strong>Long-term</strong>: 9. VPN for remote access 10. IDS/IPS for OT network monitoring 11. Security audit and penetration testing 12. Secure element for LoRaWAN key storage</p>
+<hr>
+<h2 id="results-whats-working-right-now">Results: What&rsquo;s Working Right Now<a hidden class="anchor" aria-hidden="true" href="#results-whats-working-right-now">#</a></h2>
+<h3 id="system-status">System Status<a hidden class="anchor" aria-hidden="true" href="#system-status">#</a></h3>
+<p><strong>All 4 nodes reporting</strong>:</p>
+<ul>
+<li>✅ LoRa-1 (SHT41): 31°C, 58% RH</li>
+<li>✅ LoRa-2 (BME680): 28°C, 60% RH, 1020 hPa, 135 kOhm</li>
+<li>✅ Modbus-1 (SHT3x): 26°C, 52% RH</li>
+<li>✅ Modbus-2 (SHT3x): 27°C, 54% RH</li>
+</ul>
+<p><strong>Data flow metrics</strong>:</p>
+<ul>
+<li>LoRaWAN uplinks: ~30 second intervals</li>
+<li>Modbus polling: 2 second intervals</li>
+<li>End-to-end latency: &lt;1 second (both protocols)</li>
+<li>Dashboard refresh: 10 seconds</li>
+</ul>
+<p><strong>System stability</strong>:</p>
+<ul>
+<li>Zero crashes in 72+ hour test</li>
+<li>MQTT keep-alive working (no 90s disconnects)</li>
+<li>Modbus slaves handling concurrent requests</li>
+<li>InfluxDB write rate: ~6 points/minute</li>
+</ul>
+<h3 id="live-dashboard">Live Dashboard<a hidden class="anchor" aria-hidden="true" href="#live-dashboard">#</a></h3>
+<p>The unified dashboard shows:</p>
+<p><strong>Temperature Comparison Panel</strong>:</p>
+<pre tabindex="0"><code>All 4 nodes overlaid on one graph:
+- Blue: lora1 (SHT41) - highest precision
+- Green: lora2 (BME680) - multi-sensor
+- Yellow: modbus1 (SHT3x) - Ethernet
+- Red: modbus2 (SHT3x) - Ethernet
+
+Observation: LoRa-2 reads 2-3°C higher than others
+Reason: BME680 self-heating during gas measurement
+</code></pre><p><strong>Protocol Comparison</strong>:</p>
+<pre tabindex="0"><code>LoRaWAN:
+- Latency: ~2s (includes air time)
+- Reliability: 100% (indoor, 5m from gateway)
+- Bandwidth: 4-12 bytes per uplink
+- Power: Battery-capable
+
+Modbus TCP:
+- Latency: &lt;100ms
+- Reliability: 100% (wired)
+- Bandwidth: Unlimited (Ethernet)
+- Power: Wall-powered only
+</code></pre><hr>
+<h2 id="key-technical-achievements">Key Technical Achievements<a hidden class="anchor" aria-hidden="true" href="#key-technical-achievements">#</a></h2>
+<h3 id="1-unified-data-model-1">1. Unified Data Model<a hidden class="anchor" aria-hidden="true" href="#1-unified-data-model-1">#</a></h3>
+<p><strong>Before</strong>: Two databases, manual correlation</p>
+<p><strong>After</strong>: Single source of truth with tag-based filtering:</p>
+<pre tabindex="0"><code class="language-flux" data-lang="flux">// Compare temperature by protocol
+from(bucket: &#34;sensors&#34;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._field == &#34;temperature&#34;)
+  |&gt; group(columns: [&#34;protocol&#34;])
+  |&gt; mean()
+</code></pre><h3 id="2-docker-orchestration">2. Docker Orchestration<a hidden class="anchor" aria-hidden="true" href="#2-docker-orchestration">#</a></h3>
+<p><strong>One command deployment</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./start_services.sh
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6 containers start in &lt;10 seconds</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Dashboard auto-provisions</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Data flows immediately</span>
+</span></span></code></pre></div><p><strong>Clean shutdown</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./stop_services.sh
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># All services stop gracefully</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Data persists in volumes</span>
+</span></span></code></pre></div><h3 id="3-production-grade-security-analysis">3. Production-Grade Security Analysis<a hidden class="anchor" aria-hidden="true" href="#3-production-grade-security-analysis">#</a></h3>
+<p><strong>Not just &ldquo;it works&rdquo; - analyzed</strong>:</p>
+<ul>
+<li>🔍 12+ threats identified across 5 components</li>
+<li>📊 Risk ratings (High/Medium/Low)</li>
+<li>🛡️ Specific mitigations for each threat</li>
+<li>📋 Prioritized remediation roadmap</li>
+<li>✅ IEC 62443 and NIST framework mapping</li>
+</ul>
+<p><strong>Deliverable</strong>: 150-line <code>SECURITY.md</code> with:</p>
+<ul>
+<li>STRIDE threat model</li>
+<li>Risk matrix</li>
+<li>Mitigation strategies</li>
+<li>Compliance considerations</li>
+</ul>
+<hr>
+<h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
+<h3 id="technical-lessons">Technical Lessons<a hidden class="anchor" aria-hidden="true" href="#technical-lessons">#</a></h3>
+<ol>
+<li>
+<p><strong>Tags &gt; Buckets for Protocol Separation</strong></p>
+<ul>
+<li>Single bucket with protocol tags is cleaner</li>
+<li>Enables cross-protocol queries</li>
+<li>Simpler operational model</li>
+</ul>
+</li>
+<li>
+<p><strong>MQTT Keep-Alive is Mandatory</strong></p>
+<ul>
+<li>Raw socket MQTT needs PINGREQ/PINGRESP</li>
+<li>30-second ping interval prevents disconnects</li>
+<li>Activity timeout detection catches dead connections</li>
+</ul>
+</li>
+<li>
+<p><strong>Docker Host Networking Has Trade-offs</strong></p>
+<ul>
+<li>Required for Modbus bridge to reach 10.10.10.x</li>
+<li>But: Bridge has full host network access</li>
+<li>Security implication: Firewall rules critical</li>
+</ul>
+</li>
+<li>
+<p><strong>InfluxDB Line Protocol is Simple</strong></p>
+<ul>
+<li>No heavyweight libraries needed</li>
+<li>Raw HTTP POST with line protocol</li>
+<li>Perfect for embedded Python bridges</li>
+</ul>
+</li>
+<li>
+<p><strong>Grafana Provisioning Saves Time</strong></p>
+<ul>
+<li>Auto-provision datasources and dashboards</li>
+<li>No manual import on first boot</li>
+<li>Version control for dashboards (JSON)</li>
+</ul>
+</li>
+</ol>
+<h3 id="security-lessons">Security Lessons<a hidden class="anchor" aria-hidden="true" href="#security-lessons">#</a></h3>
+<ol>
+<li>
+<p><strong>Protocols Have Different Threat Profiles</strong></p>
+<ul>
+<li>LoRaWAN: Strong crypto, physical layer vulnerable</li>
+<li>MQTT: Application layer, easily secured with TLS</li>
+<li>Modbus TCP: No built-in security, needs network controls</li>
+</ul>
+</li>
+<li>
+<p><strong>Defense in Depth Matters</strong></p>
+<ul>
+<li>Single weak link (MQTT auth) breaks security</li>
+<li>Need multiple layers: auth, encryption, network segmentation</li>
+<li>Assume breach: monitor, audit, have incident response</li>
+</ul>
+</li>
+<li>
+<p><strong>Default Credentials are a Critical Risk</strong></p>
+<ul>
+<li>First thing attackers check</li>
+<li>Must change before ANY network exposure</li>
+<li>Use password managers, not weak passwords</li>
+</ul>
+</li>
+<li>
+<p><strong>STRIDE Reveals Blind Spots</strong></p>
+<ul>
+<li>Found 12 threats I hadn&rsquo;t considered</li>
+<li>Systematic framework prevents missing attack vectors</li>
+<li>Risk ratings help prioritize fixes</li>
+</ul>
+</li>
+</ol>
+<h3 id="meta-lessons">Meta-Lessons<a hidden class="anchor" aria-hidden="true" href="#meta-lessons">#</a></h3>
+<ol>
+<li>
+<p><strong>Unification Simplifies Operations</strong></p>
+<ul>
+<li>One dashboard vs. two reduces cognitive load</li>
+<li>Single InfluxDB instance = less to maintain</li>
+<li>Easier to compare and correlate data</li>
+</ul>
+</li>
+<li>
+<p><strong>Security Analysis is Learning</strong></p>
+<ul>
+<li>STRIDE framework is straightforward</li>
+<li>Applying it to real system teaches threat modeling</li>
+<li>Employers want to see security awareness</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation Demonstrates Maturity</strong></p>
+<ul>
+<li>150-line SECURITY.md shows professional thinking</li>
+<li>Risk matrices communicate priorities</li>
+<li>Remediation roadmap shows you understand trade-offs</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="week-12-preview">Week 12 Preview<a hidden class="anchor" aria-hidden="true" href="#week-12-preview">#</a></h2>
+<p>Week 11 completes the technical work. Week 12 focuses on <strong>polish and presentation</strong>:</p>
+<h3 id="portfolio-assembly">Portfolio Assembly<a hidden class="anchor" aria-hidden="true" href="#portfolio-assembly">#</a></h3>
+<ul>
+<li>Main repository linking all 12 weeks</li>
+<li>System architecture diagrams</li>
+<li>Performance benchmarks</li>
+<li>Case study document</li>
+</ul>
+<h3 id="video-demonstration">Video Demonstration<a hidden class="anchor" aria-hidden="true" href="#video-demonstration">#</a></h3>
+<ul>
+<li>5-10 minute walkthrough</li>
+<li>Show working hardware</li>
+<li>Explain one complex debugging story</li>
+<li>Walk through dashboard</li>
+</ul>
+<h3 id="job-readiness">Job Readiness<a hidden class="anchor" aria-hidden="true" href="#job-readiness">#</a></h3>
+<ul>
+<li>LinkedIn portfolio post</li>
+<li>GitHub profile optimization</li>
+<li>Resume updates with quantified achievements</li>
+<li>Interview preparation</li>
+</ul>
+<p><strong>The goal</strong>: Make this portfolio <strong>recruiter-ready</strong>.</p>
+<hr>
+<h2 id="try-it-yourself">Try It Yourself<a hidden class="anchor" aria-hidden="true" href="#try-it-yourself">#</a></h2>
+<h3 id="hardware-needed">Hardware Needed<a hidden class="anchor" aria-hidden="true" href="#hardware-needed">#</a></h3>
+<p><strong>Minimum (2-node)</strong>:</p>
+<ul>
+<li>1x NUCLEO-WL55JC1 (~$25)</li>
+<li>1x NUCLEO-F446RE + W5500 (~$35)</li>
+<li>1x RAK7268V2 gateway (~$120)</li>
+<li>2x Sensors (~$15)</li>
+<li>Total: ~$195</li>
+</ul>
+<p><strong>Full System (4-node)</strong>:</p>
+<ul>
+<li>2x NUCLEO-WL55JC1 (~$50)</li>
+<li>2x NUCLEO-F446RE + W5500 (~$70)</li>
+<li>1x RAK7268V2 gateway (~$120)</li>
+<li>4x Sensors (~$30)</li>
+<li>Total: ~$270</li>
+</ul>
+<h3 id="quick-start">Quick Start<a hidden class="anchor" aria-hidden="true" href="#quick-start">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Clone repo</span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/mapfumo/wk11-unified-monitoring
+</span></span><span style="display:flex;"><span>cd wk11-unified-monitoring
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Start infrastructure</span>
+</span></span><span style="display:flex;"><span>./start_services.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Flash firmware (in separate terminals)</span>
+</span></span><span style="display:flex;"><span>cd firmware/lorawan/lora-1 <span style="color:#f92672">&amp;&amp;</span> cargo run --release
+</span></span><span style="display:flex;"><span>cd firmware/lorawan/lora-2 <span style="color:#f92672">&amp;&amp;</span> cargo run --release
+</span></span><span style="display:flex;"><span>cd firmware/modbus <span style="color:#f92672">&amp;&amp;</span> cargo run --release --bin modbus_1
+</span></span><span style="display:flex;"><span>cd firmware/modbus <span style="color:#f92672">&amp;&amp;</span> cargo run --release --bin modbus_2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Access dashboard</span>
+</span></span><span style="display:flex;"><span>open http://localhost:3000
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Login: admin/admin</span>
+</span></span></code></pre></div><p><strong>Expected timeline</strong>:</p>
+<ul>
+<li>Infrastructure: 10 seconds</li>
+<li>Firmware flashing: 2 minutes per board</li>
+<li>First data points: &lt;30 seconds</li>
+<li>Full dashboard: &lt;5 minutes</li>
+</ul>
+<hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Week 11 brought together 11 weeks of work into a <strong>unified platform</strong>:</p>
+<p><strong>Technical Integration</strong>:</p>
+<ul>
+<li>✅ 4 sensor nodes (2 protocols)</li>
+<li>✅ Single InfluxDB bucket</li>
+<li>✅ Unified Grafana dashboard</li>
+<li>✅ Docker Compose orchestration</li>
+<li>✅ One-command deployment</li>
+</ul>
+<p><strong>Security Analysis</strong>:</p>
+<ul>
+<li>✅ STRIDE threat model</li>
+<li>✅ 12+ threats identified</li>
+<li>✅ Risk matrix with priorities</li>
+<li>✅ Production remediation roadmap</li>
+<li>✅ Compliance framework mapping</li>
+</ul>
+<p><strong>Professional Deliverables</strong>:</p>
+<ul>
+<li>✅ Comprehensive USERGUIDE.md</li>
+<li>✅ 150-line SECURITY.md</li>
+<li>✅ Clean codebase (modbus common.rs, protocol bridges)</li>
+<li>✅ Auto-provisioned dashboards</li>
+<li>✅ Operational scripts (start/stop)</li>
+</ul>
+<p><strong>Most importantly</strong>: The system <strong>works</strong>. Right now. On my desk. All 4 nodes reporting. Dashboard updating in real-time. Zero errors.</p>
+<p><strong>And I can explain</strong>:</p>
+<ul>
+<li>Why MQTT needs authentication</li>
+<li>Why Modbus TCP is vulnerable</li>
+<li>How to prioritize security fixes</li>
+<li>What defense-in-depth means in practice</li>
+</ul>
+<p>From Week 1&rsquo;s LED blink to Week 11&rsquo;s unified industrial monitoring platform with security analysis - <strong>every week built on the last</strong>.</p>
+<p>One more week to polish, document, and ship. Let&rsquo;s finish strong.</p>
+<hr>
+<h2 id="resources">Resources<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<h3 id="code">Code<a hidden class="anchor" aria-hidden="true" href="#code">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk11-unified-monitoring">Week 11 Repository</a></li>
+<li><a href="./USERGUIDE.md">USERGUIDE.md</a> - Complete deployment guide</li>
+<li><a href="./SECURITY.md">SECURITY.md</a> - Full STRIDE analysis</li>
+</ul>
+<h3 id="documentation">Documentation<a hidden class="anchor" aria-hidden="true" href="#documentation">#</a></h3>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">STRIDE Threat Modeling</a></li>
+<li><a href="https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards">IEC 62443 Industrial Cybersecurity</a></li>
+<li><a href="https://www.nist.gov/cyberframework">NIST Cybersecurity Framework</a></li>
+<li><a href="https://www.modbus.org/docs/MB-TCP-Security-v21_2018-07-24.pdf">Modbus TCP Security Guide</a></li>
+</ul>
+<h3 id="previous-weeks">Previous Weeks<a hidden class="anchor" aria-hidden="true" href="#previous-weeks">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk10-lorawan">Week 10: LoRaWAN Migration</a></li>
+<li><a href="https://github.com/mapfumo/wk9-opcua-modbus">Week 9: Modbus TCP + OPC-UA</a></li>
+<li><a href="https://github.com/mapfumo/wk7-mqtt-influx">Week 7+8: MQTT + InfluxDB + Grafana</a></li>
+</ul>
+<hr>
+<p><strong>Author</strong>: Antony (Tony) Mapfumo<br>
+<strong>Part of</strong>: 12-Week IIoT Systems Engineer Transition<br>
+<strong>Week</strong>: 11 of 12 (92% complete)<br>
+<strong>Status</strong>: ✅ Unified Platform + Security Analysis Complete<br>
+<strong>Next</strong>: Week 12 - Portfolio Assembly &amp; Polish<br>
+<strong>Tags</strong>: <code>#iiot</code> <code>#security</code> <code>#stride</code> <code>#lorawan</code> <code>#modbus</code> <code>#grafana</code> <code>#learning-in-public</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/">
+    <span class="title">Next »</span>
+    <br>
+    <span>From LoRa Modules to Native LoRaWAN the STM32WL Migration - Wk10</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 on twitter"
+        href="https://twitter.com/intent/tweet/?text=Unifying%20the%20Chaos%20-%20One%20Dashboard%20for%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20Industrial%20Security%20-%20Wk11&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f&amp;title=Unifying%20the%20Chaos%20-%20One%20Dashboard%20for%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20Industrial%20Security%20-%20Wk11&amp;summary=Unifying%20the%20Chaos%20-%20One%20Dashboard%20for%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20Industrial%20Security%20-%20Wk11&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f&title=Unifying%20the%20Chaos%20-%20One%20Dashboard%20for%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20Industrial%20Security%20-%20Wk11">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11 on whatsapp"
+        href="https://api.whatsapp.com/send?text=Unifying%20the%20Chaos%20-%20One%20Dashboard%20for%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20Industrial%20Security%20-%20Wk11%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

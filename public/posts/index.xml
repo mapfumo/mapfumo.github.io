@@ -6,7 +6,25 @@
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 Jan 2026 13:50:05 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 15 Jan 2026 20:52:25 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11</title>
+      <link>http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/</link>
+      <pubDate>Thu, 15 Jan 2026 20:52:25 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/</guid>
+      <description>&lt;h2 id=&#34;the-challenge&#34;&gt;The Challenge&lt;/h2&gt;
+&lt;p&gt;After 10 weeks, I had a problem. A &lt;strong&gt;good&lt;/strong&gt; problem, but a problem nonetheless:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Week 9&lt;/strong&gt;: Two Modbus TCP nodes (STM32F446 + W5500 Ethernet)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Week 10&lt;/strong&gt;: Two LoRaWAN nodes (STM32WL55 native radio)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Separate dashboards&lt;/strong&gt;: Modbus data in one Grafana, LoRaWAN in another&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Different buckets&lt;/strong&gt;: &lt;code&gt;modbus&lt;/code&gt; bucket, &lt;code&gt;lorawan&lt;/code&gt; bucket&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;No unified view&lt;/strong&gt;: Can&amp;rsquo;t compare all 4 nodes at once&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Week 11&amp;rsquo;s goal&lt;/strong&gt;: &lt;strong&gt;Unify everything into a single monitoring platform while analyzing what it would take to make this production-ready from a security perspective.&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>From LoRa Modules to Native LoRaWAN the STM32WL Migration - Wk10</title>
       <link>http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/</link>

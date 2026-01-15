@@ -1,0 +1,208 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Gradients -->
+                <linearGradient id="lorawan-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1"/>
+                </linearGradient>
+                
+                <linearGradient id="modbus-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#d97706;stop-opacity:1"/>
+                </linearGradient>
+                
+                <linearGradient id="docker-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1"/>
+                </linearGradient>
+                
+                <linearGradient id="gateway-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1"/>
+                </linearGradient>
+                
+                <!-- Arrow marker -->
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#64748b"/>
+                </marker>
+                
+                <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#10b981"/>
+                </marker>
+                
+                <marker id="arrowhead-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#f59e0b"/>
+                </marker>
+                
+                <!-- Glow filter -->
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="1200" height="900" fill="#0f172a"/>
+            
+            <!-- Title Section -->
+            <text x="600" y="40" font-family="monospace" font-size="24" font-weight="bold" fill="#e2e8f0" text-anchor="middle">Unified IIoT Architecture</text>
+            <text x="600" y="65" font-family="monospace" font-size="12" fill="#64748b" text-anchor="middle">4 Nodes → 2 Protocols → 1 Dashboard</text>
+            
+            <!-- ============ SENSOR LAYER (TOP) ============ -->
+            
+            <!-- LoRaWAN Nodes (Left Side) -->
+            <g id="lorawan-nodes">
+                <!-- LoRa-1 -->
+                <rect x="50" y="120" width="180" height="100" rx="8" fill="url(#lorawan-gradient)" stroke="#10b981" stroke-width="2"/>
+                <text x="140" y="150" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">LoRa-1</text>
+                <text x="140" y="170" font-family="monospace" font-size="11" fill="#d1fae5" text-anchor="middle">STM32WL55</text>
+                <text x="140" y="190" font-family="monospace" font-size="10" fill="#d1fae5" text-anchor="middle">SHT41</text>
+                <circle cx="220" cy="145" r="5" fill="#22c55e" class="status-indicator"/>
+                <text x="140" y="210" font-family="monospace" font-size="9" fill="#d1fae5" text-anchor="middle">868 MHz</text>
+                
+                <!-- LoRa-2 -->
+                <rect x="270" y="120" width="180" height="100" rx="8" fill="url(#lorawan-gradient)" stroke="#10b981" stroke-width="2"/>
+                <text x="360" y="150" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">LoRa-2</text>
+                <text x="360" y="170" font-family="monospace" font-size="11" fill="#d1fae5" text-anchor="middle">STM32WL55</text>
+                <text x="360" y="190" font-family="monospace" font-size="10" fill="#d1fae5" text-anchor="middle">BME680</text>
+                <circle cx="440" cy="145" r="5" fill="#22c55e" class="status-indicator"/>
+                <text x="360" y="210" font-family="monospace" font-size="9" fill="#d1fae5" text-anchor="middle">868 MHz</text>
+            </g>
+            
+            <!-- Modbus TCP Nodes (Right Side) -->
+            <g id="modbus-nodes">
+                <!-- Modbus-1 -->
+                <rect x="750" y="120" width="180" height="100" rx="8" fill="url(#modbus-gradient)" stroke="#f59e0b" stroke-width="2"/>
+                <text x="840" y="150" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Modbus-1</text>
+                <text x="840" y="170" font-family="monospace" font-size="11" fill="#fef3c7" text-anchor="middle">STM32F446</text>
+                <text x="840" y="190" font-family="monospace" font-size="10" fill="#fef3c7" text-anchor="middle">SHT3x + W5500</text>
+                <circle cx="920" cy="145" r="5" fill="#fbbf24" class="status-indicator"/>
+                <text x="840" y="210" font-family="monospace" font-size="9" fill="#fef3c7" text-anchor="middle">10.10.10.100</text>
+                
+                <!-- Modbus-2 -->
+                <rect x="970" y="120" width="180" height="100" rx="8" fill="url(#modbus-gradient)" stroke="#f59e0b" stroke-width="2"/>
+                <text x="1060" y="150" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Modbus-2</text>
+                <text x="1060" y="170" font-family="monospace" font-size="11" fill="#fef3c7" text-anchor="middle">STM32F446</text>
+                <text x="1060" y="190" font-family="monospace" font-size="10" fill="#fef3c7" text-anchor="middle">SHT3x + W5500</text>
+                <circle cx="1140" cy="145" r="5" fill="#fbbf24" class="status-indicator"/>
+                <text x="1060" y="210" font-family="monospace" font-size="9" fill="#fef3c7" text-anchor="middle">10.10.10.200</text>
+            </g>
+            
+            <!-- Protocol Labels -->
+            <text x="245" y="110" font-family="monospace" font-size="12" font-weight="bold" fill="#10b981" text-anchor="middle">LoRaWAN Protocol</text>
+            <text x="965" y="110" font-family="monospace" font-size="12" font-weight="bold" fill="#f59e0b" text-anchor="middle">Modbus TCP Protocol</text>
+            
+            <!-- ============ GATEWAY LAYER ============ -->
+            
+            <!-- RAK Gateway -->
+            <rect x="140" y="280" width="200" height="80" rx="8" fill="url(#gateway-gradient)" stroke="#6366f1" stroke-width="2"/>
+            <text x="240" y="310" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">RAK7268V2</text>
+            <text x="240" y="330" font-family="monospace" font-size="11" fill="#e0e7ff" text-anchor="middle">LoRaWAN Gateway</text>
+            <text x="240" y="350" font-family="monospace" font-size="9" fill="#e0e7ff" text-anchor="middle">10.10.10.254:1883</text>
+            
+            <!-- Network bridge indicator for Modbus -->
+            <rect x="860" y="280" width="180" height="60" rx="8" fill="#1e293b" stroke="#64748b" stroke-width="2" stroke-dasharray="5,5"/>
+            <text x="950" y="305" font-family="monospace" font-size="12" fill="#94a3b8" text-anchor="middle">Direct TCP</text>
+            <text x="950" y="325" font-family="monospace" font-size="10" fill="#64748b" text-anchor="middle">10.10.10.x:502</text>
+            
+            <!-- Data Flow Lines from Sensors -->
+            <!-- LoRa nodes to Gateway -->
+            <path d="M 140 220 L 180 280" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)" stroke-dasharray="5,5" class="data-flow"/>
+            <path d="M 360 220 L 300 280" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)" stroke-dasharray="5,5" class="data-flow"/>
+            <text x="200" y="250" font-family="monospace" font-size="9" fill="#10b981">LoRaWAN</text>
+            
+            <!-- Modbus nodes indicator -->
+            <path d="M 840 220 L 900 280" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead-orange)" stroke-dasharray="5,5" class="data-flow"/>
+            <path d="M 1060 220 L 1000 280" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead-orange)" stroke-dasharray="5,5" class="data-flow"/>
+            <text x="900" y="250" font-family="monospace" font-size="9" fill="#f59e0b">Modbus TCP</text>
+            
+            <!-- ============ DOCKER COMPOSE LAYER ============ -->
+            
+            <!-- Docker Container -->
+            <rect x="100" y="420" width="1000" height="380" rx="12" fill="url(#docker-gradient)" stroke="#334155" stroke-width="3"/>
+            <text x="600" y="450" font-family="monospace" font-size="16" font-weight="bold" fill="#e2e8f0" text-anchor="middle">Docker Compose Infrastructure</text>
+            <rect x="120" y="460" width="960" height="2" fill="#334155"/>
+            
+            <!-- MQTT Bridge -->
+            <g id="mqtt-bridge">
+                <rect x="140" y="490" width="200" height="90" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                <text x="240" y="515" font-family="monospace" font-size="13" font-weight="bold" fill="#10b981" text-anchor="middle">mqtt-bridge</text>
+                <text x="240" y="535" font-family="monospace" font-size="10" fill="#94a3b8" text-anchor="middle">Python 3.11</text>
+                <text x="240" y="555" font-family="monospace" font-size="9" fill="#64748b" text-anchor="middle">MQTT → InfluxDB</text>
+                <text x="240" y="570" font-family="monospace" font-size="8" fill="#64748b" text-anchor="middle">lorawan_sensor</text>
+            </g>
+            
+            <!-- Modbus Bridge -->
+            <g id="modbus-bridge">
+                <rect x="860" y="490" width="200" height="90" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                <text x="960" y="515" font-family="monospace" font-size="13" font-weight="bold" fill="#f59e0b" text-anchor="middle">modbus-bridge</text>
+                <text x="960" y="535" font-family="monospace" font-size="10" fill="#94a3b8" text-anchor="middle">Python 3.11</text>
+                <text x="960" y="555" font-family="monospace" font-size="9" fill="#64748b" text-anchor="middle">Modbus → InfluxDB</text>
+                <text x="960" y="570" font-family="monospace" font-size="8" fill="#64748b" text-anchor="middle">modbus_sensor</text>
+            </g>
+            
+            <!-- Arrows from gateway/network to bridges -->
+            <path d="M 240 360 L 240 490" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)"/>
+            <text x="255" y="420" font-family="monospace" font-size="9" fill="#10b981">MQTT</text>
+            <text x="255" y="435" font-family="monospace" font-size="9" fill="#10b981">JSON</text>
+            
+            <path d="M 950 340 L 950 490" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead-orange)"/>
+            <text x="965" y="420" font-family="monospace" font-size="9" fill="#f59e0b">Modbus</text>
+            <text x="965" y="435" font-family="monospace" font-size="9" fill="#f59e0b">Poll 2s</text>
+            
+            <!-- InfluxDB -->
+            <g id="influxdb">
+                <rect x="400" y="620" width="400" height="110" rx="8" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2"/>
+                <text x="600" y="650" font-family="monospace" font-size="16" font-weight="bold" fill="#60a5fa" text-anchor="middle">InfluxDB 2.x</text>
+                <text x="600" y="675" font-family="monospace" font-size="11" fill="#93c5fd" text-anchor="middle">Bucket: sensors</text>
+                
+                <!-- Two measurements boxes -->
+                <rect x="420" y="685" width="160" height="35" rx="4" fill="#1e40af" stroke="#3b82f6" stroke-width="1"/>
+                <text x="500" y="705" font-family="monospace" font-size="10" fill="#dbeafe" text-anchor="middle">lorawan_sensor</text>
+                
+                <rect x="620" y="685" width="160" height="35" rx="4" fill="#1e40af" stroke="#3b82f6" stroke-width="1"/>
+                <text x="700" y="705" font-family="monospace" font-size="10" fill="#dbeafe" text-anchor="middle">modbus_sensor</text>
+            </g>
+            
+            <!-- Arrows from bridges to InfluxDB -->
+            <path d="M 280 580 Q 380 600 480 620" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)"/>
+            <path d="M 920 580 Q 820 600 720 620" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead-orange)"/>
+            
+            <!-- Grafana -->
+            <g id="grafana">
+                <rect x="300" y="760" width="600" height="80" rx="8" fill="#ea580c" stroke="#fb923c" stroke-width="2"/>
+                <text x="600" y="790" font-family="monospace" font-size="16" font-weight="bold" fill="white" text-anchor="middle">Grafana Dashboard</text>
+                <text x="600" y="815" font-family="monospace" font-size="11" fill="#fed7aa" text-anchor="middle">Unified 4-Node Visualization</text>
+                <text x="600" y="833" font-family="monospace" font-size="9" fill="#fed7aa" text-anchor="middle">http://localhost:3000</text>
+            </g>
+            
+            <!-- Arrow from InfluxDB to Grafana -->
+            <path d="M 600 730 L 600 760" stroke="#3b82f6" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+            <text x="615" y="745" font-family="monospace" font-size="9" fill="#3b82f6">Flux</text>
+            <text x="615" y="758" font-family="monospace" font-size="9" fill="#3b82f6">Query</text>
+            
+            <!-- ============ BOTTOM METRICS ============ -->
+            
+            <!-- Metrics boxes -->
+            <rect x="80" y="850" width="260" height="35" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+            <text x="210" y="872" font-family="monospace" font-size="11" fill="#10b981" text-anchor="middle">✓ LoRaWAN: ~30s intervals</text>
+            
+            <rect x="360" y="850" width="220" height="35" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+            <text x="470" y="872" font-family="monospace" font-size="11" fill="#f59e0b" text-anchor="middle">✓ Modbus: 2s polling</text>
+            
+            <rect x="600" y="850" width="240" height="35" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+            <text x="720" y="872" font-family="monospace" font-size="11" fill="#3b82f6" text-anchor="middle">✓ Latency: &lt;1s both</text>
+            
+            <rect x="860" y="850" width="260" height="35" rx="6" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+            <text x="990" y="872" font-family="monospace" font-size="11" fill="#22c55e" text-anchor="middle">✓ Uptime: 72+ hours</text>
+            
+            <!-- Security indicator -->
+            <g id="security-badge" transform="translate(20, 420)">
+                <rect x="0" y="0" width="60" height="100" rx="6" fill="#dc2626" stroke="#ef4444" stroke-width="2"/>
+                <text x="30" y="20" font-family="monospace" font-size="9" font-weight="bold" fill="white" text-anchor="middle" transform="rotate(-90, 30, 50)">STRIDE</text>
+                <text x="30" y="50" font-family="monospace" font-size="8" fill="#fecaca" text-anchor="middle" transform="rotate(-90, 30, 50)">Analyzed</text>
+            </g>
+        </svg>

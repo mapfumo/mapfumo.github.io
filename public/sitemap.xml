@@ -3,12 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2026-01-11T13:50:05+10:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/</loc>
-    <lastmod>2026-01-11T13:50:05+10:00</lastmod>
+    <lastmod>2026-01-15T20:52:25+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-15T20:52:25+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/</loc>
+    <lastmod>2026-01-15T20:52:25+10:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/week-10-from-lora-modules-to-native-lorawan-the-stm32wl-migration/</loc>
     <lastmod>2026-01-11T13:50:05+10:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/modbus-opcua-week-9/</loc>
