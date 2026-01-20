@@ -1097,10 +1097,3 @@ From Week 1's LED blink to Week 9's Modbus TCP slaves with OPC-UA integration - 
 
 - [Week 7+8: MQTT + InfluxDB + Grafana](https://github.com/mapfumo/wk7-mqtt-influx)
 - [Week 6: Async Gateway](https://github.com/mapfumo/wk6-async-gateway)
-
----
-
-**Author**: Antony (Tony) Mapfumo  
-**Part of**: 4-Month Embedded Rust Learning Roadmap  
-**Week**: 9 of 16  
-**Tags**: `#modbus-tcp` `#opcua` `#w5500` `#industrial-automation` `#scada` `#plc` `#embassy` `#learning-in-public`
