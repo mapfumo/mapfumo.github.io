@@ -6,7 +6,7 @@ layout:
 
 ---
 
-![Antony Mapfumo](/img/ants.jpg#floatleft "Antony Mapfumo")
+![Antony Mapfumo](/img/ants_bw.jpg#floatleft "Antony Mapfumo")
 
 I'm Tony — a network engineer transitioning into Industrial IoT and embedded systems engineering. Currently building production-grade IIoT systems in Embedded Rust — LoRaWAN sensor networks, Modbus TCP slaves, real-time data pipelines, and unified monitoring platforms.
 
