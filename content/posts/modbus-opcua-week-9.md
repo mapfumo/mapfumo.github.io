@@ -1081,17 +1081,17 @@ From Week 1's LED blink to Week 9's Modbus TCP slaves with OPC-UA integration - 
 
 ### Documentation
 
-- [USERGUIDE.md](./USERGUIDE.md) - Complete operational guide
-- [STATUS.md](./STATUS.md) - Current system status
-- [NOTES.md](./NOTES.md) - Development session logs
-- [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) - Common issues
+- [USERGUIDE.md](https://github.com/mapfumo/wk9-opcua-modbus/blob/main/USERGUIDE.md) - Complete operational guide
+- [STATUS.md](https://github.com/mapfumo/wk9-opcua-modbus/blob/main/STATUS.md) - Current system status
+- [NOTES.md](https://github.com/mapfumo/wk9-opcua-modbus/blob/main/NOTES.md) - Development session logs
+- [TROUBLESHOOTING.md](https://github.com/mapfumo/wk9-opcua-modbus/blob/main/TROUBLESHOOTING.md) - Common issues
 
 ### Specifications
 
-- [Modbus TCP Specification](https://www.modbus.org/specs.php)
+- [Modbus TCP Specification](https://www.modbus.org/file/secure/messagingimplementationguide.pdf)
 - [OPC-UA Specification](https://reference.opcfoundation.org/)
-- [W5500 Datasheet](https://www.wiznet.io/product-item/w5500/)
-- [IEEE 754 Standard](https://ieeexplore.ieee.org/document/8766229)
+- [W5500 Datasheet](https://cdn.sparkfun.com/datasheets/Dev/Arduino/Shields/W5500_datasheet_v1.0.2_1.pdf)
+- [IEEE 754 Standard](https://www-users.cse.umn.edu/~vinals/tspot_files/phys4041/2020/IEEE%20Standard%20754-2019.pdf)
 
 ### Related Projects
 
