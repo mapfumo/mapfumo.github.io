@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT | Antony Mapfumo</title>
+<meta name="keywords" content="">
+<meta name="description" content="
+🎬 Watch the Full Demo
+After 12 weeks of building, here&rsquo;s the result: a production-grade Industrial IoT monitoring platform built from scratch.
+
+
+▶️ Watch on YouTube (6 minutes)
+
+What I Built
+A complete Industrial IoT monitoring platform demonstrating expertise across the full stack:
+Hardware (4 Sensor Nodes)
+LoRaWAN Nodes (STM32WL55):
+
+LoRa-1: SHT41 temperature/humidity sensor &#43; SSD1306 OLED
+LoRa-2: BME680 environmental sensor &#43; SH1106 OLED
+Native LoRa radio (no external modules)
+AU915 frequency band, OTAA join
+
+Modbus TCP Nodes (STM32F446):">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT
+    </h1>
+    <div class="post-meta">Jan 26, 2026 · 7 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/wk12_image.svg" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/wk12_image.svg" alt="STM32F446RE NUCLEO board with SSD1306 OLED display"></a>
+        <p>From LoRa Modules to Native LoRaWAN the STM32WL Migration</p>
+</figure>
+  <div class="post-content"><hr>
+<h2 id="-watch-the-full-demo">🎬 Watch the Full Demo<a hidden class="anchor" aria-hidden="true" href="#-watch-the-full-demo">#</a></h2>
+<p>After 12 weeks of building, here&rsquo;s the result: a production-grade Industrial IoT monitoring platform built from scratch.</p>
+<p><a href="https://youtu.be/hHb1stTLWLI"><img loading="lazy" src="https://img.youtube.com/vi/hHb1stTLWLI/maxresdefault.jpg" alt="Industrial IoT Monitoring Platform"  />
+</a></p>
+<p><strong><a href="https://youtu.be/hHb1stTLWLI">▶️ Watch on YouTube (6 minutes)</a></strong></p>
+<hr>
+<h2 id="what-i-built">What I Built<a hidden class="anchor" aria-hidden="true" href="#what-i-built">#</a></h2>
+<p>A complete Industrial IoT monitoring platform demonstrating expertise across the full stack:</p>
+<h3 id="hardware-4-sensor-nodes">Hardware (4 Sensor Nodes)<a hidden class="anchor" aria-hidden="true" href="#hardware-4-sensor-nodes">#</a></h3>
+<p><strong>LoRaWAN Nodes</strong> (STM32WL55):</p>
+<ul>
+<li>LoRa-1: SHT41 temperature/humidity sensor + SSD1306 OLED</li>
+<li>LoRa-2: BME680 environmental sensor + SH1106 OLED</li>
+<li>Native LoRa radio (no external modules)</li>
+<li>AU915 frequency band, OTAA join</li>
+</ul>
+<p><strong>Modbus TCP Nodes</strong> (STM32F446):</p>
+<ul>
+<li>Modbus-1: SHT41 sensor + W5500 Ethernet</li>
+<li>Modbus-2: BME680 sensor + W5500 Ethernet</li>
+<li>IEEE 754 float32 register encoding</li>
+<li>40001-40007 holding register map</li>
+</ul>
+<h3 id="software-stack">Software Stack<a hidden class="anchor" aria-hidden="true" href="#software-stack">#</a></h3>
+<p><strong>Firmware</strong>: Embedded Rust + Embassy async runtime<br>
+<strong>Protocols</strong>: LoRaWAN (OTAA), Modbus TCP, MQTT<br>
+<strong>Infrastructure</strong>: Docker Compose, InfluxDB 2.x, Grafana 10.x<br>
+<strong>Gateway</strong>: RAK7268V2 WisGate Edge Lite 2</p>
+<hr>
+<h2 id="system-architecture">System Architecture<a hidden class="anchor" aria-hidden="true" href="#system-architecture">#</a></h2>
+<p><img loading="lazy" src="/img/system-architecture.png" alt="System Architecture"  />
+</p>
+<p>The platform integrates two industrial protocols (LoRaWAN and Modbus TCP) into a unified monitoring dashboard. Data flows from sensors through protocol-specific bridges into InfluxDB, with real-time visualization in Grafana.</p>
+<p><strong>Key architectural decisions</strong>:</p>
+<ul>
+<li>Embassy async framework (no RTOS overhead)</li>
+<li>Push-based MQTT (better fit than Prometheus pull)</li>
+<li>Docker Compose (reproducible infrastructure)</li>
+<li>Unified InfluxDB bucket with protocol tagging</li>
+</ul>
+<p><a href="/img/system-architecture.png">View full system architecture →</a></p>
+<hr>
+<h2 id="data-flow-pipeline">Data Flow Pipeline<a hidden class="anchor" aria-hidden="true" href="#data-flow-pipeline">#</a></h2>
+<p><img loading="lazy" src="/img/data-flow.png" alt="Data Flow Pipeline"  />
+</p>
+<p><strong>End-to-end latency</strong>: &lt; 2 seconds</p>
+<ol>
+<li><strong>Sensor Read</strong> (10-15ms): I2C communication with SHT41/BME680</li>
+<li><strong>Encode Payload</strong> (1ms): Integer-only math, big-endian byte order</li>
+<li><strong>LoRa TX</strong> (1.3-1.5s): SF7-SF12 spreading factor, 915 MHz</li>
+<li><strong>Gateway Receive</strong> (&lt;100ms): RAK7268V2 processes and publishes to MQTT</li>
+<li><strong>Bridge Decode</strong> (50ms): Python script decodes Base64, parses JSON</li>
+<li><strong>InfluxDB Write</strong> (20ms): Line protocol over HTTP</li>
+<li><strong>Grafana Display</strong> (poll): Real-time dashboard with 15+ panels</li>
+</ol>
+<p><a href="/img/data-flow.png">View detailed data flow →</a></p>
+<hr>
+<h2 id="network-topology">Network Topology<a hidden class="anchor" aria-hidden="true" href="#network-topology">#</a></h2>
+<p><img loading="lazy" src="/img/network-topology.png" alt="Network Topology"  />
+</p>
+<p><strong>Physical layout</strong>:</p>
+<ul>
+<li>LoRaWAN: Wireless 915.2-916.6 MHz (AU915 sub-band 2)</li>
+<li>Modbus: Wired Ethernet (10.10.10.10, 10.10.10.20)</li>
+<li>Gateway: 10.10.10.254 (MQTT broker :1883)</li>
+<li>Docker network: Bridge mode for service isolation</li>
+</ul>
+<p><a href="/img/network-topology.png">View network topology →</a></p>
+<hr>
+<h2 id="technical-highlights">Technical Highlights<a hidden class="anchor" aria-hidden="true" href="#technical-highlights">#</a></h2>
+<h3 id="1-embassy-async-runtime-no-rtos">1. Embassy Async Runtime (No RTOS)<a hidden class="anchor" aria-hidden="true" href="#1-embassy-async-runtime-no-rtos">#</a></h3>
+<p>Concurrent tasks without traditional RTOS overhead:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[embassy_executor::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>(spawner: <span style="color:#a6e22e">Spawner</span>) {
+</span></span><span style="display:flex;"><span>    spawner.spawn(sensor_task(sensor)).unwrap();
+</span></span><span style="display:flex;"><span>    spawner.spawn(display_task(display)).unwrap();
+</span></span><span style="display:flex;"><span>    spawner.spawn(radio_task(radio)).unwrap();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[embassy_executor::task]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">sensor_task</span>(<span style="color:#66d9ef">mut</span> sensor: <span style="color:#a6e22e">Sht41</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> reading <span style="color:#f92672">=</span> sensor.read().<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">SENSOR_DATA</span>.signal(reading);
+</span></span><span style="display:flex;"><span>        Timer::after_secs(<span style="color:#ae81ff">30</span>).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Embassy compiles async/await into state machines - zero stack-per-task overhead.</p>
+<hr>
+<h3 id="2-lorawan-byte-order-debugging">2. LoRaWAN Byte Order Debugging<a hidden class="anchor" aria-hidden="true" href="#2-lorawan-byte-order-debugging">#</a></h3>
+<p><strong>The bug</strong>: Devices wouldn&rsquo;t join the network. Gateway showed wrong DevEUI.</p>
+<p><strong>The fix</strong>: LoRaWAN transmits EUIs little-endian, but I stored them big-endian.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// WRONG (what I initially had):
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEV_EUI</span>: [<span style="color:#66d9ef">u8</span>; <span style="color:#ae81ff">8</span>] <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x23</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0xFE</span>, <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0xAC</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// CORRECT (reversed for LSB-first transmission):
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEV_EUI</span>: [<span style="color:#66d9ef">u8</span>; <span style="color:#ae81ff">8</span>] <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0xFE</span>, <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0x23</span>];
+</span></span></code></pre></div><p><strong>Lesson</strong>: Always verify wire format against specification. The &ldquo;obvious&rdquo; byte order is often wrong.</p>
+<hr>
+<h3 id="3-integer-only-sensor-math-no-fpu">3. Integer-Only Sensor Math (No FPU)<a hidden class="anchor" aria-hidden="true" href="#3-integer-only-sensor-math-no-fpu">#</a></h3>
+<p><strong>Challenge</strong>: STM32WL55 has no floating-point unit. Using <code>f32</code> causes HardFault.</p>
+<p><strong>Solution</strong>: Fixed-point integer math with ×100 scaling.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// SHT41 temperature: T = -45 + (175 × raw) / 65535
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">convert_temperature</span>(raw: <span style="color:#66d9ef">u16</span>) -&gt; <span style="color:#66d9ef">i16</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> temp_scaled <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">4500</span><span style="color:#66d9ef">i32</span> <span style="color:#f92672">+</span> ((<span style="color:#ae81ff">17500</span><span style="color:#66d9ef">i32</span> <span style="color:#f92672">*</span> raw <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i32</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">65535</span>);
+</span></span><span style="display:flex;"><span>    (temp_scaled <span style="color:#f92672">/</span> <span style="color:#ae81ff">100</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i16</span>  <span style="color:#75715e">// Result in °C × 100
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Payload: 2 bytes big-endian
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> temp_bytes <span style="color:#f92672">=</span> (temp_celsius <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i16</span>).to_be_bytes();
+</span></span><span style="display:flex;"><span>payload[<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">2</span>].copy_from_slice(<span style="color:#f92672">&amp;</span>temp_bytes);
+</span></span></code></pre></div><p><strong>Trade-off</strong>: 0.01°C resolution is more than sufficient for environmental monitoring.</p>
+<hr>
+<h3 id="4-modbus-tcp-server-implementation">4. Modbus TCP Server Implementation<a hidden class="anchor" aria-hidden="true" href="#4-modbus-tcp-server-implementation">#</a></h3>
+<p>IEEE 754 float32 encoding in holding registers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Write temperature (registers 40001-40002)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> temp_bytes <span style="color:#f92672">=</span> temp_celsius.to_be_bytes();
+</span></span><span style="display:flex;"><span>registers[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">u16</span>::from_be_bytes([temp_bytes[<span style="color:#ae81ff">0</span>], temp_bytes[<span style="color:#ae81ff">1</span>]]);
+</span></span><span style="display:flex;"><span>registers[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">u16</span>::from_be_bytes([temp_bytes[<span style="color:#ae81ff">2</span>], temp_bytes[<span style="color:#ae81ff">3</span>]]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Client decodes with:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// bytes = [reg_high_MSB, reg_high_LSB, reg_low_MSB, reg_low_LSB]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// float = struct.unpack(&#39;&gt;f&#39;, bytes)
+</span></span></span></code></pre></div><p>Python bridge polls every 2 seconds and writes to InfluxDB with proper tagging.</p>
+<hr>
+<h2 id="performance-metrics">Performance Metrics<a hidden class="anchor" aria-hidden="true" href="#performance-metrics">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>End-to-End Latency</strong></td>
+          <td>&lt; 2 seconds</td>
+      </tr>
+      <tr>
+          <td><strong>LoRaWAN Join Time</strong></td>
+          <td>~7 seconds (OTAA)</td>
+      </tr>
+      <tr>
+          <td><strong>LoRa TX Duration</strong></td>
+          <td>1.3-1.5 seconds (SF7-SF12)</td>
+      </tr>
+      <tr>
+          <td><strong>Sensor Read Time</strong></td>
+          <td>10-15 ms (I2C @ 100kHz)</td>
+      </tr>
+      <tr>
+          <td><strong>Flash Usage (STM32WL55)</strong></td>
+          <td>28 KB / 256 KB (11%)</td>
+      </tr>
+      <tr>
+          <td><strong>RAM Usage (STM32WL55)</strong></td>
+          <td>8 KB / 64 KB (12.5%)</td>
+      </tr>
+      <tr>
+          <td><strong>Grafana Panels</strong></td>
+          <td>15+ (temperature, humidity, pressure, link quality)</td>
+      </tr>
+      <tr>
+          <td><strong>Uptime</strong></td>
+          <td>72+ hours continuous operation</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="case-study--deep-dives">Case Study &amp; Deep Dives<a hidden class="anchor" aria-hidden="true" href="#case-study--deep-dives">#</a></h2>
+<p>I&rsquo;ve documented the technical challenges, architectural decisions, and lessons learned in a comprehensive case study:</p>
+<p><strong><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/CASE_STUDY.md">📄 Read the Full Case Study →</a></strong></p>
+<p>Topics covered:</p>
+<ul>
+<li>Embassy async framework internals</li>
+<li>LoRaWAN byte order discovery process</li>
+<li>Integer-only sensor math (no FPU)</li>
+<li>I2C peripheral sharing patterns</li>
+<li>Patching dependency version conflicts</li>
+<li>MQTT protocol version negotiation</li>
+<li>Architecture decision rationale</li>
+<li>Performance analysis</li>
+<li>What I&rsquo;d do differently</li>
+</ul>
+<hr>
+<h2 id="repository-structure">Repository Structure<a hidden class="anchor" aria-hidden="true" href="#repository-structure">#</a></h2>
+<p>All code is open source and documented:</p>
+<pre tabindex="0"><code>4-month-plan/
+├── wk1-rtic-lora/           # RTIC + LoRa UART foundation
+├── wk2-lora-sensor-fusion/  # Multi-sensor I2C + LoRa
+├── wk3-binary-protocol/     # Postcard + CRC + ACK/retry
+├── wk5-gateway-firmware/    # JSON telemetry gateway
+├── wk6-async-gateway/       # Tokio async service
+├── wk7-mqtt-influx/         # MQTT → InfluxDB → Grafana
+├── wk9-opcua-modbus/        # W5500 + Modbus + OPC-UA
+├── wk10-lorawan/            # LoRaWAN sensor network
+├── wk11-unified-monitoring/ # 🌟 Self-contained unified platform
+└── wk12-portfolio/          # Documentation + diagrams + video
+</code></pre><p><strong><a href="https://github.com/mapfumo/wk11-unified-monitoring">🔗 View on GitHub →</a></strong></p>
+<hr>
+<h2 id="quick-start-unified-platform">Quick Start (Unified Platform)<a hidden class="anchor" aria-hidden="true" href="#quick-start-unified-platform">#</a></h2>
+<p>The <code>wk11-unified-monitoring</code> repository is self-contained and deployable:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Clone</span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/mapfumo/wk11-unified-monitoring
+</span></span><span style="display:flex;"><span>cd wk11-unified-monitoring
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Start infrastructure</span>
+</span></span><span style="display:flex;"><span>docker compose up -d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Flash firmware (requires hardware + probe-rs)</span>
+</span></span><span style="display:flex;"><span>cd firmware/lorawan/lora-1 <span style="color:#f92672">&amp;&amp;</span> cargo run --release
+</span></span><span style="display:flex;"><span>cd firmware/modbus <span style="color:#f92672">&amp;&amp;</span> cargo run --release --bin modbus_1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Access Grafana</span>
+</span></span><span style="display:flex;"><span>open http://localhost:3000  <span style="color:#75715e"># admin/admin</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Watch decoded sensor readings</span>
+</span></span><span style="display:flex;"><span>python3 mqtt_subscriber.py
+</span></span></code></pre></div><p><strong>Requirements</strong>:</p>
+<ul>
+<li>Docker + Docker Compose</li>
+<li>Rust toolchain (for firmware)</li>
+<li>probe-rs (for flashing)</li>
+<li>Hardware: STM32 boards, RAK7268V2 gateway</li>
+</ul>
+<hr>
+<h2 id="security-analysis">Security Analysis<a hidden class="anchor" aria-hidden="true" href="#security-analysis">#</a></h2>
+<p>I conducted STRIDE threat modeling to identify vulnerabilities and mitigations:</p>
+<p><strong>Threats identified</strong>:</p>
+<ul>
+<li>Unencrypted MQTT (Tampering)</li>
+<li>Default credentials (Elevation of Privilege)</li>
+<li>No network segmentation (Lateral Movement)</li>
+<li>Missing TLS (Information Disclosure)</li>
+<li>No rate limiting (Denial of Service)</li>
+</ul>
+<p><strong><a href="https://github.com/mapfumo/wk11-unified-monitoring/blob/main/SECURITY.md">📄 Read Full STRIDE Analysis →</a></strong></p>
+<p>This demonstrates production-grade security thinking - not just building features, but thinking about deployment risks.</p>
+<hr>
+<h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
+<h3 id="what-worked-well">What Worked Well<a hidden class="anchor" aria-hidden="true" href="#what-worked-well">#</a></h3>
+<ol>
+<li><strong>Baby steps approach</strong>: Incremental changes with verification prevented cascading failures</li>
+<li><strong>Reference projects</strong>: Starting with working examples saved hours of hardware debugging</li>
+<li><strong>Documentation discipline</strong>: TROUBLESHOOTING.md files paid dividends when revisiting old code</li>
+<li><strong>RTT debugging</strong>: probe-rs with Real-Time Transfer is essential for embedded work</li>
+</ol>
+<h3 id="what-id-do-differently">What I&rsquo;d Do Differently<a hidden class="anchor" aria-hidden="true" href="#what-id-do-differently">#</a></h3>
+<ol>
+<li><strong>Start with unified repo</strong>: Migrating firmware between repos required path fixes</li>
+<li><strong>Add TLS earlier</strong>: Security should be designed in, not bolted on</li>
+<li><strong>Hardware-in-the-loop CI</strong>: No automated testing for firmware</li>
+<li><strong>Power profiling</strong>: Should have measured battery consumption for LoRaWAN nodes</li>
+</ol>
+<h3 id="key-technical-insights">Key Technical Insights<a hidden class="anchor" aria-hidden="true" href="#key-technical-insights">#</a></h3>
+<ul>
+<li><strong>Specification documents are authoritative</strong>: Blog posts omit critical details</li>
+<li><strong>Embedded Rust ecosystem moves fast</strong>: Expect to patch dependencies</li>
+<li><strong>Condenser mics need quiet rooms</strong>: Good choice for my timber house</li>
+<li><strong>Audio quality &gt; video quality</strong>: Viewers tolerate poor video, not poor audio</li>
+</ul>
+<hr>
+<h2 id="project-statistics">Project Statistics<a hidden class="anchor" aria-hidden="true" href="#project-statistics">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Duration</strong></td>
+          <td>12 weeks (part-time)</td>
+      </tr>
+      <tr>
+          <td><strong>Lines of Rust</strong></td>
+          <td>~3,500</td>
+      </tr>
+      <tr>
+          <td><strong>Lines of Python</strong></td>
+          <td>~800</td>
+      </tr>
+      <tr>
+          <td><strong>Docker Services</strong></td>
+          <td>6 (InfluxDB, Grafana, Mosquitto, 2× bridges, Chronograf)</td>
+      </tr>
+      <tr>
+          <td><strong>Documentation</strong></td>
+          <td>~15,000 words</td>
+      </tr>
+      <tr>
+          <td><strong>Diagrams</strong></td>
+          <td>3 (Excalidraw source files)</td>
+      </tr>
+      <tr>
+          <td><strong>GitHub Repos</strong></td>
+          <td>10 (weekly progression + unified)</td>
+      </tr>
+      <tr>
+          <td><strong>Blog Posts</strong></td>
+          <td>12 (weekly updates)</td>
+      </tr>
+      <tr>
+          <td><strong>Video Length</strong></td>
+          <td>6 minutes</td>
+      </tr>
+      <tr>
+          <td><strong>Total Investment</strong></td>
+          <td>$130 (Fifine mic + DiCUNO LEDs)</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="technical-resources">Technical Resources<a hidden class="anchor" aria-hidden="true" href="#technical-resources">#</a></h2>
+<h3 id="documentation">Documentation<a hidden class="anchor" aria-hidden="true" href="#documentation">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/README.md">README.md</a> - Project overview</li>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/CASE_STUDY.md">CASE_STUDY.md</a> - Technical deep dives</li>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/VIDEO_SCRIPT.md">VIDEO_SCRIPT.md</a> - Demo video storyboard</li>
+<li><a href="https://github.com/mapfumo/wk11-unified-monitoring/blob/main/SECURITY.md">SECURITY.md</a> - STRIDE analysis</li>
+</ul>
+<h3 id="diagrams-excalidraw-source">Diagrams (Excalidraw Source)<a hidden class="anchor" aria-hidden="true" href="#diagrams-excalidraw-source">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/diagrams/system-architecture.excalidraw">system-architecture.excalidraw</a></li>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/diagrams/data-flow.excalidraw">data-flow.excalidraw</a></li>
+<li><a href="https://github.com/mapfumo/wk12-portfolio/blob/main/diagrams/network-topology.excalidraw">network-topology.excalidraw</a></li>
+</ul>
+<h3 id="code">Code<a hidden class="anchor" aria-hidden="true" href="#code">#</a></h3>
+<ul>
+<li><a href="https://github.com/mapfumo/wk11-unified-monitoring">wk11-unified-monitoring</a> - Self-contained platform</li>
+<li><a href="https://github.com/mapfumo/wk11-unified-monitoring/blob/main/modbus_to_influx.py">modbus_to_influx.py</a> - Modbus bridge</li>
+<li><a href="https://github.com/mapfumo/wk11-unified-monitoring/blob/main/mqtt_subscriber.py">mqtt_subscriber.py</a> - LoRaWAN decoder</li>
+</ul>
+<hr>
+<h2 id="reflections">Reflections<a hidden class="anchor" aria-hidden="true" href="#reflections">#</a></h2>
+<h3 id="from-network-engineer-to-embedded-systems-engineer">From Network Engineer to Embedded Systems Engineer<a hidden class="anchor" aria-hidden="true" href="#from-network-engineer-to-embedded-systems-engineer">#</a></h3>
+<p>This 12-week journey proves that systematic learning + consistent shipping beats endless tutorials.</p>
+<p><strong>What I knew before</strong> (network engineering, 10+ years):</p>
+<ul>
+<li>TCP/IP, routing, switching</li>
+<li>Linux administration</li>
+<li>Systems thinking and troubleshooting</li>
+</ul>
+<p><strong>What I learned</strong> (embedded systems, 12 weeks):</p>
+<ul>
+<li>Bare-metal firmware in Rust</li>
+<li>Industrial protocols (Modbus, LoRaWAN, OPC-UA)</li>
+<li>Async runtimes without RTOS</li>
+<li>Hardware debugging (logic analyzer, probe-rs, RTT)</li>
+<li>Time-series databases and observability</li>
+</ul>
+<p><strong>The common thread</strong>: Systems thinking. Network engineering taught me to debug complex distributed systems - embedded systems are just smaller, closer to hardware.</p>
+<h3 id="the-power-of-shipping">The Power of Shipping<a hidden class="anchor" aria-hidden="true" href="#the-power-of-shipping">#</a></h3>
+<p>I didn&rsquo;t spend 12 weeks reading books and watching videos. I spent 12 weeks <strong>building and shipping</strong>.</p>
+<ul>
+<li>Week 1: Shipped LED blink</li>
+<li>Week 2: Shipped sensor integration</li>
+<li>Week 3: Shipped binary protocol</li>
+<li>&hellip;</li>
+<li>Week 11: Shipped unified platform</li>
+<li>Week 12: Shipped portfolio video</li>
+</ul>
+<p><strong>Every week, something worked.</strong> That&rsquo;s the difference between learning and doing.</p>
+<hr>
+<p><strong>This portfolio exists because I committed to shipping every week, no matter what.</strong></p>
+<p><strong>Looking for opportunities in embedded systems, IIoT, or industrial automation.</strong></p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT on twitter"
+        href="https://twitter.com/intent/tweet/?text=Week%2012%3a%20Mission%20Accomplished%20-%20From%20LED%20Blink%20to%20Production-Grade%20IIoT&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f&amp;title=Week%2012%3a%20Mission%20Accomplished%20-%20From%20LED%20Blink%20to%20Production-Grade%20IIoT&amp;summary=Week%2012%3a%20Mission%20Accomplished%20-%20From%20LED%20Blink%20to%20Production-Grade%20IIoT&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f&title=Week%2012%3a%20Mission%20Accomplished%20-%20From%20LED%20Blink%20to%20Production-Grade%20IIoT">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT on whatsapp"
+        href="https://api.whatsapp.com/send?text=Week%2012%3a%20Mission%20Accomplished%20-%20From%20LED%20Blink%20to%20Production-Grade%20IIoT%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fjanuary%2fweek-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

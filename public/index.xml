@@ -6,7 +6,33 @@
     <description>Recent content on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Jan 2026 20:52:25 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 26 Jan 2026 22:11:26 +1000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT</title>
+      <link>http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/</link>
+      <pubDate>Mon, 26 Jan 2026 22:11:26 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/</guid>
+      <description>&lt;hr&gt;
+&lt;h2 id=&#34;-watch-the-full-demo&#34;&gt;🎬 Watch the Full Demo&lt;/h2&gt;
+&lt;p&gt;After 12 weeks of building, here&amp;rsquo;s the result: a production-grade Industrial IoT monitoring platform built from scratch.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://youtu.be/hHb1stTLWLI&#34;&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://img.youtube.com/vi/hHb1stTLWLI/maxresdefault.jpg&#34; alt=&#34;Industrial IoT Monitoring Platform&#34;  /&gt;
+&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://youtu.be/hHb1stTLWLI&#34;&gt;▶️ Watch on YouTube (6 minutes)&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;what-i-built&#34;&gt;What I Built&lt;/h2&gt;
+&lt;p&gt;A complete Industrial IoT monitoring platform demonstrating expertise across the full stack:&lt;/p&gt;
+&lt;h3 id=&#34;hardware-4-sensor-nodes&#34;&gt;Hardware (4 Sensor Nodes)&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;LoRaWAN Nodes&lt;/strong&gt; (STM32WL55):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;LoRa-1: SHT41 temperature/humidity sensor + SSD1306 OLED&lt;/li&gt;
+&lt;li&gt;LoRa-2: BME680 environmental sensor + SH1106 OLED&lt;/li&gt;
+&lt;li&gt;Native LoRa radio (no external modules)&lt;/li&gt;
+&lt;li&gt;AU915 frequency band, OTAA join&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Modbus TCP Nodes&lt;/strong&gt; (STM32F446):&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11</title>
       <link>http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/</link>
