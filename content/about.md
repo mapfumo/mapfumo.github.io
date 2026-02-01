@@ -8,25 +8,26 @@ layout:
 
 ![Antony Mapfumo](/img/ants_bw.jpg#floatleft "Antony Mapfumo")
 
-I'm Tony — a network engineer transitioning into Industrial IoT and embedded systems engineering. Currently building production-grade IIoT systems in Embedded Rust — LoRaWAN sensor networks, Modbus TCP slaves, real-time data pipelines, and unified monitoring platforms.
+I'm Tony — a network engineer and embedded systems developer specializing in Industrial IoT. I build production-grade IIoT systems in Embedded Rust: multi-protocol gateways, sensor networks, and real-time data pipelines. The combination of network engineering and embedded development is a natural fit — industrial protocols are just packets with different semantics.
 
 **Recent Work:**
 
-- **Unified IIoT Platform**: 4-node system combining LoRaWAN + Modbus TCP → single Grafana dashboard. Includes STRIDE security analysis identifying 12+ threats with prioritized mitigations.
-- **LoRaWAN Migration**: Transitioned from RYLR998 modules to native STM32WL55 radio with dual-node network (SHT41, BME680 sensors).
-- **Modbus TCP Slaves**: STM32F446 + W5500 Ethernet implementing IEEE 754 float32 register encoding, concurrent client handling.
-- **MQTT Pipelines**: LoRa → MQTT → InfluxDB → Grafana with sub-second end-to-end latency.
+- **Multi-Protocol Gateway**: Unified platform integrating LoRaWAN, Modbus TCP, and BACnet/IP on STM32 microcontrollers. Pure socket implementations, Embassy async framework, Docker-based infrastructure.
+- **LoRaWAN Sensor Network**: Native STM32WL55 radio with OTAA join, BME680/SHT41 environmental sensors, RAK7268V2 gateway.
+- **Modbus TCP Implementation**: STM32F446 + W5500 Ethernet with IEEE 754 float32 register encoding, concurrent client handling.
+- **Data Pipelines**: Protocol bridges feeding InfluxDB time-series database with Grafana visualization. Sub-second end-to-end latency.
 
 ---
 
 **Technical Stack:**
 
-- **Embedded:** Rust (Embassy async HAL, RTIC), C++, STM32 (F4/WL55)
-- **Protocols:** LoRaWAN, Modbus TCP, MQTT, OPC-UA, binary formats (Postcard)
-- **Tools:** probe-rs, logic analyzers, Docker, InfluxDB, Grafana
+- **Embedded:** Rust (Embassy async, RTIC), STM32 (F4/WL55), bare-metal firmware
+- **Protocols:** LoRaWAN, Modbus TCP, BACnet/IP, MQTT, OPC-UA
+- **Infrastructure:** Docker, InfluxDB, Grafana, Python
+- **Tools:** probe-rs, logic analyzers, Wireshark
 - **Security:** STRIDE threat modeling, IEC 62443 awareness
 
-**Engineering Philosophy:** Systematic, hardware-validated, production-minded. Every project includes: working hardware, comprehensive documentation, security analysis, and open-source code.
+**Engineering Philosophy:** Systematic, hardware-validated, production-minded. Every project ships with working hardware, comprehensive documentation, and open-source code.
 
 ## Portfolio
 
