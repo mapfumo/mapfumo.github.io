@@ -6,7 +6,7 @@ layout:
 
 ---
 
-![Antony Mapfumo](/img/ants_bw.jpg#floatleft "Antony Mapfumo")
+![Antony Mapfumo](/img/ants_hat.jpg#floatleft "Antony Mapfumo")
 
 I'm Tony — a network engineer and embedded systems developer specializing in Industrial IoT. I build production-grade IIoT systems in Embedded Rust: multi-protocol gateways, sensor networks, and real-time data pipelines. The combination of network engineering and embedded development is a natural fit — industrial protocols are just packets with different semantics.
 
