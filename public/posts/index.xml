@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 26 Jan 2026 22:11:26 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Feb 2026 17:01:44 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP</title>
+      <link>http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/</link>
+      <pubDate>Sun, 01 Feb 2026 17:01:44 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/</guid>
+      <description>&lt;h1 id=&#34;building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnetip&#34;&gt;Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP&lt;/h1&gt;
+&lt;p&gt;When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT</title>
       <link>http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/</link>

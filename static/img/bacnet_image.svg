@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="loraGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="gatewayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="modbusGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <linearGradient id="pythonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <linearGradient id="dockerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9"/>
+      <stop offset="100%" style="stop-color:#0284c7"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" fill="url(#bgGrad)"/>
+
+  <!-- Grid -->
+  <g stroke="#334155" stroke-width="0.5" opacity="0.2">
+    <line x1="0" y1="150" x2="900" y2="150"/>
+    <line x1="0" y1="300" x2="900" y2="300"/>
+    <line x1="0" y1="450" x2="900" y2="450"/>
+    <line x1="150" y1="0" x2="150" y2="600"/>
+    <line x1="300" y1="0" x2="300" y2="600"/>
+    <line x1="450" y1="0" x2="450" y2="600"/>
+    <line x1="600" y1="0" x2="600" y2="600"/>
+    <line x1="750" y1="0" x2="750" y2="600"/>
+  </g>
+
+  <!-- Section Labels -->
+  <text x="90" y="30" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">SENSOR LAYER</text>
+  <text x="280" y="30" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">NETWORK</text>
+  <text x="450" y="30" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">PROTOCOL BRIDGES</text>
+  <text x="620" y="30" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">DATA LAYER</text>
+  <text x="800" y="30" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">DASHBOARD</text>
+
+  <!-- LoRaWAN Node 1 -->
+  <g transform="translate(30, 60)" filter="url(#glow)">
+    <rect x="0" y="0" width="120" height="90" rx="6" fill="url(#loraGrad)" opacity="0.9"/>
+    <!-- Radio waves -->
+    <path d="M 95 25 Q 105 35 95 45" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <path d="M 100 20 Q 115 35 100 50" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <!-- MCU representation -->
+    <rect x="15" y="15" width="55" height="35" rx="3" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1"/>
+    <text x="42" y="28" fill="#a78bfa" font-family="monospace" font-size="7" text-anchor="middle">STM32</text>
+    <text x="42" y="40" fill="#a78bfa" font-family="monospace" font-size="7" text-anchor="middle">WL55JC</text>
+    <!-- Sensor label -->
+    <text x="60" y="62" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle">BME680</text>
+    <text x="60" y="82" fill="#e9d5ff" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">LoRa Node 1</text>
+  </g>
+
+  <!-- LoRaWAN Node 2 -->
+  <g transform="translate(30, 170)" filter="url(#glow)">
+    <rect x="0" y="0" width="120" height="90" rx="6" fill="url(#loraGrad)" opacity="0.9"/>
+    <!-- Radio waves -->
+    <path d="M 95 25 Q 105 35 95 45" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <path d="M 100 20 Q 115 35 100 50" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <!-- MCU -->
+    <rect x="15" y="15" width="55" height="35" rx="3" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1"/>
+    <text x="42" y="28" fill="#a78bfa" font-family="monospace" font-size="7" text-anchor="middle">STM32</text>
+    <text x="42" y="40" fill="#a78bfa" font-family="monospace" font-size="7" text-anchor="middle">WL55JC</text>
+    <text x="60" y="62" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle">BME680</text>
+    <text x="60" y="82" fill="#e9d5ff" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">LoRa Node 2</text>
+  </g>
+
+  <!-- LoRaWAN Gateway -->
+  <g transform="translate(210, 115)" filter="url(#glow)">
+    <rect x="0" y="0" width="100" height="70" rx="6" fill="#581c87" opacity="0.9"/>
+    <rect x="15" y="12" width="70" height="30" rx="3" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1"/>
+    <text x="50" y="26" fill="#a78bfa" font-family="monospace" font-size="7" text-anchor="middle">RAK7268V2</text>
+    <text x="50" y="36" fill="#a78bfa" font-family="monospace" font-size="6" text-anchor="middle">WisGate</text>
+    <text x="50" y="52" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">AU915</text>
+    <text x="50" y="64" fill="#e9d5ff" font-family="monospace" font-size="8" text-anchor="middle">MQTT</text>
+  </g>
+
+  <!-- RF connections to LoRa Gateway -->
+  <path d="M 150 105 Q 180 120 210 140" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="4,3" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 150 215 Q 180 180 210 160" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="4,3" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/>
+  </path>
+  <text x="175" y="140" fill="#8b5cf6" font-family="monospace" font-size="7" text-anchor="middle">RF</text>
+
+  <!-- Unified Gateway (Modbus + BACnet) -->
+  <g transform="translate(30, 320)" filter="url(#glow)">
+    <rect x="0" y="0" width="120" height="110" rx="6" fill="url(#gatewayGrad)" opacity="0.95"/>
+    <!-- MCU + W5500 -->
+    <rect x="10" y="12" width="50" height="30" rx="3" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+    <text x="35" y="24" fill="#60a5fa" font-family="monospace" font-size="6" text-anchor="middle">STM32</text>
+    <text x="35" y="34" fill="#60a5fa" font-family="monospace" font-size="6" text-anchor="middle">F446RE</text>
+    <rect x="65" y="12" width="45" height="30" rx="3" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+    <text x="87" y="30" fill="#60a5fa" font-family="monospace" font-size="7" text-anchor="middle">W5500</text>
+    <!-- Protocol badges -->
+    <rect x="8" y="48" width="50" height="14" rx="2" fill="#10b981"/>
+    <text x="33" y="58" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">Modbus:502</text>
+    <rect x="62" y="48" width="50" height="14" rx="2" fill="#f59e0b"/>
+    <text x="87" y="58" fill="#fff" font-family="monospace" font-size="6" text-anchor="middle">BACnet:47808</text>
+    <text x="60" y="76" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">SHT3x | 10.10.10.100</text>
+    <text x="60" y="100" fill="#bfdbfe" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">Unified Gateway</text>
+  </g>
+
+  <!-- Modbus Node 2 -->
+  <g transform="translate(30, 460)" filter="url(#glow)">
+    <rect x="0" y="0" width="120" height="90" rx="6" fill="url(#modbusGrad)" opacity="0.9"/>
+    <!-- MCU + W5500 -->
+    <rect x="10" y="12" width="50" height="30" rx="3" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+    <text x="35" y="24" fill="#34d399" font-family="monospace" font-size="6" text-anchor="middle">STM32</text>
+    <text x="35" y="34" fill="#34d399" font-family="monospace" font-size="6" text-anchor="middle">F446RE</text>
+    <rect x="65" y="12" width="45" height="30" rx="3" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+    <text x="87" y="30" fill="#34d399" font-family="monospace" font-size="7" text-anchor="middle">W5500</text>
+    <text x="60" y="55" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">SHT3x | Modbus:502</text>
+    <text x="60" y="68" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">10.10.10.200</text>
+    <text x="60" y="82" fill="#d1fae5" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">Modbus Node 2</text>
+  </g>
+
+  <!-- OT Subnet indicator -->
+  <rect x="20" y="305" width="145" height="260" rx="8" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="92" y="555" fill="#64748b" font-family="monospace" font-size="8" text-anchor="middle">OT Subnet 10.10.10.0/24</text>
+
+  <!-- Ethernet connections -->
+  <line x1="150" y1="375" x2="350" y2="285" stroke="#3b82f6" stroke-width="2" opacity="0.7"/>
+  <line x1="150" y1="505" x2="350" y2="315" stroke="#10b981" stroke-width="2" opacity="0.7"/>
+
+  <!-- Python Bridges Container -->
+  <g transform="translate(350, 100)">
+    <!-- Docker container outline -->
+    <rect x="0" y="0" width="140" height="350" rx="8" fill="#0c4a6e" opacity="0.3" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="8,4"/>
+    <text x="70" y="20" fill="#0ea5e9" font-family="monospace" font-size="9" text-anchor="middle">Docker Containers</text>
+
+    <!-- mqtt_to_influx.py -->
+    <g transform="translate(15, 35)" filter="url(#glow)">
+      <rect x="0" y="0" width="110" height="60" rx="5" fill="url(#pythonGrad)" opacity="0.9"/>
+      <text x="55" y="18" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" font-weight="bold">mqtt_to_influx</text>
+      <text x="55" y="32" fill="#fef3c7" font-family="monospace" font-size="7" text-anchor="middle">.py</text>
+      <text x="55" y="50" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">MQTT → InfluxDB</text>
+    </g>
+
+    <!-- modbus_to_influx.py -->
+    <g transform="translate(15, 115)" filter="url(#glow)">
+      <rect x="0" y="0" width="110" height="60" rx="5" fill="url(#pythonGrad)" opacity="0.9"/>
+      <text x="55" y="18" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" font-weight="bold">modbus_to_influx</text>
+      <text x="55" y="32" fill="#fef3c7" font-family="monospace" font-size="7" text-anchor="middle">.py</text>
+      <text x="55" y="50" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">Modbus → InfluxDB</text>
+    </g>
+
+    <!-- bacnet_to_influx.py -->
+    <g transform="translate(15, 195)" filter="url(#glow)">
+      <rect x="0" y="0" width="110" height="60" rx="5" fill="url(#pythonGrad)" opacity="0.9"/>
+      <text x="55" y="18" fill="#fff" font-family="monospace" font-size="8" text-anchor="middle" font-weight="bold">bacnet_to_influx</text>
+      <text x="55" y="32" fill="#fef3c7" font-family="monospace" font-size="7" text-anchor="middle">.py</text>
+      <text x="55" y="50" fill="#fff" font-family="monospace" font-size="7" text-anchor="middle">BACnet → InfluxDB</text>
+    </g>
+
+    <!-- Mosquitto MQTT -->
+    <g transform="translate(15, 275)" filter="url(#glow)">
+      <rect x="0" y="0" width="110" height="50" rx="5" fill="#7c3aed" opacity="0.8"/>
+      <text x="55" y="20" fill="#fff" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">Mosquitto</text>
+      <text x="55" y="38" fill="#e9d5ff" font-family="monospace" font-size="7" text-anchor="middle">MQTT Broker</text>
+    </g>
+  </g>
+
+  <!-- Connections from LoRa GW to MQTT bridge -->
+  <path d="M 310 150 L 350 150" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="6,3" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1s" repeatCount="indefinite"/>
+  </path>
+  <text x="330" y="145" fill="#8b5cf6" font-family="monospace" font-size="7" text-anchor="middle">MQTT</text>
+
+  <!-- InfluxDB -->
+  <g transform="translate(540, 180)" filter="url(#glow)">
+    <ellipse cx="50" cy="15" rx="45" ry="12" fill="#ec4899" opacity="0.9"/>
+    <rect x="5" y="15" width="90" height="70" fill="#ec4899" opacity="0.9"/>
+    <ellipse cx="50" cy="85" rx="45" ry="12" fill="#ec4899" opacity="0.9"/>
+    <ellipse cx="50" cy="15" rx="45" ry="12" fill="none" stroke="#fff" stroke-width="1" opacity="0.4"/>
+    <ellipse cx="50" cy="50" rx="45" ry="12" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>
+    <text x="50" y="45" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle" font-weight="bold">InfluxDB</text>
+    <text x="50" y="60" fill="#fce7f3" font-family="monospace" font-size="8" text-anchor="middle">sensors bucket</text>
+    <text x="50" y="75" fill="#fce7f3" font-family="monospace" font-size="7" text-anchor="middle">:8086</text>
+  </g>
+
+  <!-- Connections from bridges to InfluxDB -->
+  <path d="M 490 165 L 540 210" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="0.8s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 490 245 L 540 240" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="0.8s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 490 325 L 540 265" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="0.8s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Grafana Dashboard -->
+  <g transform="translate(700, 140)" filter="url(#glow)">
+    <rect x="0" y="0" width="170" height="200" rx="8" fill="#1e293b" stroke="#f97316" stroke-width="2"/>
+    <!-- Header -->
+    <rect x="0" y="0" width="170" height="25" rx="8" fill="#f97316" opacity="0.3"/>
+    <text x="85" y="17" fill="#f97316" font-family="monospace" font-size="10" text-anchor="middle" font-weight="bold">Grafana Dashboard</text>
+
+    <!-- Panels -->
+    <!-- Temperature panel -->
+    <rect x="10" y="35" width="70" height="50" rx="3" fill="#0f172a" stroke="#3b82f6" stroke-width="1"/>
+    <text x="45" y="48" fill="#3b82f6" font-family="monospace" font-size="7" text-anchor="middle">Temperature</text>
+    <polyline points="15,70 25,65 35,72 45,60 55,68 65,62 75,70" stroke="#3b82f6" stroke-width="1.5" fill="none"/>
+
+    <!-- Humidity panel -->
+    <rect x="90" y="35" width="70" height="50" rx="3" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+    <text x="125" y="48" fill="#10b981" font-family="monospace" font-size="7" text-anchor="middle">Humidity</text>
+    <polyline points="95,70 105,62 115,68 125,58 135,65 145,60 155,68" stroke="#10b981" stroke-width="1.5" fill="none"/>
+
+    <!-- Protocol status panel -->
+    <rect x="10" y="95" width="150" height="45" rx="3" fill="#0f172a" stroke="#8b5cf6" stroke-width="1"/>
+    <text x="85" y="108" fill="#94a3b8" font-family="monospace" font-size="7" text-anchor="middle">Protocol Status</text>
+    <circle cx="30" cy="125" r="6" fill="#8b5cf6"/><text x="55" y="128" fill="#8b5cf6" font-family="monospace" font-size="7">LoRa</text>
+    <circle cx="85" cy="125" r="6" fill="#10b981"/><text x="110" y="128" fill="#10b981" font-family="monospace" font-size="7">Modbus</text>
+    <circle cx="140" cy="125" r="6" fill="#f59e0b"/><text x="152" y="128" fill="#f59e0b" font-family="monospace" font-size="5">BACnet</text>
+
+    <!-- Sensor table -->
+    <rect x="10" y="150" width="150" height="40" rx="3" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+    <text x="85" y="165" fill="#64748b" font-family="monospace" font-size="7" text-anchor="middle">All Sensors (4 nodes)</text>
+    <line x1="10" y1="172" x2="160" y2="172" stroke="#334155" stroke-width="1"/>
+    <text x="40" y="183" fill="#94a3b8" font-family="monospace" font-size="6" text-anchor="middle">Temp | Hum | Status</text>
+    <text x="120" y="183" fill="#10b981" font-family="monospace" font-size="6" text-anchor="middle">ONLINE</text>
+  </g>
+
+  <!-- Connection from InfluxDB to Grafana -->
+  <path d="M 630 240 L 700 240" stroke="#ec4899" stroke-width="2" fill="none" stroke-dasharray="6,3" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="0.8s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Title -->
+  <text x="450" y="575" fill="#e2e8f0" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">Unified IIoT Monitoring Platform</text>
+  <text x="450" y="592" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">STM32 + Embassy/Rust | LoRaWAN + Modbus TCP + BACnet/IP | InfluxDB + Grafana</text>
+
+  <!-- Rust/Embassy badge -->
+  <g transform="translate(780, 380)">
+    <rect x="0" y="0" width="90" height="55" rx="5" fill="#1e293b" stroke="#f97316" stroke-width="1"/>
+    <text x="45" y="18" fill="#f97316" font-family="monospace" font-size="9" text-anchor="middle" font-weight="bold">Embassy</text>
+    <text x="45" y="32" fill="#94a3b8" font-family="monospace" font-size="8" text-anchor="middle">Async Rust</text>
+    <text x="45" y="46" fill="#64748b" font-family="monospace" font-size="7" text-anchor="middle">No RTOS needed</text>
+  </g>
+</svg>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP | Antony Mapfumo</title>
+<meta name="keywords" content="">
+<meta name="description" content="Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP
+When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://localhost:1313/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/portfolio/" title="Portfolio">
+                    <span>Portfolio</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tutorials/" title="Tutorials">
+                    <span>Tutorials</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP
+    </h1>
+    <div class="post-meta">Feb 1, 2026 · 9 min
+
+</div>
+  </header> 
+<figure class="entry-cover"><a href="http://localhost:1313/img/bacnet_image.svg" target="_blank"
+            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/bacnet_image.svg" alt="Multi-Protocol Industrial IoT Gateway architecture diagram"></a>
+        <p>LoRaWAN, Modbus TCP, and BACnet/IP unified gateway</p>
+</figure>
+  <div class="post-content"><h1 id="building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnetip">Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP<a hidden class="anchor" aria-hidden="true" href="#building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnetip">#</a></h1>
+<p>When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.</p>
+<p>I built a solution that brings these three protocols together on a single platform, using open-source tools and commodity hardware.</p>
+<h2 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h2>
+<p>Industrial monitoring systems rarely use just one protocol. A typical facility might have:</p>
+<ul>
+<li><strong>Legacy equipment</strong> using Modbus TCP (an industrial standard from the 1970s, still widely deployed)</li>
+<li><strong>Building automation systems</strong> using BACnet/IP (the standard for HVAC and building controls)</li>
+<li><strong>Wireless sensors</strong> using LoRaWAN (low-power, long-range radio communication)</li>
+</ul>
+<p>Each protocol has its strengths. Modbus TCP is simple and reliable. BACnet/IP is designed specifically for building automation with rich device models. LoRaWAN enables battery-powered sensors that can transmit for years without maintenance.</p>
+<p>The challenge is integration. Commercial gateways that support multiple protocols often cost thousands of dollars and lock you into proprietary ecosystems.</p>
+<h2 id="the-solution">The Solution<a hidden class="anchor" aria-hidden="true" href="#the-solution">#</a></h2>
+<p>I developed a unified monitoring platform that combines all three protocols into a single dashboard. The system uses:</p>
+<ul>
+<li><strong>Embedded firmware</strong> written in Rust running on STM32 microcontrollers</li>
+<li><strong>Protocol bridge software</strong> in Python to collect data from all three networks</li>
+<li><strong>Time-series database</strong> (InfluxDB) to store sensor readings</li>
+<li><strong>Visualization platform</strong> (Grafana) for real-time dashboards</li>
+</ul>
+<p>The entire stack is open-source and runs on standard hardware.</p>
+<h2 id="system-architecture">System Architecture<a hidden class="anchor" aria-hidden="true" href="#system-architecture">#</a></h2>
+<p>The platform consists of four sensor nodes:</p>
+<p><strong>LoRaWAN nodes (2):</strong></p>
+<ul>
+<li>STM32WL55 microcontrollers with integrated LoRa radio</li>
+<li>BME680 environmental sensors (temperature, humidity, pressure, air quality)</li>
+<li>Battery-powered for wireless deployment</li>
+<li>30-second update intervals over multi-kilometer range</li>
+</ul>
+<p><strong>Modbus TCP node:</strong></p>
+<ul>
+<li>STM32F446RE microcontroller with W5500 Ethernet controller</li>
+<li>SHT3x temperature/humidity sensor</li>
+<li>Wired Ethernet for industrial reliability</li>
+<li>IEEE 754 float32 register encoding</li>
+</ul>
+<p><strong>BACnet/IP gateway:</strong></p>
+<ul>
+<li>Same STM32F446RE + W5500 hardware as Modbus node</li>
+<li>Implements BACnet Device object model (Analog Inputs for sensors, Analog Value for uptime)</li>
+<li>Responds to Who-Is/I-Am discovery and ReadProperty requests</li>
+<li>Dual-protocol: serves both Modbus TCP and BACnet/IP simultaneously</li>
+</ul>
+<p>All sensor data flows into a unified InfluxDB time-series database, where Grafana visualizes it in real-time.</p>
+<h2 id="technical-implementation">Technical Implementation<a hidden class="anchor" aria-hidden="true" href="#technical-implementation">#</a></h2>
+<h3 id="firmware-embassy-async-framework">Firmware: Embassy Async Framework<a hidden class="anchor" aria-hidden="true" href="#firmware-embassy-async-framework">#</a></h3>
+<p>The embedded firmware uses Embassy, an async/await framework for Rust. This choice was deliberate. While RTIC (Real-Time Interrupt-driven Concurrency) would provide deterministic timing, BACnet/IP and Modbus TCP run over Ethernet with millisecond-scale latencies. Network timing dominates, not MCU scheduling.</p>
+<p>Embassy&rsquo;s async model made it straightforward to manage multiple concurrent tasks:</p>
+<ul>
+<li>Sensor reading every 2 seconds</li>
+<li>Network request handling (BACnet and Modbus on different sockets)</li>
+<li>OLED display updates</li>
+</ul>
+<p>For protocols requiring microsecond timing—like BACnet MS/TP over RS-485—RTIC would be more appropriate. But for IP-based protocols, Embassy&rsquo;s ergonomics outweigh RTIC&rsquo;s determinism.</p>
+<h3 id="protocol-implementation-pure-socket-programming">Protocol Implementation: Pure Socket Programming<a hidden class="anchor" aria-hidden="true" href="#protocol-implementation-pure-socket-programming">#</a></h3>
+<p>Rather than using existing protocol libraries, I implemented the wire formats directly. This was an educational choice—understanding how data actually moves across the network matters when troubleshooting industrial systems.</p>
+<p><strong>Modbus TCP:</strong></p>
+<ul>
+<li>MBAP header (transaction ID, protocol ID, length, unit ID)</li>
+<li>Function code 0x03 (Read Holding Registers)</li>
+<li>IEEE 754 encoding for floating-point sensor values</li>
+</ul>
+<p><strong>BACnet/IP:</strong></p>
+<ul>
+<li>BVLC (BACnet Virtual Link Control) for UDP framing</li>
+<li>NPDU (Network Protocol Data Unit) for routing</li>
+<li>APDU (Application Protocol Data Unit) for services</li>
+<li>Object model: Device (1234), Analog Inputs (0, 1), Analog Value (0)</li>
+</ul>
+<p><strong>LoRaWAN:</strong></p>
+<ul>
+<li>OTAA (Over-The-Air Activation) for secure joining</li>
+<li>Encrypted payload: packed binary structs for efficiency</li>
+<li>RAK7268V2 WisGate Edge Lite 2 gateway (AU915)</li>
+<li>Gateway publishes to MQTT, Python bridge writes to InfluxDB</li>
+</ul>
+<h3 id="data-pipeline">Data Pipeline<a hidden class="anchor" aria-hidden="true" href="#data-pipeline">#</a></h3>
+<p>Each protocol has its own Python bridge service:</p>
+<pre tabindex="0"><code>LoRaWAN Nodes → RAK7268V2 → MQTT → mqtt_to_influx.py → InfluxDB
+Modbus Nodes → modbus_to_influx.py → InfluxDB
+BACnet Gateway → bacnet_to_influx.py → InfluxDB
+</code></pre><p>All three write to the same InfluxDB bucket with protocol-specific tags, enabling unified queries across heterogeneous sensors.</p>
+<p>The entire infrastructure runs in Docker containers, started with a single command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./start_services.sh
+</span></span></code></pre></div><h2 id="practical-results">Practical Results<a hidden class="anchor" aria-hidden="true" href="#practical-results">#</a></h2>
+<p>The system provides:</p>
+<p><strong>Unified visibility:</strong> One dashboard shows data from all sensors regardless of protocol
+<strong>Protocol translation:</strong> BACnet clients can read from sensors that natively speak Modbus
+<strong>Reliability:</strong> Each protocol uses its appropriate physical layer (wireless for flexibility, wired for mission-critical)
+<strong>Extensibility:</strong> Adding new sensors just means deploying firmware and tagging data</p>
+<h2 id="lessons-learned">Lessons Learned<a hidden class="anchor" aria-hidden="true" href="#lessons-learned">#</a></h2>
+<p><strong>1. Protocol choice matters less than network design</strong></p>
+<p>I spent considerable time optimizing BACnet encoding, but the limiting factor is always network latency. A well-structured Modbus implementation performs identically to BACnet for simple sensor reading.</p>
+<p><strong>2. Async frameworks simplify concurrent I/O</strong></p>
+<p>Embassy&rsquo;s async model made it trivial to handle multiple network sockets and I2C sensors. Traditional embedded programming would require complex state machines or RTOS tasks.</p>
+<p><strong>3. Time-series databases are essential</strong></p>
+<p>Industrial monitoring generates enormous data volume. InfluxDB&rsquo;s tag-based indexing makes it fast to query &ldquo;all temperature sensors in building A&rdquo; across mixed protocols.</p>
+<p><strong>4. Documentation is harder than code</strong></p>
+<p>The firmware works reliably, but making it understandable to others required more effort than writing it. Clear diagrams, troubleshooting guides, and architectural decisions (like NOTES.md explaining why Embassy over RTIC) make the difference between a personal project and something others can use.</p>
+<h2 id="whats-next">What&rsquo;s Next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
+<p>This project demonstrates protocol integration is achievable without proprietary hardware. The next step is robustness: industrial deployments need watchdog timers, firmware updates over the network, and comprehensive error handling.</p>
+<p>For building automation specifically, adding support for BACnet trends and schedules would enable more sophisticated control logic. The hardware already supports this—it&rsquo;s a software enhancement.</p>
+<h2 id="code-deep-dive-bacnetip-implementation">Code Deep Dive: BACnet/IP Implementation<a hidden class="anchor" aria-hidden="true" href="#code-deep-dive-bacnetip-implementation">#</a></h2>
+<p>To make this concrete, let&rsquo;s examine how BACnet/IP works at the wire level. The protocol has three layers, each serving a specific purpose.</p>
+<h3 id="layer-1-bvlc-bacnet-virtual-link-control">Layer 1: BVLC (BACnet Virtual Link Control)<a hidden class="anchor" aria-hidden="true" href="#layer-1-bvlc-bacnet-virtual-link-control">#</a></h3>
+<p>BVLC is the &ldquo;envelope&rdquo; that wraps BACnet messages for UDP/IP transport. It&rsquo;s always 4 bytes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#e6db74">/// BVLC Header (4 bytes)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">BvlcHeader</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> bvlc_type: <span style="color:#66d9ef">u8</span>,    <span style="color:#75715e">// Always 0x81 for BACnet/IP
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pub</span> function: <span style="color:#66d9ef">u8</span>,     <span style="color:#75715e">// Unicast (0x0A) or Broadcast (0x0B)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pub</span> length: <span style="color:#66d9ef">u16</span>,      <span style="color:#75715e">// Total packet length
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> BvlcHeader {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">to_bytes</span>(<span style="color:#f92672">&amp;</span>self, buffer: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> [<span style="color:#66d9ef">u8</span>]) -&gt; <span style="color:#66d9ef">usize</span> {
+</span></span><span style="display:flex;"><span>        buffer[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> self.bvlc_type;
+</span></span><span style="display:flex;"><span>        buffer[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> self.function;
+</span></span><span style="display:flex;"><span>        buffer[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> (self.length <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>        buffer[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> (self.length <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="layer-2-npdu-network-protocol-data-unit">Layer 2: NPDU (Network Protocol Data Unit)<a hidden class="anchor" aria-hidden="true" href="#layer-2-npdu-network-protocol-data-unit">#</a></h3>
+<p>NPDU handles routing between BACnet networks. For simple setups, it&rsquo;s just 2 bytes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">NpduHeader</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> version: <span style="color:#66d9ef">u8</span>,   <span style="color:#75715e">// Always 0x01
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pub</span> control: <span style="color:#66d9ef">u8</span>,   <span style="color:#75715e">// 0x00 for no routing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><h3 id="layer-3-apdu-application-protocol-data-unit">Layer 3: APDU (Application Protocol Data Unit)<a hidden class="anchor" aria-hidden="true" href="#layer-3-apdu-application-protocol-data-unit">#</a></h3>
+<p>The APDU contains the actual BACnet command. Here&rsquo;s how we respond to a ReadProperty request for a temperature sensor:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">build_read_property_ack</span>(
+</span></span><span style="display:flex;"><span>    buffer: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> [<span style="color:#66d9ef">u8</span>],
+</span></span><span style="display:flex;"><span>    request: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">ReadPropertyRequest</span>,
+</span></span><span style="display:flex;"><span>    sensor_data: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">BacnetSensorData</span>,
+</span></span><span style="display:flex;"><span>) -&gt; <span style="color:#66d9ef">usize</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> pos <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// BVLC Header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x81</span>;  <span style="color:#75715e">// BACnet/IP
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0A</span>;  <span style="color:#75715e">// Unicast
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    pos <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;  <span style="color:#75715e">// Fill length later
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// NPDU
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x01</span>;  <span style="color:#75715e">// Version 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x00</span>;  <span style="color:#75715e">// No routing
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// APDU: Complex ACK
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x30</span>;  <span style="color:#75715e">// Complex ACK PDU type
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> request.invoke_id;  <span style="color:#75715e">// Echo invoke ID
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0C</span>;  <span style="color:#75715e">// ReadProperty service
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Echo the object identifier
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0C</span>;  <span style="color:#75715e">// Context tag 0, length 4
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> object_id <span style="color:#f92672">=</span> ((request.object_type <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u32</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">22</span>)
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">|</span> request.object_instance;
+</span></span><span style="display:flex;"><span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">..</span>pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span>].copy_from_slice(<span style="color:#f92672">&amp;</span>object_id.to_be_bytes());
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Echo the property identifier
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x19</span>;  <span style="color:#75715e">// Context tag 1, length 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> request.property_id <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Opening tag for property value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3E</span>;
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Encode the actual sensor value (IEEE 754 float32)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> value <span style="color:#f92672">=</span> <span style="color:#66d9ef">match</span> request.object_instance {
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span> <span style="color:#f92672">=&gt;</span> sensor_data.temperature,
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">1</span> <span style="color:#f92672">=&gt;</span> sensor_data.humidity,
+</span></span><span style="display:flex;"><span>        _ <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">0.0</span>,
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x44</span>;  <span style="color:#75715e">// Application tag: REAL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">..</span>pos <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span>].copy_from_slice(<span style="color:#f92672">&amp;</span>value.to_be_bytes());
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Closing tag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer[pos] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3F</span>;
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Fill in BVLC total length
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> total_len <span style="color:#f92672">=</span> pos <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u16</span>;
+</span></span><span style="display:flex;"><span>    buffer[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> (total_len <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>    buffer[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> (total_len <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    pos
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="async-architecture-with-embassy">Async Architecture with Embassy<a hidden class="anchor" aria-hidden="true" href="#async-architecture-with-embassy">#</a></h3>
+<p>The firmware runs both protocols simultaneously using Embassy&rsquo;s async/await model:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">loop</span> {
+</span></span><span style="display:flex;"><span>    Timer::after_millis(<span style="color:#ae81ff">100</span>).<span style="color:#66d9ef">await</span>;  <span style="color:#75715e">// 10Hz main loop
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Task A: Handle Modbus TCP (Socket 0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">match</span> tcp_get_status(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>        Ok(<span style="color:#66d9ef">SOCK_STATUS_ESTABLISHED</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(bytes) <span style="color:#f92672">=</span> tcp_recv(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> rx_buf).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">let</span> response <span style="color:#f92672">=</span> modbus::handle_request(
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&amp;</span>rx_buf[<span style="color:#f92672">..</span>bytes],
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&amp;</span>sensor_data,
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> tx_buf
+</span></span><span style="display:flex;"><span>                );
+</span></span><span style="display:flex;"><span>                tcp_send(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs, <span style="color:#f92672">&amp;</span>tx_buf[<span style="color:#f92672">..</span>len]).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        _ <span style="color:#f92672">=&gt;</span> {}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Task B: Handle BACnet/IP (Socket 1, UDP)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok(bytes) <span style="color:#f92672">=</span> udp_rx_available(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Ok((len, src_ip, src_port)) <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>            udp_recv(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> udp_buf).<span style="color:#66d9ef">await</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> response <span style="color:#f92672">=</span> bacnet::handle_packet(
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&amp;</span>udp_buf[<span style="color:#f92672">..</span>len],
+</span></span><span style="display:flex;"><span>                src_ip,
+</span></span><span style="display:flex;"><span>                src_port,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&amp;</span>sensor_data,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> tx_buf
+</span></span><span style="display:flex;"><span>            );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">match</span> response {
+</span></span><span style="display:flex;"><span>                BacnetResponse::IAm(len) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Broadcast I-Am response
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    udp_send_broadcast(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#66d9ef">BACNET_PORT</span>, <span style="color:#f92672">&amp;</span>tx_buf[<span style="color:#f92672">..</span>len]).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                BacnetResponse::ReadPropertyAck { length, dest_ip, dest_port } <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Unicast ReadProperty response
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    udp_send(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> spi, <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> cs,
+</span></span><span style="display:flex;"><span>                           dest_ip, dest_port, <span style="color:#f92672">&amp;</span>tx_buf[<span style="color:#f92672">..</span>length]).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                _ <span style="color:#f92672">=&gt;</span> {}
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Task C: Read sensor every 2 seconds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> loop_counter <span style="color:#f92672">%</span> <span style="color:#ae81ff">20</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        (temp, hum) <span style="color:#f92672">=</span> read_sht3x(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> sensor).<span style="color:#66d9ef">await</span>;
+</span></span><span style="display:flex;"><span>        sensor_data.temperature <span style="color:#f92672">=</span> temp;
+</span></span><span style="display:flex;"><span>        sensor_data.humidity <span style="color:#f92672">=</span> hum;
+</span></span><span style="display:flex;"><span>        sensor_data.uptime <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The key insight: Embassy makes it trivial to manage two network protocols plus sensor I/O in a single event loop. No RTOS needed, no complex state machines—just async/await.</p>
+<h2 id="why-pure-socket-implementation">Why Pure Socket Implementation?<a hidden class="anchor" aria-hidden="true" href="#why-pure-socket-implementation">#</a></h2>
+<p>You might notice we&rsquo;re building BACnet packets byte-by-byte rather than using an existing library. This was deliberate:</p>
+<p><strong>Learning:</strong> Understanding how data moves across the wire is essential when troubleshooting industrial systems. When a BACnet client can&rsquo;t discover your device, you need to know whether the issue is in the BVLC header, NPDU routing, or APDU encoding.</p>
+<p><strong>Debugging:</strong> With logic analyzer captures showing actual bytes, you can compare against your code to find mismatches. Library abstractions hide this.</p>
+<p><strong>Constraints:</strong> Many BACnet libraries assume a full operating system with threading and dynamic allocation. Our STM32 has 128KB RAM and no OS.</p>
+<p><strong>Portfolio value:</strong> Implementing a protocol from specification demonstrates deeper understanding than <code>pip install bacpypes</code>.</p>
+<p>That said, for production systems, well-tested libraries (BACpypes, bacnet-stack-c) would be more appropriate. This project prioritizes education over robustness.</p>
+<h2 id="code-and-resources">Code and Resources<a hidden class="anchor" aria-hidden="true" href="#code-and-resources">#</a></h2>
+<p>The complete project is open-source:</p>
+<ul>
+<li><strong>GitHub:</strong> <a href="https://github.com/mapfumo/bacnet-gateway">github.com/mapfumo/bacnet-gateway</a></li>
+<li><strong>Documentation:</strong> README with quick-start guide, protocol reference, troubleshooting</li>
+<li><strong>Firmware:</strong> Rust with Embassy async framework</li>
+<li><strong>Stack:</strong> Docker, InfluxDB, Grafana, Python</li>
+</ul>
+<p><strong>Hardware used:</strong></p>
+<ul>
+<li>NUCLEO-F446RE boards with W5500 Ethernet modules (wired nodes)</li>
+<li>NUCLEO-WL55JC boards with integrated LoRa radio (wireless nodes)</li>
+<li>RAK7268V2 WisGate Edge Lite 2 LoRaWAN gateway (AU915)</li>
+<li>SHT3x and BME680 environmental sensors</li>
+<li>SSD1306 OLED displays</li>
+</ul>
+<p>The project evolved from an earlier LoRaWAN + Modbus system by adding BACnet/IP support and consolidating all firmware into a single repository. It demonstrates that industrial protocols, while complex, are accessible to engineers willing to read specifications and implement wire formats directly.</p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP on twitter"
+        href="https://twitter.com/intent/tweet/?text=Building%20a%20Multi-Protocol%20Industrial%20IoT%20Gateway%3a%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20BACnet%2fIP&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f&amp;title=Building%20a%20Multi-Protocol%20Industrial%20IoT%20Gateway%3a%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20BACnet%2fIP&amp;summary=Building%20a%20Multi-Protocol%20Industrial%20IoT%20Gateway%3a%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20BACnet%2fIP&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP on reddit"
+        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f&title=Building%20a%20Multi-Protocol%20Industrial%20IoT%20Gateway%3a%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20BACnet%2fIP">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP on whatsapp"
+        href="https://api.whatsapp.com/send?text=Building%20a%20Multi-Protocol%20Industrial%20IoT%20Gateway%3a%20LoRaWAN%2c%20Modbus%20TCP%2c%20and%20BACnet%2fIP%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2ffebruary%2fbuilding-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+   
+</div>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
