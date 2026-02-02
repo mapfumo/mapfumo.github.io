@@ -28,8 +28,6 @@ cover:
     categories: ["IIoT", "Tech"]
 ---
 
-# Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP
-
 When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.
 
 I built a solution that brings these three protocols together on a single platform, using open-source tools and commodity hardware.
