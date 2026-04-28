@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="elevFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a5f" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0b1120" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="lostGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="recoverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="420" fill="url(#bg)"/>
+
+  <!-- Divider -->
+  <line x1="790" y1="30" x2="790" y2="390" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- ======== LEFT PANEL: Elevation + Walk Path ======== -->
+
+  <!-- Title -->
+  <text x="44" y="50" font-family="'Segoe UI',system-ui,sans-serif" font-size="15" font-weight="600" fill="#94a3b8">AU915 · SF12 · DR0 · Brisbane Suburbs · 2026-04-28</text>
+
+  <!-- Y-axis label -->
+  <text x="16" y="200" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#475569" text-anchor="middle" transform="rotate(-90,16,200)">Altitude (m)</text>
+
+  <!-- Y-axis ticks -->
+  <text x="72" y="304" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#334155" text-anchor="end">48m</text>
+  <text x="72" y="253" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#334155" text-anchor="end">64m</text>
+  <text x="72" y="215" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#334155" text-anchor="end">77m</text>
+  <text x="72" y="182" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#334155" text-anchor="end">89m</text>
+
+  <!-- Horizontal grid lines -->
+  <line x1="78" y1="304" x2="760" y2="304" stroke="#1e293b" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <line x1="78" y1="215" x2="760" y2="215" stroke="#1e293b" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <line x1="78" y1="182" x2="760" y2="182" stroke="#1e293b" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <!-- Elevation profile fill -->
+  <polygon points="80,256 121,215 247,180 327,186 383,200 466,221 546,304 564,253 680,215 680,360 80,360"
+           fill="url(#elevFill)"/>
+
+  <!-- Signal loss zone highlight (WP5-WP7) -->
+  <rect x="383" y="130" width="163" height="230" fill="url(#lostGrad)"/>
+
+  <!-- Signal recovery highlight (WP8) -->
+  <rect x="546" y="130" width="134" height="230" fill="url(#recoverGrad)"/>
+
+  <!-- Walk path (neutral line) -->
+  <polyline points="80,256 121,215 247,180 327,186 383,200 466,221 546,304 564,253 680,215"
+            fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Colored path segments by signal quality -->
+  <!-- WP1→WP2: excellent -->
+  <line x1="80" y1="256" x2="121" y2="215" stroke="#22c55e" stroke-width="2.5"/>
+  <!-- WP2→WP3: good -->
+  <line x1="121" y1="215" x2="247" y2="180" stroke="#4ade80" stroke-width="2.5"/>
+  <!-- WP3→WP4: good/marginal transition -->
+  <line x1="247" y1="180" x2="327" y2="186" stroke="#86efac" stroke-width="2.5"/>
+  <!-- WP4→WP5: marginal -->
+  <line x1="327" y1="186" x2="383" y2="200" stroke="#facc15" stroke-width="2.5"/>
+  <!-- WP5→WP6: at limit -->
+  <line x1="383" y1="200" x2="466" y2="221" stroke="#fb923c" stroke-width="2.5"/>
+  <!-- WP6→WP7: packet loss -->
+  <line x1="466" y1="221" x2="546" y2="304" stroke="#ef4444" stroke-width="2.5"/>
+  <!-- WP7→WP8: recovery -->
+  <line x1="546" y1="304" x2="564" y2="253" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="6,3"/>
+  <!-- WP8→WP9: marginal -->
+  <line x1="564" y1="253" x2="680" y2="215" stroke="#facc15" stroke-width="2.5"/>
+
+  <!-- Gateway box -->
+  <rect x="44" y="235" width="36" height="22" rx="4" fill="#0f2540" stroke="#38bdf8" stroke-width="1.2"/>
+  <text x="62" y="250" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" font-weight="600" fill="#38bdf8" text-anchor="middle">GW</text>
+  <!-- Gateway vertical dashed line to path -->
+  <line x1="80" y1="235" x2="80" y2="256" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Waypoint dots -->
+  <!-- WP1 +13.8 dB -->
+  <circle cx="80" cy="256" r="6" fill="#22c55e" filter="url(#glow)"/>
+  <!-- WP2 +9.5 dB -->
+  <circle cx="121" cy="215" r="5" fill="#4ade80"/>
+  <!-- WP3 Church +4.2 dB -->
+  <circle cx="247" cy="180" r="6" fill="#86efac" filter="url(#glow)"/>
+  <!-- WP4 -6.5 dB -->
+  <circle cx="327" cy="186" r="5" fill="#facc15"/>
+  <!-- WP5 -19.5 dB -->
+  <circle cx="383" cy="200" r="5" fill="#fb923c"/>
+  <!-- WP6 -20.8 dB (below limit) -->
+  <circle cx="466" cy="221" r="6" fill="#ef4444" filter="url(#glow)"/>
+  <!-- WP7 downhill -19.2 dB -->
+  <circle cx="546" cy="304" r="8" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5" filter="url(#glow)"/>
+  <!-- WP8 uphill +0.5 dB RECOVERED -->
+  <circle cx="564" cy="253" r="8" fill="#22c55e" stroke="#14532d" stroke-width="1.5" filter="url(#glow)"/>
+  <!-- WP9 -13.2 dB -->
+  <circle cx="680" cy="215" r="5" fill="#facc15"/>
+
+  <!-- WP3 Church label -->
+  <text x="247" y="165" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#86efac" text-anchor="middle">Church</text>
+  <text x="247" y="155" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#64748b" text-anchor="middle">256m · +4.2dB</text>
+
+  <!-- WP7 annotation: signal lost -->
+  <text x="546" y="328" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#ef4444" text-anchor="middle" font-weight="600">▼ −19.2 dB</text>
+  <text x="546" y="342" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#7f1d1d" text-anchor="middle">downhill</text>
+
+  <!-- WP8 annotation: recovered -->
+  <text x="600" y="235" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#22c55e" text-anchor="middle" font-weight="600">▲ +0.5 dB</text>
+  <text x="600" y="247" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#14532d" text-anchor="middle">+16m climb</text>
+
+  <!-- WP9 end label -->
+  <text x="680" y="200" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">921 m</text>
+
+  <!-- X-axis distance markers -->
+  <line x1="80" y1="362" x2="680" y2="362" stroke="#1e293b" stroke-width="1"/>
+  <text x="80"  y="376" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#475569" text-anchor="middle">0m</text>
+  <text x="247" y="376" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#475569" text-anchor="middle">256m</text>
+  <text x="466" y="376" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#475569" text-anchor="middle">593m</text>
+  <text x="680" y="376" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#475569" text-anchor="middle">921m</text>
+  <text x="380" y="395" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#334155" text-anchor="middle">Distance from gateway →</text>
+
+  <!-- Signal loss zone label -->
+  <text x="434" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#ef4444" text-anchor="middle" opacity="0.8">packet loss zone</text>
+
+  <!-- ======== RIGHT PANEL: Key Finding ======== -->
+
+  <!-- Cyan accent bar -->
+  <rect x="814" y="48" width="4" height="120" rx="2" fill="#38bdf8"/>
+
+  <!-- Main title -->
+  <text x="832" y="75" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" font-weight="700" fill="#f1f5f9">921 m Walk Test</text>
+  <text x="832" y="98" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#94a3b8">LoRaWAN · AU915 · SF12</text>
+  <text x="832" y="118" font-family="'Segoe UI',system-ui,sans-serif" font-size="12" fill="#64748b">Gateway on rooftop · 85 m altitude</text>
+  <text x="832" y="136" font-family="'Segoe UI',system-ui,sans-serif" font-size="12" fill="#64748b">Brisbane suburbs · 246 uplinks logged</text>
+  <text x="832" y="156" font-family="'Segoe UI',system-ui,sans-serif" font-size="12" fill="#64748b">Rust/Embassy · STM32WL55JC1</text>
+
+  <!-- Key finding box -->
+  <rect x="814" y="190" width="356" height="80" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+  <text x="992" y="212" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#38bdf8" text-anchor="middle" font-weight="600">KEY FINDING</text>
+  <text x="992" y="234" font-family="'Segoe UI',system-ui,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9" text-anchor="middle">Elevation &gt; Distance</text>
+  <text x="992" y="254" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">WP8 (743m) &gt; WP7 (716m)</text>
+  <text x="992" y="268" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b" text-anchor="middle">climbing 16m recovered the link</text>
+
+  <!-- Stats row -->
+  <!-- Reliable range -->
+  <rect x="814" y="290" width="108" height="62" rx="5" fill="#0f2540" stroke="#1e3a5f" stroke-width="1"/>
+  <text x="868" y="314" font-family="'Segoe UI',system-ui,sans-serif" font-size="18" font-weight="700" fill="#38bdf8" text-anchor="middle">~400m</text>
+  <text x="868" y="330" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b" text-anchor="middle">reliable range</text>
+  <text x="868" y="344" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#475569" text-anchor="middle">SNR &gt; 0 dB</text>
+
+  <!-- Max range -->
+  <rect x="932" y="290" width="108" height="62" rx="5" fill="#0f2540" stroke="#1e3a5f" stroke-width="1"/>
+  <text x="986" y="314" font-family="'Segoe UI',system-ui,sans-serif" font-size="18" font-weight="700" fill="#38bdf8" text-anchor="middle">921m</text>
+  <text x="986" y="330" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b" text-anchor="middle">max observed</text>
+  <text x="986" y="344" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#475569" text-anchor="middle">suburban</text>
+
+  <!-- Rural estimate -->
+  <rect x="1050" y="290" width="120" height="62" rx="5" fill="#0f2540" stroke="#1e3a5f" stroke-width="1"/>
+  <text x="1110" y="314" font-family="'Segoe UI',system-ui,sans-serif" font-size="18" font-weight="700" fill="#38bdf8" text-anchor="middle">5–15km</text>
+  <text x="1110" y="330" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b" text-anchor="middle">rural estimate</text>
+  <text x="1110" y="344" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#475569" text-anchor="middle">elevated gateway</text>
+
+  <!-- Legend -->
+  <circle cx="820" cy="376" r="5" fill="#22c55e"/>
+  <text x="830" y="380" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b">Good (SNR &gt; 0 dB)</text>
+  <circle cx="920" cy="376" r="5" fill="#facc15"/>
+  <text x="930" y="380" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b">Marginal</text>
+  <circle cx="990" cy="376" r="5" fill="#ef4444"/>
+  <text x="1000" y="380" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#64748b">Packet loss</text>
+
+</svg>

@@ -6,22 +6,148 @@
     <description>Recent content in Tags on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Dec 2025 09:42:11 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 12:23:09 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Defmt</title>
-      <link>http://localhost:1313/tags/defmt/</link>
-      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
+      <title>AU915</title>
+      <link>http://localhost:1313/tags/au915/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
       
-      <guid>http://localhost:1313/tags/defmt/</guid>
+      <guid>http://localhost:1313/tags/au915/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Field-Test</title>
+      <link>http://localhost:1313/tags/field-test/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/field-test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Grafana</title>
+      <link>http://localhost:1313/tags/grafana/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/grafana/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Influxdb</title>
+      <link>http://localhost:1313/tags/influxdb/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/influxdb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LoRaWAN</title>
+      <link>http://localhost:1313/tags/lorawan/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/lorawan/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Range-Testing</title>
+      <link>http://localhost:1313/tags/range-testing/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/range-testing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>RSSI</title>
+      <link>http://localhost:1313/tags/rssi/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/rssi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SNR</title>
+      <link>http://localhost:1313/tags/snr/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/snr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>STM32WL55</title>
+      <link>http://localhost:1313/tags/stm32wl55/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/stm32wl55/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Embassy</title>
+      <link>http://localhost:1313/tags/embassy/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/embassy/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Embedded Rust</title>
       <link>http://localhost:1313/tags/embedded-rust/</link>
-      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/embedded-rust/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MQTT</title>
+      <link>http://localhost:1313/tags/mqtt/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/mqtt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>No_std</title>
+      <link>http://localhost:1313/tags/no_std/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/no_std/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rust</title>
+      <link>http://localhost:1313/tags/rust/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/rust/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>STM32</title>
+      <link>http://localhost:1313/tags/stm32/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/stm32/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Defmt</title>
+      <link>http://localhost:1313/tags/defmt/</link>
+      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
+      
+      <guid>http://localhost:1313/tags/defmt/</guid>
       <description></description>
     </item>
     
@@ -58,24 +184,6 @@
       <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
       
       <guid>http://localhost:1313/tags/rtic/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Rust</title>
-      <link>http://localhost:1313/tags/rust/</link>
-      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
-      
-      <guid>http://localhost:1313/tags/rust/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>STM32</title>
-      <link>http://localhost:1313/tags/stm32/</link>
-      <pubDate>Sat, 13 Dec 2025 09:42:11 +1000</pubDate>
-      
-      <guid>http://localhost:1313/tags/stm32/</guid>
       <description></description>
     </item>
     

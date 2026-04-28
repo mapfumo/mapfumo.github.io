@@ -142,6 +142,37 @@
 </article>
 
 <article class="post-entry"> 
+<figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/img/lorawan-walk-test.svg" alt="LoRaWAN walk test — elevation profile with colour-coded signal quality across 921 metres">
+</figure>
+  <header class="entry-header">
+    <h2>921 Metres Through Suburban Brisbane with a LoRaWAN Node — Here&#39;s What the Data Showed.
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>The Setup I built a two-node LoRaWAN sensor network on STM32WL55JC1 microcontrollers running Rust/Embassy firmware — the full story is in Part 1. One of the two nodes, lora-2, carries no sensor. Its only job is to send a confirmed uplink every ~10 seconds, display RSSI, SNR, and DR on its OLED, and let the gateway’s InfluxDB record tell the story later.
+You might wonder why I didn’t just use lora-1 — the sensor node — for this test. Both nodes send a 4-byte payload, so packet size is identical and makes no difference to range. What matters is transmission behaviour: lora-2 sends every uplink confirmed, so a missed ACK is detected within one cycle. lora-1 only confirms every fifth uplink, meaning gateway loss takes much longer to register. lora-2 also transmits every ~10 seconds versus lora-1’s ~30 seconds — three times the data points in InfluxDB, three times the resolution when overlaying against GPS waypoints later. Purpose-built beats repurposed.
+...</p>
+  </div>
+  <footer class="entry-footer">Apr 28, 2026 · 7 min</footer>
+  <a class="entry-link" aria-label="post link to 921 Metres Through Suburban Brisbane with a LoRaWAN Node — Here&#39;s What the Data Showed." href="http://localhost:1313/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/"></a>
+</article>
+
+<article class="post-entry"> 
+<figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/img/lora-boards.jpg" alt="Two STM32WL55JC1 NUCLEO boards in enclosures — lora-1 (sensor node) and lora-2 (range probe)">
+</figure>
+  <header class="entry-header">
+    <h2>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>From Sensor to Dashboard — Without a Line of C My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.
+...</p>
+  </div>
+  <footer class="entry-footer">Apr 28, 2026 · 9 min</footer>
+  <a class="entry-link" aria-label="post link to Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most" href="http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/"></a>
+</article>
+
+<article class="post-entry"> 
 <figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/img/bacnet_image.svg" alt="Multi-Protocol Industrial IoT Gateway architecture diagram">
 </figure>
   <header class="entry-header">
@@ -149,46 +180,12 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.
+    <p>When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.
+I built a solution that brings these three protocols together on a single platform, using open-source tools and commodity hardware.
 ...</p>
   </div>
   <footer class="entry-footer">Feb 1, 2026 · 9 min</footer>
   <a class="entry-link" aria-label="post link to Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP" href="http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/img/wk12_image.svg" alt="STM32F446RE NUCLEO board with SSD1306 OLED display">
-</figure>
-  <header class="entry-header">
-    <h2>Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p> 🎬 Watch the Full Demo After 12 weeks of building, here’s the result: a production-grade Industrial IoT monitoring platform built from scratch.
-▶️ Watch on YouTube (6 minutes)
-What I Built A complete Industrial IoT monitoring platform demonstrating expertise across the full stack:
-Hardware (4 Sensor Nodes) LoRaWAN Nodes (STM32WL55):
-LoRa-1: SHT41 temperature/humidity sensor &#43; SSD1306 OLED LoRa-2: BME680 environmental sensor &#43; SH1106 OLED Native LoRa radio (no external modules) AU915 frequency band, OTAA join Modbus TCP Nodes (STM32F446):
-...</p>
-  </div>
-  <footer class="entry-footer">Jan 26, 2026 · 7 min</footer>
-  <a class="entry-link" aria-label="post link to Week 12: Mission Accomplished - From LED Blink to Production-Grade IIoT" href="http://localhost:1313/posts/2026/january/week-12-portfolio-complete-from-led-blink-to-industrial-iot-in-12-weeks/"></a>
-</article>
-
-<article class="post-entry"> 
-<figure class="entry-cover"><img loading="lazy" src="http://localhost:1313/img/wk11_image.svg" alt="STM32F446RE NUCLEO board with SSD1306 OLED display">
-</figure>
-  <header class="entry-header">
-    <h2>Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>The Challenge After 10 weeks, I had a problem. A good problem, but a problem nonetheless:
-Week 9: Two Modbus TCP nodes (STM32F446 &#43; W5500 Ethernet) Week 10: Two LoRaWAN nodes (STM32WL55 native radio) Separate dashboards: Modbus data in one Grafana, LoRaWAN in another Different buckets: modbus bucket, lorawan bucket No unified view: Can’t compare all 4 nodes at once Week 11’s goal: Unify everything into a single monitoring platform while analyzing what it would take to make this production-ready from a security perspective.
-...</p>
-  </div>
-  <footer class="entry-footer">Jan 15, 2026 · 14 min</footer>
-  <a class="entry-link" aria-label="post link to Unifying the Chaos - One Dashboard for LoRaWAN, Modbus TCP, and Industrial Security - Wk11" href="http://localhost:1313/posts/2026/january/week-11-unifying-the-chaos--one-dashboard-for-lorawan-modbus-tcp-and-industrial-security/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

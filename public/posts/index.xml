@@ -6,15 +6,36 @@
     <description>Recent content in Posts on Antony Mapfumo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Feb 2026 17:01:44 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Apr 2026 12:23:09 +1000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>921 Metres Through Suburban Brisbane with a LoRaWAN Node — Here&#39;s What the Data Showed.</title>
+      <link>http://localhost:1313/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/</link>
+      <pubDate>Tue, 28 Apr 2026 12:23:09 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/</guid>
+      <description>&lt;h2 id=&#34;the-setup&#34;&gt;The Setup&lt;/h2&gt;
+&lt;p&gt;I built a two-node LoRaWAN sensor network on STM32WL55JC1 microcontrollers running Rust/Embassy firmware — the full story is in &lt;a href=&#34;http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-rust-stm32wl55-embassy-and-the-bugs-that-taught-the-most/&#34;&gt;Part 1&lt;/a&gt;. One of the two nodes, lora-2, carries no sensor. Its only job is to send a confirmed uplink every ~10 seconds, display RSSI, SNR, and DR on its OLED, and let the gateway&amp;rsquo;s InfluxDB record tell the story later.&lt;/p&gt;
+&lt;p&gt;You might wonder why I didn&amp;rsquo;t just use lora-1 — the sensor node — for this test. Both nodes send a 4-byte payload, so packet size is identical and makes no difference to range. What matters is transmission behaviour: lora-2 sends every uplink confirmed, so a missed ACK is detected within one cycle. lora-1 only confirms every fifth uplink, meaning gateway loss takes much longer to register. lora-2 also transmits every ~10 seconds versus lora-1&amp;rsquo;s ~30 seconds — three times the data points in InfluxDB, three times the resolution when overlaying against GPS waypoints later. Purpose-built beats repurposed.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most</title>
+      <link>http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</link>
+      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</guid>
+      <description>&lt;h2 id=&#34;from-sensor-to-dashboard--without-a-line-of-c&#34;&gt;From Sensor to Dashboard — Without a Line of C&lt;/h2&gt;
+&lt;p&gt;My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP</title>
       <link>http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/</link>
       <pubDate>Sun, 01 Feb 2026 17:01:44 +1000</pubDate>
       
       <guid>http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/</guid>
-      <description>&lt;h1 id=&#34;building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnetip&#34;&gt;Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP&lt;/h1&gt;
-&lt;p&gt;When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.&lt;/p&gt;</description>
+      <description>&lt;p&gt;When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.&lt;/p&gt;
+&lt;p&gt;I built a solution that brings these three protocols together on a single platform, using open-source tools and commodity hardware.&lt;/p&gt;</description>
     </item>
     
     <item>
