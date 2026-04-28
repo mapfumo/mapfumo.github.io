@@ -6,7 +6,7 @@ cover:
     image: /img/wk6_image.png
     alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
     caption: "LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards"
-    tags:
+tags:
     [
         "async-rust",
         "Rust",
@@ -20,7 +20,7 @@ cover:
         "tokio",
         "IIoT",
     ]
-    categories: ["IIoT", "Tech"]
+categories: ["IIoT", "Tech"]
 ---
 
 Week 6 marks a fundamental shift in the project. Up through Week 5, everything stayed within the embedded realm - microcontrollers talking to each other over LoRa. Data lived in OLED displays and defmt logs that disappeared when you closed the terminal.
