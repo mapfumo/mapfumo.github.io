@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" style="background: #0f172a;">
+  <defs>
+    <style>
+      .title { font: bold 28px sans-serif; fill: #e2e8f0; }
+      .subtitle { font: 16px sans-serif; fill: #94a3b8; }
+      .label { font: bold 14px sans-serif; fill: #1e293b; }
+      .text { font: 12px sans-serif; fill: #334155; }
+      .metric { font: 11px monospace; fill: #64748b; }
+      .node-box { fill: #1e40af; stroke: #3b82f6; stroke-width: 2; rx: 8; }
+      .gateway-box { fill: #0f766e; stroke: #14b8a6; stroke-width: 2; rx: 8; }
+      .service-box { fill: #7c2d12; stroke: #ea580c; stroke-width: 2; rx: 8; }
+      .cloud-box { fill: #312e81; stroke: #6366f1; stroke-width: 2; rx: 8; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .lorawan-arrow { stroke: #22c55e; stroke-width: 3; fill: none; marker-end: url(#arrowhead-green); stroke-dasharray: 5,5; }
+      .mqtt-arrow { stroke: #f59e0b; stroke-width: 2; fill: none; marker-end: url(#arrowhead-orange); }
+      .white-text { fill: #f8fafc; font: 13px sans-serif; }
+      .green-text { fill: #22c55e; font: 12px sans-serif; }
+      .orange-text { fill: #f59e0b; font: 12px sans-serif; }
+      .small-text { fill: #cbd5e1; font: 10px sans-serif; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#94a3b8" />
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#22c55e" />
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="40" class="title" text-anchor="middle">Week 10: LoRaWAN Sensor Network with STM32WL55</text>
+  <text x="600" y="65" class="subtitle" text-anchor="middle">Native SubGHz Radio • OTAA Join • Complete Data Pipeline</text>
+
+  <!-- LoRa-1 Node -->
+  <rect class="node-box" x="50" y="120" width="220" height="200"/>
+  <text x="160" y="145" class="white-text" text-anchor="middle" font-weight="bold">LoRa-1 (Minimalist)</text>
+  <text x="160" y="170" class="small-text" text-anchor="middle">STM32WL55JC</text>
+  
+  <text x="70" y="195" class="white-text">• SHT41 Sensor</text>
+  <text x="85" y="210" class="green-text">Temp: 31°C, Hum: 58%</text>
+  
+  <text x="70" y="230" class="white-text">• SSD1306 OLED 128x32</text>
+  <text x="70" y="250" class="white-text">• Payload: 4 bytes</text>
+  
+  <text x="70" y="275" class="metric">DevEUI: 23ce1b...091fac</text>
+  <text x="70" y="290" class="green-text">RSSI: -13 dBm | SNR: 13.2 dB</text>
+  <text x="70" y="305" class="orange-text">✓ JOINED (~7s)</text>
+
+  <!-- LoRa-2 Node -->
+  <rect class="node-box" x="930" y="120" width="220" height="200"/>
+  <text x="1040" y="145" class="white-text" text-anchor="middle" font-weight="bold">LoRa-2 (Environmental)</text>
+  <text x="1040" y="170" class="small-text" text-anchor="middle">STM32WL55JC</text>
+  
+  <text x="950" y="195" class="white-text">• BME680 Sensor</text>
+  <text x="965" y="210" class="green-text">T:28°C H:60% P:1020hPa</text>
+  <text x="965" y="225" class="green-text">Gas: 135 kOhm</text>
+  
+  <text x="950" y="245" class="white-text">• SH1106 OLED 128x64</text>
+  <text x="950" y="265" class="white-text">• Payload: 12 bytes</text>
+  
+  <text x="950" y="290" class="metric">DevEUI: 24ce1b...091fac</text>
+  <text x="950" y="305" class="orange-text">✓ JOINED (~7s)</text>
+
+  <!-- LoRaWAN Arrows from nodes to gateway -->
+  <path class="lorawan-arrow" d="M 270 220 Q 430 220 490 350"/>
+  <path class="lorawan-arrow" d="M 930 220 Q 770 220 710 350"/>
+  
+  <!-- LoRaWAN Protocol Label -->
+  <text x="600" y="240" class="green-text" text-anchor="middle" font-weight="bold">LoRaWAN AU915</text>
+  <text x="600" y="255" class="small-text" text-anchor="middle">Sub-band 2 (915.2-916.6 MHz)</text>
+  <text x="600" y="270" class="small-text" text-anchor="middle">AES-128 Encrypted • OTAA • Class A</text>
+
+  <!-- Gateway -->
+  <rect class="gateway-box" x="450" y="350" width="300" height="140"/>
+  <text x="600" y="375" class="white-text" text-anchor="middle" font-weight="bold">RAK7268V2 Gateway</text>
+  <text x="600" y="395" class="small-text" text-anchor="middle">WisGate Edge Lite 2</text>
+  
+  <text x="470" y="420" class="white-text">• 8-channel concentrator (SX1302)</text>
+  <text x="470" y="440" class="white-text">• Built-in LoRa Server</text>
+  <text x="470" y="460" class="white-text">• MQTT Broker: 10.10.10.254:1883</text>
+  <text x="470" y="480" class="metric">Application: "TOT"</text>
+
+  <!-- MQTT Arrow to Bridge -->
+  <path class="mqtt-arrow" d="M 600 490 L 600 540"/>
+  <text x="620" y="520" class="orange-text">MQTT</text>
+  <text x="620" y="535" class="small-text">application/TOT/device/+/rx</text>
+
+  <!-- MQTT Bridge -->
+  <rect class="service-box" x="450" y="540" width="300" height="100"/>
+  <text x="600" y="565" class="white-text" text-anchor="middle" font-weight="bold">mqtt_to_influx.py</text>
+  <text x="600" y="585" class="small-text" text-anchor="middle">Python Bridge (Docker)</text>
+  
+  <text x="470" y="605" class="white-text">• Subscribe to gateway MQTT</text>
+  <text x="470" y="620" class="white-text">• Decode Base64 payloads</text>
+  <text x="470" y="635" class="white-text">• Auto-detect 4/12 byte formats</text>
+
+  <!-- Arrow to InfluxDB -->
+  <path class="arrow" d="M 450 590 L 340 590"/>
+  <text x="380" y="585" class="small-text">Write</text>
+
+  <!-- InfluxDB -->
+  <rect class="cloud-box" x="50" y="540" width="280" height="100"/>
+  <text x="190" y="565" class="white-text" text-anchor="middle" font-weight="bold">InfluxDB 2.x</text>
+  <text x="190" y="585" class="small-text" text-anchor="middle">Time-Series Database</text>
+  
+  <text x="70" y="605" class="white-text">Bucket: lorawan</text>
+  <text x="70" y="620" class="white-text">Tags: node, dev_eui, sensor</text>
+  <text x="70" y="635" class="metric">Fields: temp, hum, press, gas, rssi, snr</text>
+
+  <!-- Arrow to Grafana -->
+  <path class="arrow" d="M 190 640 L 190 690"/>
+  <text x="200" y="670" class="small-text">Query</text>
+
+  <!-- Grafana -->
+  <rect class="cloud-box" x="50" y="690" width="280" height="80"/>
+  <text x="190" y="715" class="white-text" text-anchor="middle" font-weight="bold">Grafana Dashboard</text>
+  <text x="190" y="735" class="small-text" text-anchor="middle">10 Panels • 10s Auto-refresh</text>
+  <text x="70" y="755" class="green-text">http://localhost:3000</text>
+
+  <!-- Performance Box -->
+  <rect fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" x="800" y="540" width="350" height="230"/>
+  <text x="975" y="565" class="white-text" text-anchor="middle" font-weight="bold">System Performance</text>
+  
+  <text x="820" y="595" class="white-text" font-weight="bold">Join Time:</text>
+  <text x="920" y="595" class="green-text">~7 seconds (OTAA)</text>
+  
+  <text x="820" y="615" class="white-text" font-weight="bold">Uplink Interval:</text>
+  <text x="950" y="615" class="green-text">~30 seconds</text>
+  
+  <text x="820" y="635" class="white-text" font-weight="bold">Latency (E2E):</text>
+  <text x="950" y="635" class="green-text">&lt;2 seconds</text>
+  
+  <text x="820" y="655" class="white-text" font-weight="bold">Air Time:</text>
+  <text x="920" y="655" class="green-text">1.3-1.5 seconds</text>
+  
+  <text x="820" y="680" class="white-text" font-weight="bold">Key Features:</text>
+  <text x="830" y="700" class="small-text">✓ Native STM32WL radio (no external module)</text>
+  <text x="830" y="715" class="small-text">✓ Embassy async/await framework</text>
+  <text x="830" y="730" class="small-text">✓ Integer-only math (no FPU)</text>
+  <text x="830" y="745" class="small-text">✓ Complete data pipeline to Grafana</text>
+  <text x="830" y="760" class="small-text">✓ Real-time OLED status displays</text>
+
+  <!-- Week indicator -->
+  <text x="1100" y="785" class="subtitle" text-anchor="end">Week 10 of 12 • 83% Complete</text>
+</svg>
