@@ -2,6 +2,7 @@
 title: "Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most"
 date: 2026-04-28T12:21:14+10:00
 draft: false
+slug: "building-a-lorawan-sensor-network-in-rust-stm32wl55-embassy-and-the-bugs-that-taught-the-most"
 cover:
   image: /img/lora-boards.jpg
   alt: "Two STM32WL55JC1 NUCLEO boards in enclosures — lora-1 (sensor node) and lora-2 (range probe)"
