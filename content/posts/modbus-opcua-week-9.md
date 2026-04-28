@@ -6,7 +6,7 @@ cover:
     image: /img/wk9_image.png
     alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
     caption: "MODBUS OPC UA"
-    tags:
+tags:
     [
         "embassy",
         "Rust",
@@ -20,7 +20,7 @@ cover:
         "industrial-automation",
         "IIoT",
     ]
-    categories: ["IIoT", "Tech"]
+categories: ["IIoT", "Tech"]
 ---
 
 Week 9 represents a fundamental shift in the project. For the past eight weeks, we've been building IoT systems - MQTT, InfluxDB, Grafana, cloud-oriented architectures. Week 9 is different.

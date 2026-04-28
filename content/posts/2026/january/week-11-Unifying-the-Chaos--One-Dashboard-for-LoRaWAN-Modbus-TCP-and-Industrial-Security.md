@@ -6,7 +6,7 @@ cover:
     image: /img/wk11_image.svg
     alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
     caption: "From LoRa Modules to Native LoRaWAN the STM32WL Migration"
-    tags:
+tags:
     [
         "security",
         "Rust",
@@ -22,7 +22,7 @@ cover:
         "grafana",
         "lorawan",
     ]
-    categories: ["IIoT", "Tech"]
+categories: ["IIoT", "Tech"]
 ---
 
 ## The Challenge

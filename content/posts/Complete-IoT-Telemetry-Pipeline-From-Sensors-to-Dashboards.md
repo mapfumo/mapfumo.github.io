@@ -6,7 +6,7 @@ cover:
     image: /img/wk7_image.png
     alt: "STM32F446RE NUCLEO board with SSD1306 OLED display"
     caption: "LoRA Network, Async Rust Gateway, MQTT, STM32F446RE NUCLEO boards"
-    tags:
+tags:
     [
         "async-rust",
         "Rust",
@@ -20,7 +20,7 @@ cover:
         "tokio",
         "IIoT",
     ]
-    categories: ["IIoT", "Tech"]
+categories: ["IIoT", "Tech"]
 ---
 
 Week 7+8 represents **project completion** at the infrastructure level. This isn't about adding one more feature - it's about building the **complete path from sensor to insight**.

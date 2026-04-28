@@ -6,7 +6,7 @@ cover:
     image: /img/bacnet_image.svg
     alt: "Multi-Protocol Industrial IoT Gateway architecture diagram"
     caption: "LoRaWAN, Modbus TCP, and BACnet/IP unified gateway"
-    tags:
+tags:
     [
         "Rust",
         "Embedded Rust",
@@ -25,7 +25,7 @@ cover:
         "industrialiot",
         "IIoT",
     ]
-    categories: ["IIoT", "Tech"]
+categories: ["IIoT", "Tech"]
 ---
 
 When industrial facilities need to monitor equipment and environmental conditions, they often face a challenge: different systems speak different languages. A temperature sensor in one part of the building might use Modbus TCP, while the HVAC system uses BACnet/IP, and wireless sensors communicate via LoRaWAN. Getting all this data into one place typically requires expensive proprietary gateways or complex integration projects.
