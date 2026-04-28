@@ -14,10 +14,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  # Opt into Node 24 now to clear the deprecation warnings
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 defaults:
   run:
     shell: bash
@@ -27,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -35,21 +31,14 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          # REQUIRED: Pinned to fix your specific RSS template error
+          # Pinning to 0.123.0 is the ONLY way to fix your RSS 'Author' error 
+          # without modifying your theme code.
           hugo-version: '0.123.0'
           extended: true
 
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Install dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
 
       - name: Build with Hugo
         env:
