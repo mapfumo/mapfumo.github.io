@@ -1,21 +1,2 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Embassy on Antony Mapfumo</title>
-    <link>http://localhost:1313/tags/embassy/</link>
-    <description>Recent content in Embassy on Antony Mapfumo</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 28 Apr 2026 12:21:14 +1000</lastBuildDate><atom:link href="http://localhost:1313/tags/embassy/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most</title>
-      <link>http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</link>
-      <pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate>
-      
-      <guid>http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</guid>
-      <description>&lt;h2 id=&#34;from-sensor-to-dashboard--without-a-line-of-c&#34;&gt;From Sensor to Dashboard — Without a Line of C&lt;/h2&gt;
-&lt;p&gt;My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Embassy on Antony Mapfumo</title><link>https://mapfumo.github.io/tags/embassy/</link><description>Recent content in Embassy on Antony Mapfumo</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 28 Apr 2026 12:21:14 +1000</lastBuildDate><atom:link href="https://mapfumo.github.io/tags/embassy/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most</title><link>https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</link><pubDate>Tue, 28 Apr 2026 12:21:14 +1000</pubDate><guid>https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/</guid><description>&lt;h2 id="from-sensor-to-dashboard--without-a-line-of-c"&gt;From Sensor to Dashboard — Without a Line of C&lt;/h2&gt;
+&lt;p&gt;My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.&lt;/p&gt;</description></item></channel></rss>

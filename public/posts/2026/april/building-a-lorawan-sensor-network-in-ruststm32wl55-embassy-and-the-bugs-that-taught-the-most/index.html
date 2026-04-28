@@ -1,440 +1,78 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
-<title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most | Antony Mapfumo</title>
-<meta name="keywords" content="Rust, Embedded Rust, LoRaWAN, Embassy, STM32, STM32WL55, no_std, influxdb, Grafana, MQTT">
-<meta name="description" content="From Sensor to Dashboard — Without a Line of C
-My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.">
-<meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css" integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
-    onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="http://localhost:1313/img/favicon.png">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-</noscript>
-</head>
-
-<body class=" dark" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    }
-
-</script>
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a>
-            <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                <ul class="lang-switch"><li>|</li>
-                </ul>
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
-                    <span>Categories</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/portfolio/" title="Portfolio">
-                    <span>Portfolio</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/tutorials/" title="Tutorials">
-                    <span>Tutorials</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
-                    <span>Tags</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:1313/about/" title="About">
-                    <span>About</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main">
-
-<article class="post-single">
-  <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
-    <h1 class="post-title">
-      Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most
-    </h1>
-    <div class="post-meta">Apr 28, 2026 · 9 min
-
-</div>
-  </header> 
-<figure class="entry-cover"><a href="http://localhost:1313/img/lora-boards.jpg" target="_blank"
-            rel="noopener noreferrer"><img loading="lazy" src="http://localhost:1313/img/lora-boards.jpg" alt="Two STM32WL55JC1 NUCLEO boards in enclosures — lora-1 (sensor node) and lora-2 (range probe)"></a>
-        <p>lora-1 and lora-2 — both running Rust/Embassy firmware over AU915 LoRaWAN</p>
-</figure>
-  <div class="post-content"><h2 id="from-sensor-to-dashboard--without-a-line-of-c">From Sensor to Dashboard — Without a Line of C<a hidden class="anchor" aria-hidden="true" href="#from-sensor-to-dashboard--without-a-line-of-c">#</a></h2>
-<p>My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.</p>
-<p>The goal was a complete, end-to-end LoRaWAN sensor network:</p>
-<ul>
-<li>Two nodes sending real data over the AU915 band to a RAK7268V2 gateway</li>
-<li>A Docker backend (InfluxDB + Grafana + MQTT bridge) ingesting and visualising every uplink</li>
-<li>Everything written in Rust — <code>no_std</code>, no heap, no OS</li>
-</ul>
-<p>What followed was one of the most instructive builds I&rsquo;ve done. Not because it went smoothly. Because it didn&rsquo;t.</p>
-<hr>
-<h2 id="the-hardware">The Hardware<a hidden class="anchor" aria-hidden="true" href="#the-hardware">#</a></h2>
-<p>Both boards are NUCLEO-WL55JC1 development boards — STM32WL55JC1 plus an SH1106 128×64 OLED display wired to the I2C2 bus.</p>
-<table>
-  <thead>
-      <tr>
-          <th>Board</th>
-          <th>Role</th>
-          <th>Sensor</th>
-          <th>Payload</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>lora-1</td>
-          <td>Environmental sensor</td>
-          <td>SHT41 (temperature + humidity)</td>
-          <td>4 bytes</td>
-      </tr>
-      <tr>
-          <td>lora-2</td>
-          <td>Range probe</td>
-          <td>None</td>
-          <td>TX counter only</td>
-      </tr>
-  </tbody>
-</table>
-<p>lora-2 carries no sensor by design. Its job is to send confirmed uplinks as fast as the duty cycle allows and report RSSI, SNR, and DR on the OLED. When I take it outside, it becomes a live signal quality instrument. More on that in a <a href="/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/">follow-up post about the field test</a>.</p>
-<hr>
-<h2 id="the-firmware-stack">The Firmware Stack<a hidden class="anchor" aria-hidden="true" href="#the-firmware-stack">#</a></h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Language:    Rust (no_std, no_main)
-</span></span><span style="display:flex;"><span>Runtime:     Embassy 0.7 (async/await on bare metal)
-</span></span><span style="display:flex;"><span>LoRa PHY:    lora-phy 3.0 (patched — see below)
-</span></span><span style="display:flex;"><span>LoRaWAN MAC: lorawan-device 0.12 (patched)
-</span></span><span style="display:flex;"><span>Target:      thumbv7em-none-eabihf (Cortex-M4, no FPU)
-</span></span><span style="display:flex;"><span>Flash tool:  probe-rs via .cargo/config.toml
-</span></span></code></pre></div><h3 id="why-embassy">Why Embassy?<a hidden class="anchor" aria-hidden="true" href="#why-embassy">#</a></h3>
-<p>Embassy replaces a traditional RTOS with Rust&rsquo;s native <code>async/await</code>. Instead of task scheduling, preemption, and mutexes, you write cooperative coroutines that suspend at <code>await</code> points and resume when the hardware is ready. For this workload — wait for LoRa TX, wait for sensor measurement, wait for a timer — it maps naturally:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Suspend this task until the radio finishes — no busy-wait, no blocking
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>device.send(<span style="color:#f92672">&amp;</span>payload, <span style="color:#ae81ff">1</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Wait for the SHT41 measurement cycle
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Timer::after_millis(<span style="color:#ae81ff">10</span>).<span style="color:#66d9ef">await</span>;
-</span></span></code></pre></div><p>No heap required. Async state machines are stack-allocated. No context switch overhead. If it compiles, a large class of memory safety bugs is already gone.</p>
-<hr>
-<h2 id="constraint-1-no-fpu">Constraint 1: No FPU<a hidden class="anchor" aria-hidden="true" href="#constraint-1-no-fpu">#</a></h2>
-<p>The STM32WL55 has no floating-point unit. Despite the <code>eabihf</code> (hard-float ABI) in the target triple — which is required by the LoRa PHY crate — the chip cannot execute FPU instructions at runtime.</p>
-<p>This means every temperature and humidity calculation has to use integer math with fixed-point scaling. The SHT41 gives raw ADC counts; the datasheet formula normally produces a float. Instead:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// Temperature: multiply by 175, divide by 65535, subtract 45 — all integer
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> temp_raw: <span style="color:#66d9ef">u16</span> <span style="color:#f92672">=</span> read_sht41();
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> temp_x100: <span style="color:#66d9ef">i32</span> <span style="color:#f92672">=</span> (temp_raw <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i32</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">17500</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">65535</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">4500</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// temp_x100 = 2350 means 23.50 °C
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Encode into payload as i16 (×100 implicit)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>payload[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> (temp_x100 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
-</span></span><span style="display:flex;"><span>payload[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> (temp_x100 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
-</span></span></code></pre></div><p>The MQTT bridge on the server side divides by 100 to recover the float for InfluxDB. No FPU required anywhere in the chain.</p>
-<p><strong>Lesson:</strong> Fixed-point integer math is not a limitation — it is a discipline. It forces you to think explicitly about precision and range at every step, which is exactly the kind of thinking embedded systems demand.</p>
-<hr>
-<h2 id="constraint-2-the-patched-crates-problem">Constraint 2: The Patched Crates Problem<a hidden class="anchor" aria-hidden="true" href="#constraint-2-the-patched-crates-problem">#</a></h2>
-<p><code>lora-phy</code> and <code>lorawan-device</code> are the two crates that handle the LoRa radio and LoRaWAN MAC layer. Both are published on crates.io — but both depend on an older <code>embassy-time</code> API that broke when Embassy moved to version 0.4.</p>
-<p>The symptom: <code>cargo build</code> fails with type errors buried in the dependency tree. The crates compile fine on their own; they break when combined with a current Embassy workspace.</p>
-<p>The fix: fork both crates locally, update the <code>embassy-time</code> API calls, and point <code>Cargo.toml</code> at the local patches:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[<span style="color:#a6e22e">patch</span>.<span style="color:#a6e22e">crates-io</span>]
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lora-phy</span> = { <span style="color:#a6e22e">path</span> = <span style="color:#e6db74">&#34;../lora-phy-patched&#34;</span> }
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lorawan-device</span> = { <span style="color:#a6e22e">path</span> = <span style="color:#e6db74">&#34;../lorawan-device-patched&#34;</span> }
-</span></span></code></pre></div><p>The patches are minimal — a handful of renamed methods in <code>embassy-time</code> — but finding them required reading the Embassy changelog, the crate source, and several GitHub issues across three repositories.</p>
-<p><strong>Lesson:</strong> The embedded Rust ecosystem is maturing fast, but crate versions lag behind Embassy releases. Pin your dependencies and do not <code>cargo update</code> without a full test cycle on hardware.</p>
-<hr>
-<h2 id="bug-1-the-i2c-bus-contention-nightmare">Bug 1: The I2C Bus Contention Nightmare<a hidden class="anchor" aria-hidden="true" href="#bug-1-the-i2c-bus-contention-nightmare">#</a></h2>
-<p>The SH1106 OLED and the SHT41 sensor share the I2C2 bus. On lora-1, this worked perfectly from day one. On the original lora-2 (which used a BME688 instead of an SHT41), the display was corrupted every single time.</p>
-<p>The symptom: the first two lines of the OLED displayed correctly. Everything below was garbage. The sensor read fine. The display looked like a scrambled TV channel.</p>
-<p>Attempted fixes, in order:</p>
-<ol>
-<li><code>bus_recover()</code> — toggle SCL nine times to reset a stuck device. No effect.</li>
-<li>Initialise sensor after display. Same corruption.</li>
-<li>Use one I2C instance per call instead of per transaction. Worse.</li>
-<li>Write a custom raw I2C driver with 8-byte maximum writes. Worked in isolation, failed in the main loop.</li>
-</ol>
-<p>The root cause took three days to find. The BME688 has a hardware quirk: during its internal boot sequence on power-up, it holds SDA low mid-transaction. The SH1106&rsquo;s <code>flush()</code> method sends the entire 1 KB framebuffer in a single I2C transaction. When the BME688 asserted SDA during that burst, the OLED received a NACK after ~32 bytes and stopped writing — which is exactly where the corruption began.</p>
-<p><strong>The fix:</strong> replace the BME688 with an SHT41. The SHT41 never holds SDA unexpectedly. The bus stayed clean and <code>flush()</code> worked every time.</p>
-<p><strong>Lesson:</strong> When two I2C devices share a bus and one is pathologically badly behaved at power-up, the only reliable fixes are hardware isolation (separate bus) or removing the offending device. Software bus recovery cannot fix a device that re-asserts the bus between recovery pulses.</p>
-<hr>
-<h2 id="bug-2-gateway-loss-detection--the-one-that-really-stung">Bug 2: Gateway Loss Detection — The One That Really Stung<a hidden class="anchor" aria-hidden="true" href="#bug-2-gateway-loss-detection--the-one-that-really-stung">#</a></h2>
-<p>This bug looked like a solved problem. It wasn&rsquo;t.</p>
-<p>When the gateway is powered off, LoRaWAN nodes have no passive notification — the radio is fire-and-forget on uplinks. I added a counter: if three consecutive uplinks fail, mark the node as disconnected and trigger a rejoin.</p>
-<p>It didn&rsquo;t work. Power off the gateway, and lora-2 sat on <code>Connected</code> indefinitely.</p>
-<p>The problem was in the match arm:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// First attempt — BROKEN
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">match</span> device.send(<span style="color:#f92672">&amp;</span>payload, <span style="color:#ae81ff">1</span>, <span style="color:#66d9ef">true</span>).<span style="color:#66d9ef">await</span> {
-</span></span><span style="display:flex;"><span>    Ok(response) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        uplink_fail_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// resets even on NoAck!
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// ...
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
-</span></span><span style="display:flex;"><span>    Err(e) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        uplink_fail_count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>I assumed that a missed ACK would come back as <code>Err</code>. It does not.</p>
-<p>The <code>lorawan-device</code> crate returns <code>Ok(SendResponse::NoAck)</code> when a confirmed uplink times out with no ACK in RX1 or RX2. <code>Err</code> is reserved for radio hardware faults — transceiver failures, SPI errors, things that are genuinely broken at the silicon level. A missing gateway is not an error to the radio; the uplink was transmitted successfully. The network simply didn&rsquo;t respond.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">SendResponse</span> {
-</span></span><span style="display:flex;"><span>    DownlinkReceived(mac::FcntDown),
-</span></span><span style="display:flex;"><span>    SessionExpired,
-</span></span><span style="display:flex;"><span>    NoAck,      <span style="color:#75715e">// confirmed uplink sent, gateway did not ACK — not an Err
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    RxComplete, <span style="color:#75715e">// unconfirmed uplink complete — no gateway feedback at all
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p>The fix is explicit matching on <code>NoAck</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">match</span> device.send(<span style="color:#f92672">&amp;</span>payload, <span style="color:#ae81ff">1</span>, use_confirmed).<span style="color:#66d9ef">await</span> {
-</span></span><span style="display:flex;"><span>    Ok(SendResponse::NoAck) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        uplink_fail_count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> uplink_fail_count <span style="color:#f92672">&gt;=</span> <span style="color:#66d9ef">MAX_UPLINK_FAILS</span> {
-</span></span><span style="display:flex;"><span>            is_joined <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;  <span style="color:#75715e">// trigger rejoin
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    Ok(_) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> use_confirmed { uplink_fail_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    Err(e) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// radio hardware fault — handle separately
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Power off the gateway now and lora-2 shows <code>Connecting...</code> within three uplink cycles (~30 seconds). Power it back on and the board rejoins automatically within the backoff window.</p>
-<p><strong>Lesson:</strong> In LoRaWAN, &ldquo;uplink sent without error&rdquo; and &ldquo;gateway received the uplink&rdquo; are not the same thing. Read the enum variants. Do not assume that a missing ACK maps to <code>Err</code>.</p>
-<hr>
-<h2 id="the-backend-pipeline">The Backend Pipeline<a hidden class="anchor" aria-hidden="true" href="#the-backend-pipeline">#</a></h2>
-<p>The backend runs entirely in Docker Compose:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>RAK7268V2 gateway
-</span></span><span style="display:flex;"><span>    └── MQTT broker (built-in, port 1883)
-</span></span><span style="display:flex;"><span>           └── mqtt_to_influx.py (Python bridge)
-</span></span><span style="display:flex;"><span>                  └── InfluxDB 2.x
-</span></span><span style="display:flex;"><span>                         └── Grafana (10s refresh)
-</span></span></code></pre></div><p>The MQTT bridge subscribes to <code>application/#</code> on the gateway&rsquo;s broker, decodes the base64 LoRaWAN payload, and writes measurements to InfluxDB with tags for <code>node</code> (lora1/lora2), <code>dev_eui</code>, and <code>sensor</code>. Each uplink becomes a data point with RSSI, SNR, DR, and the decoded sensor value.</p>
-<p>Grafana queries InfluxDB using Flux and renders live panels for temperature, humidity, RSSI, SNR, and frame count. The frame count panel is particularly useful during range testing — gaps in the counter show exactly which uplinks were lost and when.</p>
-<hr>
-<h2 id="the-join-and-rejoin-algorithm">The Join and Rejoin Algorithm<a hidden class="anchor" aria-hidden="true" href="#the-join-and-rejoin-algorithm">#</a></h2>
-<p>Both boards use OTAA (Over-The-Air Activation) with exponential backoff:</p>
-<ul>
-<li>First join attempt at startup</li>
-<li>Backoff starts at 16 seconds, doubles on each miss, caps at 60 seconds</li>
-<li>After 3 consecutive missed ACKs on confirmed uplinks → trigger rejoin</li>
-<li>Backoff resets to 16 seconds on successful join</li>
-</ul>
-<p>The 60-second cap is deliberate. The LoRaWAN specification suggests backing off to 10 minutes after repeated failures. In field testing, that means a board can appear stuck for up to 10 minutes after a brief gateway interruption. With a 60-second cap, worst case is one missed window then back online. For a deployable sensor, that is an acceptable trade-off.</p>
-<p>lora-1 sends every fifth uplink as confirmed — the failure counter only increments on missed ACKs from confirmed sends. lora-2 sends every uplink confirmed, making gateway loss detection nearly instantaneous.</p>
-<hr>
-<h2 id="eui-byte-order--read-the-spec-carefully">EUI Byte Order — Read the Spec Carefully<a hidden class="anchor" aria-hidden="true" href="#eui-byte-order--read-the-spec-carefully">#</a></h2>
-<p>This one cost an afternoon.</p>
-<p>The RAK gateway UI asks for DevEUI and AppEUI as hex strings displayed MSB-first. The <code>lorawan-device</code> crate stores them LSB-first in the firmware byte array. Get it wrong and the gateway never sees a valid join request.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// DevEUI: 23ce1bfeff091fac (as shown in gateway UI)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Stored in firmware LSB-first:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEV_EUI</span>: [<span style="color:#66d9ef">u8</span>; <span style="color:#ae81ff">8</span>] <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xac</span>, <span style="color:#ae81ff">0x1f</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0xff</span>, <span style="color:#ae81ff">0xfe</span>, <span style="color:#ae81ff">0x1b</span>, <span style="color:#ae81ff">0xce</span>, <span style="color:#ae81ff">0x23</span>];
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// AppKey is MSB-first — no reversal needed
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">APP_KEY</span>: [<span style="color:#66d9ef">u8</span>; <span style="color:#ae81ff">16</span>] <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xb7</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#f92672">..</span>.];
-</span></span></code></pre></div><p><strong>Lesson:</strong> Always verify byte order against the specification, not against what looks obvious. The &ldquo;obvious&rdquo; order is often wrong.</p>
-<hr>
-<h2 id="what-this-system-actually-does">What This System Actually Does<a hidden class="anchor" aria-hidden="true" href="#what-this-system-actually-does">#</a></h2>
-<p>lora-1 sends temperature and humidity every 30 seconds. lora-2 sends a TX counter every 10 seconds. Both display live readings on their OLEDs. Both detect gateway loss and rejoin automatically. The Grafana dashboard refreshes every 10 seconds and shows the full history for both nodes.</p>
-<p>The entire firmware for each board fits in about 400 lines of Rust. The MQTT bridge is 300 lines of Python. There is no proprietary SDK, no vendor cloud dependency, no monthly fee.</p>
-<p>This is LoRaWAN as it was designed to be used: open protocol, self-hosted network, full control.</p>
-<hr>
-<h2 id="whats-next">What&rsquo;s Next<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
-<p>With the network running reliably, the next step was taking lora-2 outside and finding out how far it actually reaches. The result surprised me — not because of the distance, but because of what mattered most.</p>
-<p><a href="/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/">Read the field test results →</a></p>
-<p>The full source is on <a href="https://github.com/mapfumo/lorawan">GitHub</a>, including both firmware projects, the Docker backend, and the MQTT bridge.</p>
-
-
-  </div>
-
-  <footer class="post-footer">
-    <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/rust/">Rust</a></li>
-      <li><a href="http://localhost:1313/tags/embedded-rust/">Embedded Rust</a></li>
-      <li><a href="http://localhost:1313/tags/lorawan/">LoRaWAN</a></li>
-      <li><a href="http://localhost:1313/tags/embassy/">Embassy</a></li>
-      <li><a href="http://localhost:1313/tags/stm32/">STM32</a></li>
-      <li><a href="http://localhost:1313/tags/stm32wl55/">STM32WL55</a></li>
-      <li><a href="http://localhost:1313/tags/no_std/">No_std</a></li>
-      <li><a href="http://localhost:1313/tags/influxdb/">Influxdb</a></li>
-      <li><a href="http://localhost:1313/tags/grafana/">Grafana</a></li>
-      <li><a href="http://localhost:1313/tags/mqtt/">MQTT</a></li>
-    </ul>
-<nav class="paginav">
-  <a class="prev" href="http://localhost:1313/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/">
-    <span class="title">« Prev</span>
-    <br>
-    <span>921 Metres Through Suburban Brisbane with a LoRaWAN Node — Here&#39;s What the Data Showed.</span>
-  </a>
-  <a class="next" href="http://localhost:1313/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/">
-    <span class="title">Next »</span>
-    <br>
-    <span>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP</span>
-  </a>
-</nav>
-
-
-<div class="share-buttons">
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on twitter"
-        href="https://twitter.com/intent/tweet/?text=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&amp;hashtags=Rust%2cEmbeddedRust%2cLoRaWAN%2cEmbassy%2cSTM32%2cSTM32WL55%2cno_std%2cinfluxdb%2cGrafana%2cMQTT">
-        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-            <path
-                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
-        </svg>
-    </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on linkedin"
-        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&amp;title=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;summary=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f">
-        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-            <path
-                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
-        </svg>
-    </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on reddit"
-        href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&title=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most">
-        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-            <path
-                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
-        </svg>
-    </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on facebook"
-        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f">
-        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-            <path
-                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
-        </svg>
-    </a>
-    <a target="_blank" rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on whatsapp"
-        href="https://api.whatsapp.com/send?text=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f">
-        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
-            <path
-                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
-        </svg>
-    </a>
-   
-</div>
-  </footer>
-</article>
-    </main>
-    
-<footer class="footer">
-    <span>&copy; 2026 <a href="http://localhost:1313/">Antony Mapfumo</a></span>
-    <span>
-        Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
-    </span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-        <path d="M12 6H0l6-6z" />
-    </svg>
-</a>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
-
-</script>
-</body>
-
-</html>
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most | Antony Mapfumo</title><meta name=keywords content="Rust,Embedded Rust,LoRaWAN,Embassy,STM32,STM32WL55,no_std,influxdb,Grafana,MQTT"><meta name=description content="From Sensor to Dashboard — Without a Line of C
+My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package."><meta name=author content><link rel=canonical href=https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/><link crossorigin=anonymous href=/assets/css/stylesheet.2624896e1ea98c7b55634eefb2ccc9cd185a099a691a5f2ed998b2cc4e336532.css integrity="sha256-JiSJbh6pjHtVY07vsszJzRhaCZppGl8u2ZiyzE4zZTI=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://mapfumo.github.io/img/favicon.png><link rel=icon type=image/png sizes=16x16 href=https://mapfumo.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://mapfumo.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://mapfumo.github.io/apple-touch-icon.png><link rel=mask-icon href=https://mapfumo.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:title" content="Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most"><meta property="og:description" content="From Sensor to Dashboard — Without a Line of C
+My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package."><meta property="og:type" content="article"><meta property="og:url" content="https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/"><meta property="og:image" content="https://mapfumo.github.io/img/lora-boards.jpg"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-28T12:21:14+10:00"><meta property="article:modified_time" content="2026-04-28T12:21:14+10:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://mapfumo.github.io/img/lora-boards.jpg"><meta name=twitter:title content="Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most"><meta name=twitter:description content="From Sensor to Dashboard — Without a Line of C
+My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://mapfumo.github.io/posts/"},{"@type":"ListItem","position":2,"name":"Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most","item":"https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most","name":"Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most","description":"From Sensor to Dashboard — Without a Line of C My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.\n","keywords":["Rust","Embedded Rust","LoRaWAN","Embassy","STM32","STM32WL55","no_std","influxdb","Grafana","MQTT"],"articleBody":"From Sensor to Dashboard — Without a Line of C My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.\nThe goal was a complete, end-to-end LoRaWAN sensor network:\nTwo nodes sending real data over the AU915 band to a RAK7268V2 gateway A Docker backend (InfluxDB + Grafana + MQTT bridge) ingesting and visualising every uplink Everything written in Rust — no_std, no heap, no OS What followed was one of the most instructive builds I’ve done. Not because it went smoothly. Because it didn’t.\nThe Hardware Both boards are NUCLEO-WL55JC1 development boards — STM32WL55JC1 plus an SH1106 128×64 OLED display wired to the I2C2 bus.\nBoard Role Sensor Payload lora-1 Environmental sensor SHT41 (temperature + humidity) 4 bytes lora-2 Range probe None TX counter only lora-2 carries no sensor by design. Its job is to send confirmed uplinks as fast as the duty cycle allows and report RSSI, SNR, and DR on the OLED. When I take it outside, it becomes a live signal quality instrument. More on that in a follow-up post about the field test.\nThe Firmware Stack Language: Rust (no_std, no_main) Runtime: Embassy 0.7 (async/await on bare metal) LoRa PHY: lora-phy 3.0 (patched — see below) LoRaWAN MAC: lorawan-device 0.12 (patched) Target: thumbv7em-none-eabihf (Cortex-M4, no FPU) Flash tool: probe-rs via .cargo/config.toml Why Embassy? Embassy replaces a traditional RTOS with Rust’s native async/await. Instead of task scheduling, preemption, and mutexes, you write cooperative coroutines that suspend at await points and resume when the hardware is ready. For this workload — wait for LoRa TX, wait for sensor measurement, wait for a timer — it maps naturally:\n// Suspend this task until the radio finishes — no busy-wait, no blocking device.send(\u0026payload, 1, true).await?; // Wait for the SHT41 measurement cycle Timer::after_millis(10).await; No heap required. Async state machines are stack-allocated. No context switch overhead. If it compiles, a large class of memory safety bugs is already gone.\nConstraint 1: No FPU The STM32WL55 has no floating-point unit. Despite the eabihf (hard-float ABI) in the target triple — which is required by the LoRa PHY crate — the chip cannot execute FPU instructions at runtime.\nThis means every temperature and humidity calculation has to use integer math with fixed-point scaling. The SHT41 gives raw ADC counts; the datasheet formula normally produces a float. Instead:\n// Temperature: multiply by 175, divide by 65535, subtract 45 — all integer let temp_raw: u16 = read_sht41(); let temp_x100: i32 = (temp_raw as i32 * 17500 / 65535) - 4500; // temp_x100 = 2350 means 23.50 °C // Encode into payload as i16 (×100 implicit) payload[0] = (temp_x100 \u003e\u003e 8) as u8; payload[1] = (temp_x100 \u0026 0xFF) as u8; The MQTT bridge on the server side divides by 100 to recover the float for InfluxDB. No FPU required anywhere in the chain.\nLesson: Fixed-point integer math is not a limitation — it is a discipline. It forces you to think explicitly about precision and range at every step, which is exactly the kind of thinking embedded systems demand.\nConstraint 2: The Patched Crates Problem lora-phy and lorawan-device are the two crates that handle the LoRa radio and LoRaWAN MAC layer. Both are published on crates.io — but both depend on an older embassy-time API that broke when Embassy moved to version 0.4.\nThe symptom: cargo build fails with type errors buried in the dependency tree. The crates compile fine on their own; they break when combined with a current Embassy workspace.\nThe fix: fork both crates locally, update the embassy-time API calls, and point Cargo.toml at the local patches:\n[patch.crates-io] lora-phy = { path = \"../lora-phy-patched\" } lorawan-device = { path = \"../lorawan-device-patched\" } The patches are minimal — a handful of renamed methods in embassy-time — but finding them required reading the Embassy changelog, the crate source, and several GitHub issues across three repositories.\nLesson: The embedded Rust ecosystem is maturing fast, but crate versions lag behind Embassy releases. Pin your dependencies and do not cargo update without a full test cycle on hardware.\nBug 1: The I2C Bus Contention Nightmare The SH1106 OLED and the SHT41 sensor share the I2C2 bus. On lora-1, this worked perfectly from day one. On the original lora-2 (which used a BME688 instead of an SHT41), the display was corrupted every single time.\nThe symptom: the first two lines of the OLED displayed correctly. Everything below was garbage. The sensor read fine. The display looked like a scrambled TV channel.\nAttempted fixes, in order:\nbus_recover() — toggle SCL nine times to reset a stuck device. No effect. Initialise sensor after display. Same corruption. Use one I2C instance per call instead of per transaction. Worse. Write a custom raw I2C driver with 8-byte maximum writes. Worked in isolation, failed in the main loop. The root cause took three days to find. The BME688 has a hardware quirk: during its internal boot sequence on power-up, it holds SDA low mid-transaction. The SH1106’s flush() method sends the entire 1 KB framebuffer in a single I2C transaction. When the BME688 asserted SDA during that burst, the OLED received a NACK after ~32 bytes and stopped writing — which is exactly where the corruption began.\nThe fix: replace the BME688 with an SHT41. The SHT41 never holds SDA unexpectedly. The bus stayed clean and flush() worked every time.\nLesson: When two I2C devices share a bus and one is pathologically badly behaved at power-up, the only reliable fixes are hardware isolation (separate bus) or removing the offending device. Software bus recovery cannot fix a device that re-asserts the bus between recovery pulses.\nBug 2: Gateway Loss Detection — The One That Really Stung This bug looked like a solved problem. It wasn’t.\nWhen the gateway is powered off, LoRaWAN nodes have no passive notification — the radio is fire-and-forget on uplinks. I added a counter: if three consecutive uplinks fail, mark the node as disconnected and trigger a rejoin.\nIt didn’t work. Power off the gateway, and lora-2 sat on Connected indefinitely.\nThe problem was in the match arm:\n// First attempt — BROKEN match device.send(\u0026payload, 1, true).await { Ok(response) =\u003e { uplink_fail_count = 0; // resets even on NoAck! // ... } Err(e) =\u003e { uplink_fail_count += 1; } } I assumed that a missed ACK would come back as Err. It does not.\nThe lorawan-device crate returns Ok(SendResponse::NoAck) when a confirmed uplink times out with no ACK in RX1 or RX2. Err is reserved for radio hardware faults — transceiver failures, SPI errors, things that are genuinely broken at the silicon level. A missing gateway is not an error to the radio; the uplink was transmitted successfully. The network simply didn’t respond.\npub enum SendResponse { DownlinkReceived(mac::FcntDown), SessionExpired, NoAck, // confirmed uplink sent, gateway did not ACK — not an Err RxComplete, // unconfirmed uplink complete — no gateway feedback at all } The fix is explicit matching on NoAck:\nmatch device.send(\u0026payload, 1, use_confirmed).await { Ok(SendResponse::NoAck) =\u003e { uplink_fail_count += 1; if uplink_fail_count \u003e= MAX_UPLINK_FAILS { is_joined = false; // trigger rejoin } } Ok(_) =\u003e { if use_confirmed { uplink_fail_count = 0; } } Err(e) =\u003e { // radio hardware fault — handle separately } } Power off the gateway now and lora-2 shows Connecting... within three uplink cycles (~30 seconds). Power it back on and the board rejoins automatically within the backoff window.\nLesson: In LoRaWAN, “uplink sent without error” and “gateway received the uplink” are not the same thing. Read the enum variants. Do not assume that a missing ACK maps to Err.\nThe Backend Pipeline The backend runs entirely in Docker Compose:\nRAK7268V2 gateway └── MQTT broker (built-in, port 1883) └── mqtt_to_influx.py (Python bridge) └── InfluxDB 2.x └── Grafana (10s refresh) The MQTT bridge subscribes to application/# on the gateway’s broker, decodes the base64 LoRaWAN payload, and writes measurements to InfluxDB with tags for node (lora1/lora2), dev_eui, and sensor. Each uplink becomes a data point with RSSI, SNR, DR, and the decoded sensor value.\nGrafana queries InfluxDB using Flux and renders live panels for temperature, humidity, RSSI, SNR, and frame count. The frame count panel is particularly useful during range testing — gaps in the counter show exactly which uplinks were lost and when.\nThe Join and Rejoin Algorithm Both boards use OTAA (Over-The-Air Activation) with exponential backoff:\nFirst join attempt at startup Backoff starts at 16 seconds, doubles on each miss, caps at 60 seconds After 3 consecutive missed ACKs on confirmed uplinks → trigger rejoin Backoff resets to 16 seconds on successful join The 60-second cap is deliberate. The LoRaWAN specification suggests backing off to 10 minutes after repeated failures. In field testing, that means a board can appear stuck for up to 10 minutes after a brief gateway interruption. With a 60-second cap, worst case is one missed window then back online. For a deployable sensor, that is an acceptable trade-off.\nlora-1 sends every fifth uplink as confirmed — the failure counter only increments on missed ACKs from confirmed sends. lora-2 sends every uplink confirmed, making gateway loss detection nearly instantaneous.\nEUI Byte Order — Read the Spec Carefully This one cost an afternoon.\nThe RAK gateway UI asks for DevEUI and AppEUI as hex strings displayed MSB-first. The lorawan-device crate stores them LSB-first in the firmware byte array. Get it wrong and the gateway never sees a valid join request.\n// DevEUI: 23ce1bfeff091fac (as shown in gateway UI) // Stored in firmware LSB-first: const DEV_EUI: [u8; 8] = [0xac, 0x1f, 0x09, 0xff, 0xfe, 0x1b, 0xce, 0x23]; // AppKey is MSB-first — no reversal needed const APP_KEY: [u8; 16] = [0xb7, 0x26, ...]; Lesson: Always verify byte order against the specification, not against what looks obvious. The “obvious” order is often wrong.\nWhat This System Actually Does lora-1 sends temperature and humidity every 30 seconds. lora-2 sends a TX counter every 10 seconds. Both display live readings on their OLEDs. Both detect gateway loss and rejoin automatically. The Grafana dashboard refreshes every 10 seconds and shows the full history for both nodes.\nThe entire firmware for each board fits in about 400 lines of Rust. The MQTT bridge is 300 lines of Python. There is no proprietary SDK, no vendor cloud dependency, no monthly fee.\nThis is LoRaWAN as it was designed to be used: open protocol, self-hosted network, full control.\nWhat’s Next With the network running reliably, the next step was taking lora-2 outside and finding out how far it actually reaches. The result surprised me — not because of the distance, but because of what mattered most.\nRead the field test results →\nThe full source is on GitHub, including both firmware projects, the Docker backend, and the MQTT bridge.\n","wordCount":"1844","inLanguage":"en","image":"https://mapfumo.github.io/img/lora-boards.jpg","datePublished":"2026-04-28T12:21:14+10:00","dateModified":"2026-04-28T12:21:14+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://mapfumo.github.io/posts/2026/april/building-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most/"},"publisher":{"@type":"Organization","name":"Antony Mapfumo","logo":{"@type":"ImageObject","url":"https://mapfumo.github.io/img/favicon.png"}}}</script></head><body class=dark id=top><script>localStorage.getItem("pref-theme")==="light"&&document.body.classList.remove("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://mapfumo.github.io/ accesskey=h title="Antony Mapfumo (Alt + H)">Antony Mapfumo</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://mapfumo.github.io/categories/ title=Categories><span>Categories</span></a></li><li><a href=https://mapfumo.github.io/portfolio/ title=Portfolio><span>Portfolio</span></a></li><li><a href=https://mapfumo.github.io/tutorials/ title=Tutorials><span>Tutorials</span></a></li><li><a href=https://mapfumo.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://mapfumo.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://mapfumo.github.io/about/ title=About><span>About</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://mapfumo.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://mapfumo.github.io/posts/>Posts</a></div><h1 class=post-title>Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most</h1><div class=post-meta>Apr 28, 2026 · 9 min</div></header><figure class=entry-cover><a href=https://mapfumo.github.io/img/lora-boards.jpg target=_blank rel="noopener noreferrer"><img loading=lazy src=https://mapfumo.github.io/img/lora-boards.jpg alt="Two STM32WL55JC1 NUCLEO boards in enclosures — lora-1 (sensor node) and lora-2 (range probe)"></a><p>lora-1 and lora-2 — both running Rust/Embassy firmware over AU915 LoRaWAN</p></figure><div class=post-content><h2 id=from-sensor-to-dashboard--without-a-line-of-c>From Sensor to Dashboard — Without a Line of C<a hidden class=anchor aria-hidden=true href=#from-sensor-to-dashboard--without-a-line-of-c>#</a></h2><p>My previous projects used the STM32F446RE — a capable workhorse, but one that needs an external LoRa radio module wired up separately. When I decided to go deep on LoRaWAN, I wanted a chip where the radio was part of the silicon itself. The STM32WL55JC1 delivers exactly that: an ARM Cortex-M4 application processor and a sub-GHz radio coexisting on the same die, talking to each other over an internal SPI bus that never leaves the package.</p><p>The goal was a complete, end-to-end LoRaWAN sensor network:</p><ul><li>Two nodes sending real data over the AU915 band to a RAK7268V2 gateway</li><li>A Docker backend (InfluxDB + Grafana + MQTT bridge) ingesting and visualising every uplink</li><li>Everything written in Rust — <code>no_std</code>, no heap, no OS</li></ul><p>What followed was one of the most instructive builds I&rsquo;ve done. Not because it went smoothly. Because it didn&rsquo;t.</p><hr><h2 id=the-hardware>The Hardware<a hidden class=anchor aria-hidden=true href=#the-hardware>#</a></h2><p>Both boards are NUCLEO-WL55JC1 development boards — STM32WL55JC1 plus an SH1106 128×64 OLED display wired to the I2C2 bus.</p><table><thead><tr><th>Board</th><th>Role</th><th>Sensor</th><th>Payload</th></tr></thead><tbody><tr><td>lora-1</td><td>Environmental sensor</td><td>SHT41 (temperature + humidity)</td><td>4 bytes</td></tr><tr><td>lora-2</td><td>Range probe</td><td>None</td><td>TX counter only</td></tr></tbody></table><p>lora-2 carries no sensor by design. Its job is to send confirmed uplinks as fast as the duty cycle allows and report RSSI, SNR, and DR on the OLED. When I take it outside, it becomes a live signal quality instrument. More on that in a <a href=/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/>follow-up post about the field test</a>.</p><hr><h2 id=the-firmware-stack>The Firmware Stack<a hidden class=anchor aria-hidden=true href=#the-firmware-stack>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Language:    Rust (no_std, no_main)
+</span></span><span style=display:flex><span>Runtime:     Embassy 0.7 (async/await on bare metal)
+</span></span><span style=display:flex><span>LoRa PHY:    lora-phy 3.0 (patched — see below)
+</span></span><span style=display:flex><span>LoRaWAN MAC: lorawan-device 0.12 (patched)
+</span></span><span style=display:flex><span>Target:      thumbv7em-none-eabihf (Cortex-M4, no FPU)
+</span></span><span style=display:flex><span>Flash tool:  probe-rs via .cargo/config.toml
+</span></span></code></pre></div><h3 id=why-embassy>Why Embassy?<a hidden class=anchor aria-hidden=true href=#why-embassy>#</a></h3><p>Embassy replaces a traditional RTOS with Rust&rsquo;s native <code>async/await</code>. Instead of task scheduling, preemption, and mutexes, you write cooperative coroutines that suspend at <code>await</code> points and resume when the hardware is ready. For this workload — wait for LoRa TX, wait for sensor measurement, wait for a timer — it maps naturally:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// Suspend this task until the radio finishes — no busy-wait, no blocking
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>device.send(<span style=color:#f92672>&amp;</span>payload, <span style=color:#ae81ff>1</span>, <span style=color:#66d9ef>true</span>).<span style=color:#66d9ef>await</span><span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Wait for the SHT41 measurement cycle
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>Timer::after_millis(<span style=color:#ae81ff>10</span>).<span style=color:#66d9ef>await</span>;
+</span></span></code></pre></div><p>No heap required. Async state machines are stack-allocated. No context switch overhead. If it compiles, a large class of memory safety bugs is already gone.</p><hr><h2 id=constraint-1-no-fpu>Constraint 1: No FPU<a hidden class=anchor aria-hidden=true href=#constraint-1-no-fpu>#</a></h2><p>The STM32WL55 has no floating-point unit. Despite the <code>eabihf</code> (hard-float ABI) in the target triple — which is required by the LoRa PHY crate — the chip cannot execute FPU instructions at runtime.</p><p>This means every temperature and humidity calculation has to use integer math with fixed-point scaling. The SHT41 gives raw ADC counts; the datasheet formula normally produces a float. Instead:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// Temperature: multiply by 175, divide by 65535, subtract 45 — all integer
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>let</span> temp_raw: <span style=color:#66d9ef>u16</span> <span style=color:#f92672>=</span> read_sht41();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> temp_x100: <span style=color:#66d9ef>i32</span> <span style=color:#f92672>=</span> (temp_raw <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>i32</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>17500</span> <span style=color:#f92672>/</span> <span style=color:#ae81ff>65535</span>) <span style=color:#f92672>-</span> <span style=color:#ae81ff>4500</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// temp_x100 = 2350 means 23.50 °C
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// Encode into payload as i16 (×100 implicit)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>payload[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> (temp_x100 <span style=color:#f92672>&gt;&gt;</span> <span style=color:#ae81ff>8</span>) <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>payload[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> (temp_x100 <span style=color:#f92672>&amp;</span> <span style=color:#ae81ff>0xFF</span>) <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span></code></pre></div><p>The MQTT bridge on the server side divides by 100 to recover the float for InfluxDB. No FPU required anywhere in the chain.</p><p><strong>Lesson:</strong> Fixed-point integer math is not a limitation — it is a discipline. It forces you to think explicitly about precision and range at every step, which is exactly the kind of thinking embedded systems demand.</p><hr><h2 id=constraint-2-the-patched-crates-problem>Constraint 2: The Patched Crates Problem<a hidden class=anchor aria-hidden=true href=#constraint-2-the-patched-crates-problem>#</a></h2><p><code>lora-phy</code> and <code>lorawan-device</code> are the two crates that handle the LoRa radio and LoRaWAN MAC layer. Both are published on crates.io — but both depend on an older <code>embassy-time</code> API that broke when Embassy moved to version 0.4.</p><p>The symptom: <code>cargo build</code> fails with type errors buried in the dependency tree. The crates compile fine on their own; they break when combined with a current Embassy workspace.</p><p>The fix: fork both crates locally, update the <code>embassy-time</code> API calls, and point <code>Cargo.toml</code> at the local patches:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml><span style=display:flex><span>[<span style=color:#a6e22e>patch</span>.<span style=color:#a6e22e>crates-io</span>]
+</span></span><span style=display:flex><span><span style=color:#a6e22e>lora-phy</span> = { <span style=color:#a6e22e>path</span> = <span style=color:#e6db74>&#34;../lora-phy-patched&#34;</span> }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>lorawan-device</span> = { <span style=color:#a6e22e>path</span> = <span style=color:#e6db74>&#34;../lorawan-device-patched&#34;</span> }
+</span></span></code></pre></div><p>The patches are minimal — a handful of renamed methods in <code>embassy-time</code> — but finding them required reading the Embassy changelog, the crate source, and several GitHub issues across three repositories.</p><p><strong>Lesson:</strong> The embedded Rust ecosystem is maturing fast, but crate versions lag behind Embassy releases. Pin your dependencies and do not <code>cargo update</code> without a full test cycle on hardware.</p><hr><h2 id=bug-1-the-i2c-bus-contention-nightmare>Bug 1: The I2C Bus Contention Nightmare<a hidden class=anchor aria-hidden=true href=#bug-1-the-i2c-bus-contention-nightmare>#</a></h2><p>The SH1106 OLED and the SHT41 sensor share the I2C2 bus. On lora-1, this worked perfectly from day one. On the original lora-2 (which used a BME688 instead of an SHT41), the display was corrupted every single time.</p><p>The symptom: the first two lines of the OLED displayed correctly. Everything below was garbage. The sensor read fine. The display looked like a scrambled TV channel.</p><p>Attempted fixes, in order:</p><ol><li><code>bus_recover()</code> — toggle SCL nine times to reset a stuck device. No effect.</li><li>Initialise sensor after display. Same corruption.</li><li>Use one I2C instance per call instead of per transaction. Worse.</li><li>Write a custom raw I2C driver with 8-byte maximum writes. Worked in isolation, failed in the main loop.</li></ol><p>The root cause took three days to find. The BME688 has a hardware quirk: during its internal boot sequence on power-up, it holds SDA low mid-transaction. The SH1106&rsquo;s <code>flush()</code> method sends the entire 1 KB framebuffer in a single I2C transaction. When the BME688 asserted SDA during that burst, the OLED received a NACK after ~32 bytes and stopped writing — which is exactly where the corruption began.</p><p><strong>The fix:</strong> replace the BME688 with an SHT41. The SHT41 never holds SDA unexpectedly. The bus stayed clean and <code>flush()</code> worked every time.</p><p><strong>Lesson:</strong> When two I2C devices share a bus and one is pathologically badly behaved at power-up, the only reliable fixes are hardware isolation (separate bus) or removing the offending device. Software bus recovery cannot fix a device that re-asserts the bus between recovery pulses.</p><hr><h2 id=bug-2-gateway-loss-detection--the-one-that-really-stung>Bug 2: Gateway Loss Detection — The One That Really Stung<a hidden class=anchor aria-hidden=true href=#bug-2-gateway-loss-detection--the-one-that-really-stung>#</a></h2><p>This bug looked like a solved problem. It wasn&rsquo;t.</p><p>When the gateway is powered off, LoRaWAN nodes have no passive notification — the radio is fire-and-forget on uplinks. I added a counter: if three consecutive uplinks fail, mark the node as disconnected and trigger a rejoin.</p><p>It didn&rsquo;t work. Power off the gateway, and lora-2 sat on <code>Connected</code> indefinitely.</p><p>The problem was in the match arm:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// First attempt — BROKEN
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>match</span> device.send(<span style=color:#f92672>&amp;</span>payload, <span style=color:#ae81ff>1</span>, <span style=color:#66d9ef>true</span>).<span style=color:#66d9ef>await</span> {
+</span></span><span style=display:flex><span>    Ok(response) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>        uplink_fail_count <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;  <span style=color:#75715e>// resets even on NoAck!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// ...
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    }
+</span></span><span style=display:flex><span>    Err(e) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>        uplink_fail_count <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I assumed that a missed ACK would come back as <code>Err</code>. It does not.</p><p>The <code>lorawan-device</code> crate returns <code>Ok(SendResponse::NoAck)</code> when a confirmed uplink times out with no ACK in RX1 or RX2. <code>Err</code> is reserved for radio hardware faults — transceiver failures, SPI errors, things that are genuinely broken at the silicon level. A missing gateway is not an error to the radio; the uplink was transmitted successfully. The network simply didn&rsquo;t respond.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>enum</span> <span style=color:#a6e22e>SendResponse</span> {
+</span></span><span style=display:flex><span>    DownlinkReceived(mac::FcntDown),
+</span></span><span style=display:flex><span>    SessionExpired,
+</span></span><span style=display:flex><span>    NoAck,      <span style=color:#75715e>// confirmed uplink sent, gateway did not ACK — not an Err
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    RxComplete, <span style=color:#75715e>// unconfirmed uplink complete — no gateway feedback at all
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span></code></pre></div><p>The fix is explicit matching on <code>NoAck</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>match</span> device.send(<span style=color:#f92672>&amp;</span>payload, <span style=color:#ae81ff>1</span>, use_confirmed).<span style=color:#66d9ef>await</span> {
+</span></span><span style=display:flex><span>    Ok(SendResponse::NoAck) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>        uplink_fail_count <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> uplink_fail_count <span style=color:#f92672>&gt;=</span> <span style=color:#66d9ef>MAX_UPLINK_FAILS</span> {
+</span></span><span style=display:flex><span>            is_joined <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;  <span style=color:#75715e>// trigger rejoin
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    Ok(_) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> use_confirmed { uplink_fail_count <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    Err(e) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// radio hardware fault — handle separately
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Power off the gateway now and lora-2 shows <code>Connecting...</code> within three uplink cycles (~30 seconds). Power it back on and the board rejoins automatically within the backoff window.</p><p><strong>Lesson:</strong> In LoRaWAN, &ldquo;uplink sent without error&rdquo; and &ldquo;gateway received the uplink&rdquo; are not the same thing. Read the enum variants. Do not assume that a missing ACK maps to <code>Err</code>.</p><hr><h2 id=the-backend-pipeline>The Backend Pipeline<a hidden class=anchor aria-hidden=true href=#the-backend-pipeline>#</a></h2><p>The backend runs entirely in Docker Compose:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>RAK7268V2 gateway
+</span></span><span style=display:flex><span>    └── MQTT broker (built-in, port 1883)
+</span></span><span style=display:flex><span>           └── mqtt_to_influx.py (Python bridge)
+</span></span><span style=display:flex><span>                  └── InfluxDB 2.x
+</span></span><span style=display:flex><span>                         └── Grafana (10s refresh)
+</span></span></code></pre></div><p>The MQTT bridge subscribes to <code>application/#</code> on the gateway&rsquo;s broker, decodes the base64 LoRaWAN payload, and writes measurements to InfluxDB with tags for <code>node</code> (lora1/lora2), <code>dev_eui</code>, and <code>sensor</code>. Each uplink becomes a data point with RSSI, SNR, DR, and the decoded sensor value.</p><p>Grafana queries InfluxDB using Flux and renders live panels for temperature, humidity, RSSI, SNR, and frame count. The frame count panel is particularly useful during range testing — gaps in the counter show exactly which uplinks were lost and when.</p><hr><h2 id=the-join-and-rejoin-algorithm>The Join and Rejoin Algorithm<a hidden class=anchor aria-hidden=true href=#the-join-and-rejoin-algorithm>#</a></h2><p>Both boards use OTAA (Over-The-Air Activation) with exponential backoff:</p><ul><li>First join attempt at startup</li><li>Backoff starts at 16 seconds, doubles on each miss, caps at 60 seconds</li><li>After 3 consecutive missed ACKs on confirmed uplinks → trigger rejoin</li><li>Backoff resets to 16 seconds on successful join</li></ul><p>The 60-second cap is deliberate. The LoRaWAN specification suggests backing off to 10 minutes after repeated failures. In field testing, that means a board can appear stuck for up to 10 minutes after a brief gateway interruption. With a 60-second cap, worst case is one missed window then back online. For a deployable sensor, that is an acceptable trade-off.</p><p>lora-1 sends every fifth uplink as confirmed — the failure counter only increments on missed ACKs from confirmed sends. lora-2 sends every uplink confirmed, making gateway loss detection nearly instantaneous.</p><hr><h2 id=eui-byte-order--read-the-spec-carefully>EUI Byte Order — Read the Spec Carefully<a hidden class=anchor aria-hidden=true href=#eui-byte-order--read-the-spec-carefully>#</a></h2><p>This one cost an afternoon.</p><p>The RAK gateway UI asks for DevEUI and AppEUI as hex strings displayed MSB-first. The <code>lorawan-device</code> crate stores them LSB-first in the firmware byte array. Get it wrong and the gateway never sees a valid join request.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// DevEUI: 23ce1bfeff091fac (as shown in gateway UI)
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// Stored in firmware LSB-first:
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>DEV_EUI</span>: [<span style=color:#66d9ef>u8</span>; <span style=color:#ae81ff>8</span>] <span style=color:#f92672>=</span> [<span style=color:#ae81ff>0xac</span>, <span style=color:#ae81ff>0x1f</span>, <span style=color:#ae81ff>0x09</span>, <span style=color:#ae81ff>0xff</span>, <span style=color:#ae81ff>0xfe</span>, <span style=color:#ae81ff>0x1b</span>, <span style=color:#ae81ff>0xce</span>, <span style=color:#ae81ff>0x23</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// AppKey is MSB-first — no reversal needed
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>const</span> <span style=color:#66d9ef>APP_KEY</span>: [<span style=color:#66d9ef>u8</span>; <span style=color:#ae81ff>16</span>] <span style=color:#f92672>=</span> [<span style=color:#ae81ff>0xb7</span>, <span style=color:#ae81ff>0x26</span>, <span style=color:#f92672>..</span>.];
+</span></span></code></pre></div><p><strong>Lesson:</strong> Always verify byte order against the specification, not against what looks obvious. The &ldquo;obvious&rdquo; order is often wrong.</p><hr><h2 id=what-this-system-actually-does>What This System Actually Does<a hidden class=anchor aria-hidden=true href=#what-this-system-actually-does>#</a></h2><p>lora-1 sends temperature and humidity every 30 seconds. lora-2 sends a TX counter every 10 seconds. Both display live readings on their OLEDs. Both detect gateway loss and rejoin automatically. The Grafana dashboard refreshes every 10 seconds and shows the full history for both nodes.</p><p>The entire firmware for each board fits in about 400 lines of Rust. The MQTT bridge is 300 lines of Python. There is no proprietary SDK, no vendor cloud dependency, no monthly fee.</p><p>This is LoRaWAN as it was designed to be used: open protocol, self-hosted network, full control.</p><hr><h2 id=whats-next>What&rsquo;s Next<a hidden class=anchor aria-hidden=true href=#whats-next>#</a></h2><p>With the network running reliably, the next step was taking lora-2 outside and finding out how far it actually reaches. The result surprised me — not because of the distance, but because of what mattered most.</p><p><a href=/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/>Read the field test results →</a></p><p>The full source is on <a href=https://github.com/mapfumo/lorawan>GitHub</a>, including both firmware projects, the Docker backend, and the MQTT bridge.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://mapfumo.github.io/tags/rust/>Rust</a></li><li><a href=https://mapfumo.github.io/tags/embedded-rust/>Embedded Rust</a></li><li><a href=https://mapfumo.github.io/tags/lorawan/>LoRaWAN</a></li><li><a href=https://mapfumo.github.io/tags/embassy/>Embassy</a></li><li><a href=https://mapfumo.github.io/tags/stm32/>STM32</a></li><li><a href=https://mapfumo.github.io/tags/stm32wl55/>STM32WL55</a></li><li><a href=https://mapfumo.github.io/tags/no_std/>No_std</a></li><li><a href=https://mapfumo.github.io/tags/influxdb/>Influxdb</a></li><li><a href=https://mapfumo.github.io/tags/grafana/>Grafana</a></li><li><a href=https://mapfumo.github.io/tags/mqtt/>MQTT</a></li></ul><nav class=paginav><a class=prev href=https://mapfumo.github.io/posts/2026/april/i-walked-921-metres-with-lorawan-node-here-is-what-the-data-showed/><span class=title>« Prev</span><br><span>921 Metres Through Suburban Brisbane with a LoRaWAN Node — Here's What the Data Showed.</span>
+</a><a class=next href=https://mapfumo.github.io/posts/2026/february/building-a-multi-protocol-industrial-iot-gateway-lorawan-modbus-tcp-and-bacnet-ip/><span class=title>Next »</span><br><span>Building a Multi-Protocol Industrial IoT Gateway: LoRaWAN, Modbus TCP, and BACnet/IP</span></a></nav><div class=share-buttons><a target=_blank rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on twitter" href="https://twitter.com/intent/tweet/?text=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;url=https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&amp;hashtags=Rust%2cEmbeddedRust%2cLoRaWAN%2cEmbassy%2cSTM32%2cSTM32WL55%2cno_std%2cinfluxdb%2cGrafana%2cMQTT"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentColor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a><a target=_blank rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&amp;title=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;summary=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most&amp;source=https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentColor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM160.461 423.278V197.561h-75.04v225.717h75.04zm270.539.0V293.839c0-69.333-37.018-101.586-86.381-101.586-39.804.0-57.634 21.891-67.617 37.266v-31.958h-75.021c.995 21.181.0 225.717.0 225.717h75.02V297.222c0-6.748.486-13.492 2.474-18.315 5.414-13.475 17.767-27.434 38.494-27.434 27.135.0 38.007 20.707 38.007 51.037v120.768H431zM123.448 88.722C97.774 88.722 81 105.601 81 127.724c0 21.658 16.264 39.002 41.455 39.002h.484c26.165.0 42.452-17.344 42.452-39.002-.485-22.092-16.241-38.954-41.943-39.002z"/></svg>
+</a><a target=_blank rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on reddit" href="https://reddit.com/submit?url=https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f&title=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentColor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM446 265.638c0-22.964-18.616-41.58-41.58-41.58-11.211.0-21.361 4.457-28.841 11.666-28.424-20.508-67.586-33.757-111.204-35.278l18.941-89.121 61.884 13.157c.756 15.734 13.642 28.29 29.56 28.29 16.407.0 29.706-13.299 29.706-29.701.0-16.403-13.299-29.702-29.706-29.702-11.666.0-21.657 6.792-26.515 16.578l-69.105-14.69c-1.922-.418-3.939-.042-5.585 1.036-1.658 1.073-2.811 2.761-3.224 4.686l-21.152 99.438c-44.258 1.228-84.046 14.494-112.837 35.232-7.468-7.164-17.589-11.591-28.757-11.591-22.965.0-41.585 18.616-41.585 41.58.0 16.896 10.095 31.41 24.568 37.918-.639 4.135-.99 8.328-.99 12.576.0 63.977 74.469 115.836 166.33 115.836s166.334-51.859 166.334-115.836c0-4.218-.347-8.387-.977-12.493 14.564-6.47 24.735-21.034 24.735-38.001zM326.526 373.831c-20.27 20.241-59.115 21.816-70.534 21.816-11.428.0-50.277-1.575-70.522-21.82-3.007-3.008-3.007-7.882.0-10.889 3.003-2.999 7.882-3.003 10.885.0 12.777 12.781 40.11 17.317 59.637 17.317 19.522.0 46.86-4.536 59.657-17.321 3.016-2.999 7.886-2.995 10.885.008 3.008 3.011 3.003 7.882-.008 10.889zm-5.23-48.781c-16.373.0-29.701-13.324-29.701-29.698.0-16.381 13.328-29.714 29.701-29.714 16.378.0 29.706 13.333 29.706 29.714.0 16.374-13.328 29.698-29.706 29.698zM160.91 295.348c0-16.381 13.328-29.71 29.714-29.71 16.369.0 29.689 13.329 29.689 29.71.0 16.373-13.32 29.693-29.689 29.693-16.386.0-29.714-13.32-29.714-29.693z"/></svg>
+</a><a target=_blank rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on facebook" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentColor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H342.978V319.085h66.6l12.672-82.621h-79.272v-53.617c0-22.603 11.073-44.636 46.58-44.636H425.6v-70.34s-32.71-5.582-63.982-5.582c-65.288.0-107.96 39.569-107.96 111.204v62.971h-72.573v82.621h72.573V512h-191.104c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892z"/></svg>
+</a><a target=_blank rel="noopener noreferrer" aria-label="share Building a LoRaWAN Sensor Network in Rust — STM32WL55, Embassy, and the Bugs That Taught Me the Most on whatsapp" href="https://api.whatsapp.com/send?text=Building%20a%20LoRaWAN%20Sensor%20Network%20in%20Rust%20%e2%80%94%20STM32WL55%2c%20Embassy%2c%20and%20the%20Bugs%20That%20Taught%20Me%20the%20Most%20-%20https%3a%2f%2fmapfumo.github.io%2fposts%2f2026%2fapril%2fbuilding-a-lorawan-sensor-network-in-ruststm32wl55-embassy-and-the-bugs-that-taught-the-most%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentColor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zm-58.673 127.703c-33.842-33.881-78.847-52.548-126.798-52.568-98.799.0-179.21 80.405-179.249 179.234-.013 31.593 8.241 62.428 23.927 89.612l-25.429 92.884 95.021-24.925c26.181 14.28 55.659 21.807 85.658 21.816h.074c98.789.0 179.206-80.413 179.247-179.243.018-47.895-18.61-92.93-52.451-126.81zM263.976 403.485h-.06c-26.734-.01-52.954-7.193-75.828-20.767l-5.441-3.229-56.386 14.792 15.05-54.977-3.542-5.637c-14.913-23.72-22.791-51.136-22.779-79.287.033-82.142 66.867-148.971 149.046-148.971 39.793.014 77.199 15.531 105.329 43.692 28.128 28.16 43.609 65.592 43.594 105.4-.034 82.149-66.866 148.983-148.983 148.984zm81.721-111.581c-4.479-2.242-26.499-13.075-30.604-14.571-4.105-1.495-7.091-2.241-10.077 2.241-2.986 4.483-11.569 14.572-14.182 17.562-2.612 2.988-5.225 3.364-9.703 1.12-4.479-2.241-18.91-6.97-36.017-22.23C231.8 264.15 222.81 249.484 220.198 245s-.279-6.908 1.963-9.14c2.016-2.007 4.48-5.232 6.719-7.847 2.24-2.615 2.986-4.484 4.479-7.472 1.493-2.99.747-5.604-.374-7.846-1.119-2.241-10.077-24.288-13.809-33.256-3.635-8.733-7.327-7.55-10.077-7.688-2.609-.13-5.598-.158-8.583-.158-2.986.0-7.839 1.121-11.944 5.604-4.105 4.484-15.675 15.32-15.675 37.364.0 22.046 16.048 43.342 18.287 46.332 2.24 2.99 31.582 48.227 76.511 67.627 10.685 4.615 19.028 7.371 25.533 9.434 10.728 3.41 20.492 2.929 28.209 1.775 8.605-1.285 26.499-10.833 30.231-21.295 3.732-10.464 3.732-19.431 2.612-21.298-1.119-1.869-4.105-2.99-8.583-5.232z"/></svg></a></div></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://mapfumo.github.io/>Antony Mapfumo</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
