@@ -1,4 +1,3 @@
-# Sample workflow for building and deploying a Hugo site to GitHub Pages
 name: Deploy Hugo site to Pages
 
 on:
@@ -14,6 +13,10 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
+
+env:
+  # Opt into Node 24 now to clear the deprecation warnings
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 defaults:
   run:
@@ -32,7 +35,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          # This specific version is required to fix the 'can't evaluate field Author' error
+          # REQUIRED: Pinned to fix your specific RSS template error
           hugo-version: '0.123.0'
           extended: true
 
@@ -40,10 +43,10 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
-      - name: Install Node.js dependencies
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
