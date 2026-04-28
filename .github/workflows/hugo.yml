@@ -1,58 +1,68 @@
 # Sample workflow for building and deploying a Hugo site to GitHub Pages
 name: Deploy Hugo site to Pages
+
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+
+# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
-# Default to bash
+
 defaults:
   run:
     shell: bash
+
 jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4.2.2  # v4 supports modern Node runtimes
         with:
           submodules: recursive
           fetch-depth: 0
+
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+        uses: peaceiris/actions-hugo@v3.0.0  # v3 is the current stable version for modern Node
         with:
           hugo-version: 'latest'
           extended: true
+
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v5  # v5 is compatible with current Pages standards
+
       - name: Install Node.js dependencies
+        # Ensures a modern Node version is available for theme dependencies (PostCSS/Tailwind)
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: '20' # Update to '22' or '24' when your local theme is ready
+
+      - name: Install dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+
       - name: Build with Hugo
         env:
-          # For maximum backward compatibility with Hugo modules
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
+        uses: actions/upload-pages-artifact@v3.1.1  # Matches current artifact standards
+
   # Deployment job
   deploy:
     environment:
@@ -63,4 +73,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v4.0.5  # v4 is the current standard for Pages deployment
