@@ -14,9 +14,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 defaults:
   run:
     shell: bash
@@ -33,10 +30,11 @@ jobs:
 
       - name: Setup Hugo
         run: |
-          HUGO_VERSION="0.123.0"
-          wget -q -O hugo.deb "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
-          sudo dpkg -i hugo.deb
-          rm hugo.deb
+          HUGO_VERSION="0.147.7"
+          wget -q -O hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          tar -xzf hugo.tar.gz hugo
+          sudo mv hugo /usr/local/bin/
+          rm hugo.tar.gz
           hugo version
 
       - name: Setup Pages
