@@ -1,5 +1,5 @@
 ---
-title: "Teaching a Camera-Free Sensor to Tell Empty from Seated — 34 Sessions, Three Dayparts, and a Zero That Lied"
+title: "Part 1: Teaching a Camera-Free Sensor to Tell Empty from Seated — 34 Sessions, Three Dayparts, and a Zero That Lied"
 date: 2026-11-23T07:30:00+10:00
 draft: false
 slug: camera-free-occupancy-building-the-dataset
@@ -161,3 +161,5 @@ The data says the three classes separate — across both sensors, three dayparts
 Then the dataset gets tagged, and the next post is the part this was all for: training a model in STM32Cube AI Studio and running it on the microcontroller.
 
 The code, the dataset and the full lab notes are on GitHub: [mapfumo/camera-free-occupancy](https://github.com/mapfumo/camera-free-occupancy).
+
+**Next:** [Part 2](/posts/2026/november/camera-free-occupancy-part-2-the-dataset-is-done/) — the second day of every daypart, the finished 70-session dataset, and the I2C bus that wouldn't let go.
