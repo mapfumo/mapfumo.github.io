@@ -98,7 +98,10 @@ I checked those frames before trusting the labels. None of the `empty` frames in
 
 Since bring-up, a session would occasionally refuse to start. The firmware probed the I2C bus for a sensor — usually the thermal one — found nothing, and gave up. A rescan a minute later always found it. Part 1 blamed a loose jumper wire.
 
-Then I remembered there aren't any. Both sensors sit on a proto shield plugged straight into the board's Arduino header. The third dropout, on the second afternoon, cost a full 13½-minute recording with zero frames, and that was enough to look properly.
+Then I remembered there aren't any. Both sensors sit on a proto shield plugged straight into the board's Arduino header, with the wiring soldered in place. The third dropout, on the second afternoon, cost a full 13½-minute recording with zero frames, and that was enough to look properly.
+
+![The sensor board on its boom seen from below, with the thermal and time-of-flight breakouts on the shield and the USB cable running down the pole](/img/camera-free-occupancy-rig-from-below.jpg)
+*Both sensors share one I2C bus on the shield. The braided USB cable running down the pole is the one I knocked loose in Part 1.*
 
 The better suspect was how every session *ends*. I stop a recording by killing the host process on a timer, which halts the microcontroller wherever it is — sometimes halfway through reading a byte from a sensor. I2C is a shared two-wire bus. A sensor that is in the middle of sending a 0 bit pulls the data line (SDA) low and keeps it there, patiently waiting for clock pulses that will never come. The next session starts, sees a busy bus, and concludes nobody's home.
 

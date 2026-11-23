@@ -32,6 +32,9 @@ I'm building a room occupancy sensor that never sees a face. No camera, no image
 
 Both sit on one I2C bus on a **B-U585I-IOT02A** (STM32U585, Cortex-M33), running Rust firmware on Embassy. ST's C driver for the ToF is linked in over FFI. The end goal is a small model running on the microcontroller that says *empty*, *seated* or *present*, feeding the same BACnet/MQTT/Grafana pipeline as my earlier projects.
 
+![The VL53L5CX-SATEL time-of-flight breakout and the red SparkFun Grid-EYE thermal breakout on a proto shield, plugged into the B-U585I-IOT02A board](/img/camera-free-occupancy-sensors-on-shield.jpg)
+*The two sensors on a proto shield over the STM32U585 board: ST's VL53L5CX time-of-flight breakout (blue, left) and SparkFun's Grid-EYE thermal array (red). The wiring is soldered point to point on the shield — no push-in jumpers.*
+
 Before any of that, the model needs data. This post is about collecting it — 34 sessions over two days — and the handful of things the sensors told me that I would not have guessed.
 
 The rule I set myself: **don't train anything until the classes are distinguishable by eye as heatmaps.** If a person can't see the difference between empty and seated in the raw grids, no model is going to fix that. The mounting is.
@@ -41,6 +44,9 @@ The rule I set myself: **don't train anything until the classes are distinguisha
 ## Three Classes, Decided by Geometry
 
 The rig is clamped to the back of the desk, pointing down at the chair. I measured the angle with the board's own accelerometer — **49.9° below horizontal**. A tape measure failed: furniture hides the floor, and a warm seat looks like the target.
+
+![The sensor board clamped to the end of a boom arm on a stand, angled down toward the desk](/img/camera-free-occupancy-rig-over-desk.jpg)
+*The rig: board on a boom at 165 cm, looking down at the desk chair. The USB cable carries power and the data stream to the PC.*
 
 That angle decided the class set. At 49.9° down, a standing person's head is out of frame, so "standing" and "walking past" look the same from the sensor's point of view. Three classes, not four:
 
